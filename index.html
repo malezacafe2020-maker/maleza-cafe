@@ -199,22 +199,22 @@
     const KDS_PIN = "1234";
 
     // =========================================================================
-    // FIREBASE CONFIG
+    // FIREBASE CONFIG INTEGRADA
     // =========================================================================
     const firebaseConfig = {
-  apiKey: "AIzaSyC-R4TAHZqtW4jU-mKrvEWOhJiQq1Z5raQ",
-  authDomain: "maleza-cafe.firebaseapp.com",
-  projectId: "maleza-cafe",
-  storageBucket: "maleza-cafe.firebasestorage.app",
-  messagingSenderId: "523980403582",
-  appId: "1:523980403582:web:40bc172da3a86da9bcb92f"
-};
+      apiKey: "AIzaSyC-R4TAHZqtW4jU-mKrvEWOhJiQq1Z5raQ",
+      authDomain: "maleza-cafe.firebaseapp.com",
+      projectId: "maleza-cafe",
+      storageBucket: "maleza-cafe.firebasestorage.app",
+      messagingSenderId: "523980403582",
+      appId: "1:523980403582:web:40bc172da3a86da9bcb92f"
+    };
 
     let db = null;
     let isCloud = false;
 
     try {
-      if (typeof firebase !== 'undefined' && firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("PEGA_TU_API_KEY")) {
+      if (typeof firebase !== 'undefined' && firebaseConfig.apiKey) {
         firebase.initializeApp(firebaseConfig);
         db = firebase.firestore();
         isCloud = true;
@@ -223,10 +223,9 @@
           b.textContent = 'Nube Activa (Firebase)';
           b.className = 'text-[11px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-medium';
         }
-      } else {
-        throw new Error("Sin config Firebase");
       }
     } catch (e) {
+      console.warn("Fallback a Modo Local:", e);
       const b = document.getElementById('cloud-badge');
       if (b) {
         b.textContent = 'Modo Local (Pruebas)';
@@ -326,6 +325,8 @@
           orders = [];
           snapshot.forEach(doc => orders.push({ id: doc.id, ...doc.data() }));
           renderKDS();
+        }, error => {
+          console.error("Error al escuchar comandas:", error);
         });
       } else {
         orders = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
@@ -376,7 +377,8 @@
         updateCartUI();
         closeCartModal();
       } catch (err) {
-        alert("Error de conexión: " + err.message);
+        console.error("Error al enviar:", err);
+        alert("Error de conexión con la nube. Asegúrate de tener conexión o haber configurado las Reglas en Firebase.");
       } finally {
         btn.disabled = false;
         btn.textContent = "🛎️ Enviar Comanda a Cocina";
@@ -385,7 +387,11 @@
 
     window.updateOrderStatus = async function(id, status) {
       if (isCloud && db) {
-        await db.collection("orders").doc(id).update({ status });
+        try {
+          await db.collection("orders").doc(id).update({ status });
+        } catch (e) {
+          console.error("Error al actualizar:", e);
+        }
       } else {
         const o = orders.find(x => x.id === id);
         if (o) {
