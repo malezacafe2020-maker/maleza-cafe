@@ -62,8 +62,6 @@
 
   <!-- ================= 1. VISTA CLIENTE ================= -->
   <main id="view-client" class="max-w-2xl mx-auto p-4 sm:p-6">
-    
-    <!-- Hero / Encabezado idéntico a la imagen -->
     <section class="py-6 sm:py-8 text-center flex flex-col items-center">
       <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-maleza-badge text-maleza-badgeText text-xs font-semibold tracking-wider uppercase mb-5">
         <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
@@ -127,8 +125,6 @@
 
   <!-- ================= 2. VISTA KDS PROTEGIDA (TABLET) ================= -->
   <section id="view-tablet" class="hidden max-w-7xl mx-auto p-4">
-    
-    <!-- Barra de Control KDS -->
     <div class="bg-white rounded-2xl p-4 mb-6 shadow-sm border border-zinc-200 flex flex-wrap items-center justify-between gap-4">
       <div>
         <div class="flex items-center gap-2">
@@ -145,18 +141,15 @@
       </div>
 
       <div class="flex items-center flex-wrap gap-2.5">
-        <!-- Botón Exportar a Excel -->
         <button onclick="exportCurrentOrdersCSV()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition-all">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
           Exportar Excel (CSV)
         </button>
 
-        <!-- Botón Cerrar Turno -->
         <button onclick="handleShiftClosing()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition-all">
           💼 Cierre de Turno
         </button>
 
-        <!-- Indicador de total del turno activo -->
         <div class="bg-[#FAF9F5] border border-maleza/20 px-3.5 py-2 rounded-xl text-right">
           <span class="block text-[10px] text-zinc-500 font-bold uppercase">Corte del Turno</span>
           <span id="kds-sales-total" class="font-serif font-bold text-lg text-maleza-dark">$0.00</span>
@@ -172,7 +165,7 @@
     <div id="kds-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
   </section>
 
-  <!-- ================= MODAL: HISTORIAL DE DÍAS ANTERIORES ================= -->
+  <!-- MODAL: HISTORIAL -->
   <div id="history-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl">
       <div class="flex justify-between items-center border-b border-zinc-100 pb-3 mb-4">
@@ -191,7 +184,7 @@
 
         <div class="grid grid-cols-2 gap-2">
           <button onclick="loadHistoryDate()" class="w-full bg-maleza text-white font-semibold text-xs py-3 rounded-xl hover:bg-maleza-dark transition-all">
-            🔍 Ver Comandas de esa Fecha
+            🔍 Ver Comandas
           </button>
           <button onclick="resetToToday()" class="w-full bg-zinc-100 text-zinc-700 font-semibold text-xs py-3 rounded-xl hover:bg-zinc-200 transition-all">
             Volver a Hoy
@@ -262,7 +255,7 @@
     // PIN KDS
     const KDS_PIN = "1234";
 
-    // FIREBASE CONFIG INTEGRADA
+    // FIREBASE CONFIG
     const firebaseConfig = {
       apiKey: "AIzaSyC-R4TAHZqtW4jU-mKrvEWOhJiQq1Z5raQ",
       authDomain: "maleza-cafe.firebaseapp.com",
@@ -342,9 +335,8 @@
     let orders = [];
     let currentCustomItem = null;
     let kdsUnsubscribe = null;
-    let selectedKdsDateStr = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    let selectedKdsDateStr = new Date().toISOString().slice(0, 10);
 
-    // RUTA CLIENTE vs KDS TABLET
     const urlParams = new URLSearchParams(window.location.search);
     const isKdsRequested = urlParams.has('kds');
 
@@ -385,17 +377,12 @@
     }
 
     // =========================================================================
-    // FILTRO DINÁMICO POR FECHA Y ESCUCHA EN TIEMPO REAL
+    // ESCUCHA EN TIEMPO REAL ROBUSTA (SIN ERRORES DE ÍNDICE COMPUESTO)
     // =========================================================================
     function startKDSListener(targetDateStr) {
       if (kdsUnsubscribe) {
-        kdsUnsubscribe(); // Detener listener anterior si se cambia de fecha
+        kdsUnsubscribe();
       }
-
-      // Fechas de inicio y fin del día seleccionado
-      const [year, month, day] = targetDateStr.split('-').map(Number);
-      const startOfDay = new Date(year, month - 1, day, 0, 0, 0, 0);
-      const endOfDay = new Date(year, month - 1, day, 23, 59, 59, 999);
 
       const isToday = targetDateStr === new Date().toISOString().slice(0, 10);
       document.getElementById('kds-active-date-label').textContent = isToday 
@@ -403,28 +390,17 @@
         : "Viendo Historial: " + targetDateStr;
 
       if (isCloud && db) {
-        const q = db.collection("orders")
-          .where("createdAt", ">=", startOfDay)
-          .where("createdAt", "<=", endOfDay)
-          .orderBy("createdAt", "desc");
+        // Consulta directa por campo dateStr para máxima velocidad y cero errores de índice
+        const q = db.collection("orders").where("dateStr", "==", targetDateStr);
 
         kdsUnsubscribe = q.onSnapshot(snapshot => {
           orders = [];
           snapshot.forEach(doc => orders.push({ id: doc.id, ...doc.data() }));
+          // Ordenar por hora descendente en memoria
+          orders.sort((a, b) => (b.timestampStr || '').localeCompare(a.timestampStr || ''));
           renderKDS();
         }, error => {
           console.error("Error al escuchar comandas:", error);
-          // Fallback en caso de que falte índice compuesto en Firestore
-          db.collection("orders").orderBy("createdAt", "desc").limit(100).onSnapshot(s => {
-            orders = [];
-            s.forEach(doc => {
-              const data = doc.data();
-              if (data.dateStr === targetDateStr) {
-                orders.push({ id: doc.id, ...data });
-              }
-            });
-            renderKDS();
-          });
         });
       } else {
         const allOrders = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
@@ -452,9 +428,7 @@
       closeHistoryModal();
     };
 
-    // =========================================================================
-    // BOTÓN: CIERRE DE TURNO (CORTE Y ARCHIVADO)
-    // =========================================================================
+    // Cierre de Turno
     window.handleShiftClosing = function() {
       if (orders.length === 0) {
         alert("No hay comandas registradas en esta fecha para realizar corte.");
@@ -471,10 +445,8 @@
 
       if (!confirmClose) return;
 
-      // 1. Descarga el archivo de ventas
       exportCurrentOrdersCSV(`Corte_Caja_Maleza_${selectedKdsDateStr}.csv`);
 
-      // 2. Marcar las órdenes del día como archivadas
       if (isCloud && db) {
         const batch = db.batch();
         orders.forEach(o => {
@@ -515,7 +487,7 @@
         total: total,
         paymentMethod: payment,
         status: 'pending',
-        dateStr: todayISO, // Permite indexación rápida por fecha
+        dateStr: todayISO,
         timestampStr: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         createdAt: isCloud ? firebase.firestore.FieldValue.serverTimestamp() : new Date().toISOString()
       };
@@ -540,7 +512,7 @@
         closeCartModal();
       } catch (err) {
         console.error("Error al enviar:", err);
-        alert("Error de conexión. Asegúrate de tener conexión o haber configurado las Reglas en Firebase.");
+        alert("Error de conexión con la base de datos.");
       } finally {
         btn.disabled = false;
         btn.textContent = "🛎️ Enviar Comanda a Cocina";
@@ -733,7 +705,7 @@
           <div class="grid grid-cols-2 gap-1.5 text-xs">
             ${bases.map(b => `
               <label class="flex items-center gap-2 p-2 rounded-lg bg-zinc-50 border border-zinc-200 cursor-pointer">
-                <input type="checkbox" name="opt_base" value="${b}" onchange="checkMaxBases(${item.maxBases})">
+                <input type="checkbox" name="opt_base" value="${b}" onchange="checkMaxBases(${item.maxBases}, this)">
                 <span>${b}</span>
               </label>
             `).join('')}
@@ -778,11 +750,11 @@
       updateCrepaSubtotal();
     }
 
-    window.checkMaxBases = function(max) {
+    window.checkMaxBases = function(max, currentCheckbox) {
       const selected = document.querySelectorAll('input[name="opt_base"]:checked');
       if (selected.length > max) {
         alert(`Solo puedes elegir máximo ${max} base(s) para esta opción.`);
-        event.target.checked = false;
+        if (currentCheckbox) currentCheckbox.checked = false;
       }
     };
 
