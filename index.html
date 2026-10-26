@@ -55,7 +55,7 @@
             <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-12 5 4-2 9-1 11-1-1 4-5 7-9 8 3-1 6-3 8-6-3 2-6 3-9 3-2 0-3.5-1-4-2 3-1 6-4 8-7z"/>
           </svg>
         </span>
-        <h1 class="font-serif font-bold text-2xl text-maleza-dark tracking-tight">maleza.cafe</h1>
+        <h1 class="font-serif font-bold text-2xl text-maleza-dark tracking-tight">maleza</h1>
       </div>
     </div>
   </header>
@@ -294,7 +294,7 @@
       console.warn("Fallback a Modo Local");
     }
 
-    // CATÁLOGO COMPLETO
+    // CATÁLOGO COMPLETO LÍMPIO
     const MENU_DATA = [
       { id: 'c1', cat: 'crepas', name: 'Crepa Dulce Sencilla', price: 50, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false },
       { id: 'c2', cat: 'crepas', name: 'Crepa Dulce Doble', price: 60, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false },
@@ -355,7 +355,7 @@
       }
     } else {
       renderProducts('crepas');
-      checkActiveClientOrder(); // Inicia el monitor si el cliente ya tenía pedido
+      checkActiveClientOrder();
     }
 
     // Funciones PIN KDS
@@ -382,7 +382,7 @@
     }
 
     // =========================================================================
-    // LÓGICA DEL MONITOR DEL CLIENTE (Modificar / Devolver)
+    // LÓGICA DEL MONITOR DEL CLIENTE
     // =========================================================================
     let activeClientOrderId = null;
     let activeClientOrderData = null;
@@ -416,7 +416,6 @@
       const msg = document.getElementById('monitor-msg');
       const actions = document.getElementById('monitor-actions');
       
-      // Si el pedido se archivó o canceló por completo, quitamos el monitor
       if (data.status === 'canceled' || data.status === 'archived') {
         monitor.classList.add('hidden');
         localStorage.removeItem('maleza_active_order');
@@ -435,7 +434,6 @@
         actions.classList.remove('hidden');
       } 
       else if (data.status === 'preparing') {
-        // Bloqueado: Ya no se puede modificar
         monitor.className = 'fixed top-[72px] inset-x-4 max-w-md mx-auto z-40 bg-white rounded-2xl shadow-xl border-2 border-blue-500 p-4 transition-all';
         badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-blue-100 text-blue-800';
         badge.textContent = '🔥 PREPARANDO';
@@ -451,7 +449,6 @@
         actions.classList.remove('hidden');
       }
       else if (data.status === 'returned') {
-        // La barra lo devolvió para corrección
         alert("La barra devolvió tu pedido para que puedas hacer modificaciones.");
         cart = data.items;
         updateCartUI();
@@ -463,13 +460,11 @@
       }
     }
 
-    // Acción cuando el cliente decide modificar su pedido
     window.modifyActiveOrder = async function() {
       if (!activeClientOrderId || !activeClientOrderData) return;
       const confirmModify = confirm("¿Deseas cancelar el pedido actual para modificarlo?");
       if (!confirmModify) return;
       
-      // Anulamos el pedido anterior
       if (isCloud && db) {
         await db.collection("orders").doc(activeClientOrderId).update({ status: 'canceled' });
       } else {
@@ -481,7 +476,6 @@
         }
       }
       
-      // Restauramos el carrito para que no tenga que picar todo de nuevo
       cart = activeClientOrderData.items;
       updateCartUI();
       openCartModal();
@@ -532,15 +526,13 @@
           localStorage.setItem('maleza_orders', JSON.stringify(allOrders));
         }
         
-        // Configurar el monitor del cliente
         localStorage.setItem('maleza_active_order', newOrderId);
         listenToActiveClientOrder(newOrderId);
         
-        // Limpiamos carrito local y cerramos modal
         cart = [];
         updateCartUI();
         closeCartModal();
-        window.scrollTo({ top: 0, behavior: 'smooth' }); // Subimos para que vea el monitor
+        window.scrollTo({ top: 0, behavior: 'smooth' }); 
       } catch (err) {
         console.error("Error al enviar:", err);
         alert("Error de conexión con la base de datos.");
@@ -665,12 +657,10 @@
       
       const isToday = selectedKdsDateStr === getLocalDateString();
       
-      // En la vista de "Hoy" ocultamos archivados, devueltos y cancelados.
       const visibleOrders = isToday 
         ? orders.filter(o => o.status !== 'archived' && o.status !== 'canceled' && o.status !== 'returned') 
         : orders;
 
-      // El total monetario IGNORA los pedidos cancelados o devueltos (para no descuadrar caja)
       const validOrders = orders.filter(o => o.status !== 'canceled' && o.status !== 'returned');
       const totalSum = validOrders.reduce((s, o) => s + (o.total || 0), 0);
       if (totalEl) totalEl.textContent = `$${totalSum.toFixed(2)}`;
@@ -735,7 +725,6 @@
       }).join('');
     }
 
-    // Funciones de Menú / Carrito (No sufrieron cambios)
     window.filterCategory = function(cat, btn) {
       document.querySelectorAll('.cat-btn').forEach(b => b.className = 'cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200');
       btn.className = 'cat-btn px-4 py-2.5 rounded-full bg-maleza text-white whitespace-nowrap shadow-sm';
