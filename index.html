@@ -183,7 +183,7 @@
       <div class="flex justify-between items-center border-b border-zinc-100 pb-3 mb-4">
         <div>
           <h3 class="font-serif font-bold text-xl text-maleza-dark">Historial de Comandas</h3>
-          <p class="text-xs text-zinc-500">Selecciona una fecha para ver sus ventas</p>
+          <p class="text-xs text-zinc-500">Selecciona una fecha para ver sus ventas completas</p>
         </div>
         <button onclick="closeHistoryModal()" class="text-zinc-400 hover:text-zinc-700 text-2xl leading-none">&times;</button>
       </div>
@@ -294,7 +294,7 @@
       console.warn("Fallback a Modo Local");
     }
 
-    // CATÁLOGO COMPLETO LÍMPIO
+    // CATÁLOGO COMPLETO LÍMPIO (Sin referencias externas)
     const MENU_DATA = [
       { id: 'c1', cat: 'crepas', name: 'Crepa Dulce Sencilla', price: 50, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false },
       { id: 'c2', cat: 'crepas', name: 'Crepa Dulce Doble', price: 60, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false },
@@ -542,7 +542,6 @@
       }
     };
 
-
     // =========================================================================
     // ESCUCHA EN TIEMPO REAL KDS
     // =========================================================================
@@ -725,6 +724,9 @@
       }).join('');
     }
 
+    // =========================================================================
+    // FUNCIONES DEL MENÚ Y CARRITO 
+    // =========================================================================
     window.filterCategory = function(cat, btn) {
       document.querySelectorAll('.cat-btn').forEach(b => b.className = 'cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200');
       btn.className = 'cat-btn px-4 py-2.5 rounded-full bg-maleza text-white whitespace-nowrap shadow-sm';
