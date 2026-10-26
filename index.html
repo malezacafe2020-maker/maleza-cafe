@@ -9,7 +9,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- Firebase Compat Scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
@@ -21,13 +21,11 @@
         extend: {
           colors: {
             maleza: {
-              dark: '#203322',
-              DEFAULT: '#2F4832',
-              light: '#5B755E',
-              cream: '#F4F2EB',
-              accent: '#B86543',
-              badge: '#E2E8DD',
-              badgeText: '#3B523E'
+              dark: '#2D3B2A',
+              DEFAULT: '#4A5D43',
+              light: '#768B6E',
+              cream: '#F7F5F0',
+              accent: '#C47B5A'
             }
           },
           fontFamily: {
@@ -39,66 +37,52 @@
     }
   </script>
   <style>
-    body { background-color: #F4F2EB; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background-color: #F7F5F0; font-family: 'Plus Jakarta Sans', sans-serif; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="text-zinc-800 antialiased pb-24">
+<body class="text-zinc-800 antialiased pb-20">
 
   <!-- ================= BARRA SUPERIOR (VISTA CLIENTE) ================= -->
-  <header id="client-header" class="sticky top-0 z-40 bg-[#F4F2EB]/90 backdrop-blur-md border-b border-[#E7E3D8] px-4 py-3.5">
-    <div class="max-w-2xl mx-auto flex items-center justify-center relative">
+  <header id="client-header" class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-zinc-200 px-4 py-3 shadow-sm">
+    <div class="max-w-2xl mx-auto flex items-center justify-between">
       <div class="flex items-center space-x-2">
-        <span class="w-7 h-7 rounded-full bg-maleza-dark flex items-center justify-center text-white text-xs">
-          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-            <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-12 5 4-2 9-1 11-1-1 4-5 7-9 8 3-1 6-3 8-6-3 2-6 3-9 3-2 0-3.5-1-4-2 3-1 6-4 8-7z"/>
-          </svg>
-        </span>
-        <h1 class="font-serif font-bold text-2xl text-maleza-dark tracking-tight">maleza</h1>
+        <span class="w-3 h-3 rounded-full bg-maleza animate-pulse"></span>
+        <h1 class="font-serif font-bold text-xl text-maleza-dark tracking-tight">@maleza.cafe</h1>
       </div>
+      <span class="text-[11px] font-semibold text-zinc-400 bg-zinc-100 px-2.5 py-1 rounded-full">Menú Digital</span>
     </div>
   </header>
 
-  <!-- ================= 1. VISTA CLIENTE ================= -->
-  <main id="view-client" class="max-w-2xl mx-auto p-4 sm:p-6">
-    <section class="py-6 sm:py-8 text-center flex flex-col items-center">
-      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-maleza-badge text-maleza-badgeText text-xs font-semibold tracking-wider uppercase mb-5">
-        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-          <path d="M12 2L14.2 8.2L20.5 9.1L15.6 13.3L17.2 19.5L12 16.1L6.8 19.5L8.4 13.3L3.5 9.1L9.8 8.2L12 2Z"/>
-        </svg>
-        <span>Café de Especialidad</span>
-      </div>
+  <!-- ================= 1. VISTA EXCLUSIVA CLIENTE ================= -->
+  <main id="view-client" class="max-w-2xl mx-auto p-4">
+    <section class="bg-gradient-to-br from-maleza-dark to-maleza text-white rounded-3xl p-6 mb-6 shadow-md">
+      <p class="text-xs uppercase tracking-widest text-emerald-200 font-semibold mb-1">Menú Digital</p>
+      <h2 class="font-serif text-3xl font-bold mb-2">Hecho a nuestro modo, porque sí</h2>
+      <p class="text-xs text-zinc-200 max-w-sm mb-4">Haz tu pedido aquí mismo. Se enviará de inmediato a la barra para prepararlo.</p>
 
-      <h2 class="font-serif text-4xl sm:text-5xl font-bold text-maleza-dark leading-[1.15] max-w-md tracking-tight">
-        Un lugar para <span class="italic font-normal text-maleza-accent">quedarte</span> un ratito.
-      </h2>
-
-      <p class="text-sm sm:text-base text-zinc-600 font-medium max-w-md mt-4 leading-relaxed">
-        Café honesto, comida rica y una pausa que se siente bien. Pide desde tu mesa y disfruta sin prisas.
-      </p>
-
-      <div class="w-full max-w-sm mt-6 bg-white p-3.5 rounded-2xl border border-[#E7E3D8] shadow-sm text-left">
-        <label class="block text-xs font-semibold text-zinc-600 mb-1">¿A nombre de quién o qué mesa preparamos?</label>
-        <input type="text" id="client-name" placeholder="Ej. Mesa 2 - Carlos" class="w-full bg-[#FAF9F5] text-zinc-900 text-sm px-3 py-2.5 rounded-xl border border-zinc-200 focus:outline-none focus:border-maleza font-medium">
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/20">
+        <label class="block text-xs text-emerald-100 mb-1 font-medium">¿A nombre de quién preparamos el pedido?</label>
+        <input type="text" id="client-name" placeholder="Escribe tu nombre o mesa..." class="w-full bg-white text-zinc-900 text-sm px-3 py-2 rounded-xl focus:outline-none font-medium shadow-inner">
       </div>
     </section>
 
     <!-- Pestañas de categorías -->
-    <nav class="flex space-x-2 overflow-x-auto no-scrollbar pb-3 mb-5 text-xs font-semibold">
-      <button onclick="filterCategory('crepas', this)" class="cat-btn px-4 py-2.5 rounded-full bg-maleza text-white whitespace-nowrap shadow-sm">Crepas & Waffles</button>
-      <button onclick="filterCategory('banderillas', this)" class="cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200">Banderillas Coreanas</button>
-      <button onclick="filterCategory('especiales', this)" class="cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200">Lattes Especiales</button>
-      <button onclick="filterCategory('bubble', this)" class="cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200">Bubble Tea</button>
-      <button onclick="filterCategory('cafe', this)" class="cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200">Cafetería & Bebidas</button>
+    <nav class="flex space-x-2 overflow-x-auto no-scrollbar pb-3 mb-4 text-xs font-semibold">
+      <button onclick="filterCategory('crepas', this)" class="cat-btn px-4 py-2 rounded-full bg-maleza text-white whitespace-nowrap shadow-sm">Crepas & Waffles</button>
+      <button onclick="filterCategory('banderillas', this)" class="cat-btn px-4 py-2 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200">Banderillas Coreanas</button>
+      <button onclick="filterCategory('especiales', this)" class="cat-btn px-4 py-2 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200">Lattes Especiales</button>
+      <button onclick="filterCategory('bubble', this)" class="cat-btn px-4 py-2 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200">Bubble Tea</button>
+      <button onclick="filterCategory('cafe', this)" class="cat-btn px-4 py-2 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200">Cafetería & Bebidas</button>
     </nav>
 
     <!-- Grid de productos -->
-    <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
+    <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
 
     <!-- Barra Carrito Flotante -->
-    <div id="cart-float" class="hidden fixed bottom-5 inset-x-4 max-w-md mx-auto z-30">
-      <button onclick="openCartModal()" class="w-full bg-maleza-dark text-white p-4 rounded-2xl shadow-xl flex items-center justify-between border border-emerald-950/40">
+    <div id="cart-float" class="hidden fixed bottom-4 inset-x-4 max-w-md mx-auto z-30">
+      <button onclick="openCartModal()" class="w-full bg-maleza-dark text-white p-4 rounded-2xl shadow-xl flex items-center justify-between border border-emerald-900/40">
         <div class="flex items-center space-x-3">
           <span id="cart-count" class="bg-maleza-accent text-white font-bold text-xs px-2.5 py-1 rounded-full">0</span>
           <span class="font-semibold text-sm">Ver Mi Comanda</span>
@@ -131,68 +115,25 @@
           <h2 class="font-serif text-2xl font-bold text-maleza-dark">Pantalla de Comandas (KDS)</h2>
           <span id="cloud-badge" class="text-[11px] bg-zinc-200 text-zinc-700 px-2 py-0.5 rounded-full font-medium">Iniciando...</span>
         </div>
-        <div class="flex items-center gap-2 mt-1">
-          <span id="kds-active-date-label" class="text-xs font-semibold text-maleza-dark">Viendo: Hoy</span>
-          <span class="text-zinc-300">|</span>
-          <button onclick="openHistoryModal()" class="text-xs text-maleza-accent hover:underline font-semibold flex items-center gap-1">
-            📅 Ver Historial / Otra Fecha
-          </button>
-        </div>
+        <p class="text-xs text-zinc-500">Recepción en tiempo real desde los celulares</p>
       </div>
 
-      <div class="flex items-center flex-wrap gap-2.5">
-        <button onclick="exportCurrentOrdersCSV()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition-all">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-          Exportar Excel (CSV)
+      <div class="flex items-center gap-3">
+        <button onclick="exportToExcelCSV()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm flex items-center gap-2">
+          📥 Exportar a Excel (CSV)
         </button>
-
-        <button onclick="handleShiftClosing()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition-all">
-          💼 Cierre de Turno
-        </button>
-
-        <div class="bg-[#FAF9F5] border border-maleza/20 px-3.5 py-2 rounded-xl text-right">
+        <div class="bg-maleza-cream border border-maleza/20 px-4 py-2 rounded-xl text-right">
           <span class="block text-[10px] text-zinc-500 font-bold uppercase">Corte del Turno</span>
           <span id="kds-sales-total" class="font-serif font-bold text-lg text-maleza-dark">$0.00</span>
         </div>
-
-        <button onclick="lockKDS()" title="Bloquear pantalla" class="bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-xs p-2.5 rounded-xl transition-all">
+        <button onclick="lockKDS()" title="Bloquear pantalla" class="bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-xs p-2.5 rounded-xl">
           🔒 Salir
         </button>
       </div>
     </div>
 
-    <!-- Tablero de Comandas -->
     <div id="kds-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
   </section>
-
-  <!-- MODAL: HISTORIAL -->
-  <div id="history-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl">
-      <div class="flex justify-between items-center border-b border-zinc-100 pb-3 mb-4">
-        <div>
-          <h3 class="font-serif font-bold text-xl text-maleza-dark">Historial de Comandas</h3>
-          <p class="text-xs text-zinc-500">Selecciona una fecha para ver sus ventas</p>
-        </div>
-        <button onclick="closeHistoryModal()" class="text-zinc-400 hover:text-zinc-700 text-2xl leading-none">&times;</button>
-      </div>
-
-      <div class="space-y-4 mb-6">
-        <div>
-          <label class="block text-xs font-semibold text-zinc-600 mb-1">Fecha a consultar:</label>
-          <input type="date" id="history-date-picker" class="w-full bg-zinc-50 text-zinc-800 text-sm px-3 py-2.5 rounded-xl border border-zinc-200 focus:outline-none focus:border-maleza font-medium">
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <button onclick="loadHistoryDate()" class="w-full bg-maleza text-white font-semibold text-xs py-3 rounded-xl hover:bg-maleza-dark transition-all">
-            🔍 Ver Comandas
-          </button>
-          <button onclick="resetToToday()" class="w-full bg-zinc-100 text-zinc-700 font-semibold text-xs py-3 rounded-xl hover:bg-zinc-200 transition-all">
-            Volver a Hoy
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- MODAL: PERSONALIZAR PRODUCTO -->
   <div id="custom-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
@@ -238,7 +179,7 @@
           </label>
         </div>
         <div class="mt-2 text-[11px] text-zinc-500 leading-snug">
-          Transferencias BBVA: <span class="font-mono font-bold">4152 3145 8769 0465</span> (Daniela I. Zacatelco)
+          Transferencias BBVA: <span class="font-mono font-bold">4152 3145 8769 0465</span> (Daniela I. Zacatelco)[cite: 7]
         </div>
       </div>
       <div class="border-t border-zinc-100 pt-4 flex items-center justify-between mb-4">
@@ -252,10 +193,14 @@
   </div>
 
   <script>
-    // PIN KDS
+    // =========================================================================
+    // CONFIGURACIÓN DE SEGURIDAD (PIN KDS)
+    // =========================================================================
     const KDS_PIN = "1234";
 
+    // =========================================================================
     // FIREBASE CONFIG INTEGRADA
+    // =========================================================================
     const firebaseConfig = {
       apiKey: "AIzaSyC-R4TAHZqtW4jU-mKrvEWOhJiQq1Z5raQ",
       authDomain: "maleza-cafe.firebaseapp.com",
@@ -290,56 +235,52 @@
 
     // CATÁLOGO COMPLETO
     const MENU_DATA = [
-      { id: 'c1', cat: 'crepas', name: 'Crepa Dulce Sencilla', price: 50, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false },[cite: 4]
-      { id: 'c2', cat: 'crepas', name: 'Crepa Dulce Doble', price: 60, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false },[cite: 4]
-      { id: 'c3', cat: 'crepas', name: 'Crepa Dulce Con Fruta', price: 70, desc: '1 o 2 bases + 1 fruta', type: 'crepa', maxBases: 2, hasFruit: true },[cite: 4]
-      { id: 'c4', cat: 'crepas', name: 'Crepa Salada Clásica', price: 60, desc: 'Jamón y queso manchego', type: 'simple' },[cite: 4]
-      { id: 'c5', cat: 'crepas', name: 'Crepa Salada Peperoni', price: 60, desc: 'Peperoni y queso manchego', type: 'simple' },[cite: 4]
-      { id: 'c6', cat: 'crepas', name: 'Crepa Salada Hawaiana', price: 70, desc: 'Jamón, queso manchego y piña', type: 'simple' },[cite: 4]
+      // Crepas
+      { id: 'c1', cat: 'crepas', name: 'Crepa Dulce Sencilla', price: 50, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false },
+      { id: 'c2', cat: 'crepas', name: 'Crepa Dulce Doble', price: 60, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false },
+      { id: 'c3', cat: 'crepas', name: 'Crepa Dulce Con Fruta', price: 70, desc: '1 o 2 bases + 1 fruta', type: 'crepa', maxBases: 2, hasFruit: true },
+      { id: 'c4', cat: 'crepas', name: 'Crepa Salada Clásica', price: 60, desc: 'Jamón y queso manchego', type: 'simple' },
+      { id: 'c5', cat: 'crepas', name: 'Crepa Salada Peperoni', price: 60, desc: 'Peperoni y queso manchego', type: 'simple' },
+      { id: 'c6', cat: 'crepas', name: 'Crepa Salada Hawaiana', price: 70, desc: 'Jamón, queso manchego y piña', type: 'simple' },
 
-      { id: 'w1', cat: 'crepas', name: 'Waffle Belga Sencillo', price: 40, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false, isWaffle: true },[cite: 5]
-      { id: 'w2', cat: 'crepas', name: 'Waffle Belga Doble', price: 45, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false, isWaffle: true },[cite: 5]
-      { id: 'w3', cat: 'crepas', name: 'Waffle Belga Con Fruta', price: 50, desc: '1 o 2 bases + 1 fruta', type: 'crepa', maxBases: 2, hasFruit: true, isWaffle: true },[cite: 5]
+      // Waffles
+      { id: 'w1', cat: 'crepas', name: 'Waffle Belga Sencillo', price: 40, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false, isWaffle: true },
+      { id: 'w2', cat: 'crepas', name: 'Waffle Belga Doble', price: 45, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false, isWaffle: true },
+      { id: 'w3', cat: 'crepas', name: 'Waffle Belga Con Fruta', price: 50, desc: '1 o 2 bases + 1 fruta', type: 'crepa', maxBases: 2, hasFruit: true, isWaffle: true },
 
-      { id: 'b1', cat: 'banderillas', name: 'Monstera Deliciosa', desc: 'Cubierta de papa en cubos + panko', type: 'banderilla', prices: { Salchicha: 70, 'Queso manchego': 80, Combinada: 75 } },[cite: 9]
-      { id: 'b2', cat: 'banderillas', name: 'Monstera Thai', desc: 'Cubierta con ramen crocante + panko', type: 'banderilla', prices: { Salchicha: 65, 'Queso manchego': 75, Combinada: 70 } },[cite: 9]
-      { id: 'b3', cat: 'banderillas', name: 'Monstera Fuego', desc: 'Empanizado especial flaming crunch', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },[cite: 9]
-      { id: 'b4', cat: 'banderillas', name: 'Monstera Clásica', desc: 'Rebozado dorado tradicional con panko', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },[cite: 9]
-      { id: 'b5', cat: 'banderillas', name: 'Monstera Mexicheese', desc: 'Empanizado con queso jalapeño', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },[cite: 9]
+      // Banderillas Coreanas (Monstera)
+      { id: 'b1', cat: 'banderillas', name: 'Monstera Deliciosa', desc: 'Cubierta de papa en cubos + panko', type: 'banderilla', prices: { Salchicha: 70, 'Queso manchego': 80, Combinada: 75 } },
+      { id: 'b2', cat: 'banderillas', name: 'Monstera Thai', desc: 'Cubierta con ramen crocante + panko', type: 'banderilla', prices: { Salchicha: 65, 'Queso manchego': 75, Combinada: 70 } },
+      { id: 'b3', cat: 'banderillas', name: 'Monstera Fuego', desc: 'Empanizado especial flaming crunch', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },
+      { id: 'b4', cat: 'banderillas', name: 'Monstera Clásica', desc: 'Rebozado dorado tradicional con panko', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },
+      { id: 'b5', cat: 'banderillas', name: 'Monstera Mexicheese', desc: 'Empanizado con queso jalapeño', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },
 
-      { id: 'e1', cat: 'especiales', name: 'Areca (Coconut Latte)', price: 70, desc: 'Fría, espresso, leche cremosa y coco', type: 'simple' },[cite: 7]
-      { id: 'e2', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 80, desc: 'Fría, matcha, leche y fresa', type: 'simple' },[cite: 7]
-      { id: 'e3', cat: 'especiales', name: 'Magnolia (Chocolate Latte)', price: 80, desc: 'Fría, espresso, leche y cold foam de chocolate', type: 'simple' },[cite: 7]
+      // Lattes Especiales
+      { id: 'e1', cat: 'especiales', name: 'Areca (Coconut Latte)', price: 70, desc: 'Fría, espresso, leche cremosa y coco', type: 'simple' },
+      { id: 'e2', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 80, desc: 'Fría, matcha, leche y fresa', type: 'simple' },
+      { id: 'e3', cat: 'especiales', name: 'Magnolia (Chocolate Latte)', price: 80, desc: 'Fría, espresso, leche y cold foam de chocolate', type: 'simple' },
 
-      { id: 'bt1', cat: 'bubble', name: 'Jacaranda (Taro Milk Tea)', price: 60, desc: 'Leche, taro, té negro y tapioca', type: 'bubble' },[cite: 8]
-      { id: 'bt2', cat: 'bubble', name: 'Helecho (Matcha Milk Tea)', price: 60, desc: 'Leche, matcha, té negro y tapioca', type: 'bubble' },[cite: 8]
-      { id: 'bt3', cat: 'bubble', name: 'Canela (Chai Milk Tea)', price: 60, desc: 'Leche, chai, té negro y tapioca', type: 'bubble' },[cite: 8]
-      { id: 'bt4', cat: 'bubble', name: 'Palmera (Coco Milk Tea)', price: 70, desc: 'Leche, coco, té negro y tapioca', type: 'bubble' },[cite: 8]
-      { id: 'bt5', cat: 'bubble', name: 'Alocasia (Cookies & Cream)', price: 70, desc: 'Leche, oreo, té negro y tapioca', type: 'bubble' },[cite: 8]
-      { id: 'bt6', cat: 'bubble', name: 'Girasol (Mango Tea)', price: 70, desc: 'Té negro, infusión mango y tapioca', type: 'bubble' },[cite: 8]
-      { id: 'bt7', cat: 'bubble', name: 'Diente de León (Maracuyá)', price: 70, desc: 'Té negro, maracuyá y tapioca', type: 'bubble' },[cite: 8]
+      // Bubble Tea
+      { id: 'bt1', cat: 'bubble', name: 'Jacaranda (Taro Milk Tea)', price: 60, desc: 'Leche, taro, té negro y tapioca', type: 'bubble' },
+      { id: 'bt2', cat: 'bubble', name: 'Helecho (Matcha Milk Tea)', price: 60, desc: 'Leche, matcha, té negro y tapioca', type: 'bubble' },
+      { id: 'bt3', cat: 'bubble', name: 'Canela (Chai Milk Tea)', price: 60, desc: 'Leche, chai, té negro y tapioca', type: 'bubble' },
+      { id: 'bt4', cat: 'bubble', name: 'Palmera (Coco Milk Tea)', price: 70, desc: 'Leche, coco, té negro y tapioca', type: 'bubble' },
+      { id: 'bt5', cat: 'bubble', name: 'Alocasia (Cookies & Cream)', price: 70, desc: 'Leche, oreo, té negro y tapioca', type: 'bubble' },
+      { id: 'bt6', cat: 'bubble', name: 'Girasol (Mango Tea)', price: 70, desc: 'Té negro, infusión mango y tapioca', type: 'bubble' },
+      { id: 'bt7', cat: 'bubble', name: 'Diente de León (Maracuyá)', price: 70, desc: 'Té negro, maracuyá y tapioca', type: 'bubble' },
 
-      { id: 'cf1', cat: 'cafe', name: 'Capuchino Clásico', price: 50, desc: 'Espresso con espuma de leche', type: 'simple' },[cite: 7]
-      { id: 'cf2', cat: 'cafe', name: 'Café Americano', price: 45, desc: 'Extracción fresca de grano americano', type: 'simple' },[cite: 7]
-      { id: 'cf3', cat: 'cafe', name: 'Frappé Moka / Caramelo', price: 60, desc: 'Frappé cremoso con crema batida', type: 'simple' },[cite: 6]
-      { id: 'cf4', cat: 'cafe', name: 'Soda Italiana Frutos Rojos', price: 60, desc: 'Soda artesanal con frutos rojos', type: 'simple' }[cite: 6]
+      // Cafetería Clásica & Bebidas
+      { id: 'cf1', cat: 'cafe', name: 'Capuchino Clásico', price: 50, desc: 'Espresso con espuma de leche', type: 'simple' },
+      { id: 'cf2', cat: 'cafe', name: 'Café Americano', price: 45, desc: 'Extracción fresca de grano americano', type: 'simple' },
+      { id: 'cf3', cat: 'cafe', name: 'Frappé Moka / Caramelo', price: 60, desc: 'Frappé cremoso con crema batida', type: 'simple' },
+      { id: 'cf4', cat: 'cafe', name: 'Soda Italiana Frutos Rojos', price: 60, desc: 'Soda artesanal con frutos rojos', type: 'simple' }
     ];
 
     let cart = [];
     let orders = [];
     let currentCustomItem = null;
-    let kdsUnsubscribe = null;
 
-    // =========================================================================
-    // FUNCIÓN DE ZONA HORARIA LOCAL (Arregla el bug de pedidos ocultos de noche)
-    // =========================================================================
-    function getLocalDateString(d = new Date()) {
-      const tzOffset = d.getTimezoneOffset() * 60000;
-      return new Date(d.getTime() - tzOffset).toISOString().slice(0, 10);
-    }
-    
-    let selectedKdsDateStr = getLocalDateString();
-
+    // RUTA CLIENTE vs KDS TABLET
     const urlParams = new URLSearchParams(window.location.search);
     const isKdsRequested = urlParams.has('kds');
 
@@ -375,136 +316,45 @@
 
     function showKDSScreen() {
       document.getElementById('view-tablet').classList.remove('hidden');
-      document.getElementById('history-date-picker').value = selectedKdsDateStr;
-      startKDSListener(selectedKdsDateStr);
+      startKDSListener();
     }
 
-    // =========================================================================
-    // ESCUCHA EN TIEMPO REAL KDS
-    // =========================================================================
-    function startKDSListener(targetDateStr) {
-      if (kdsUnsubscribe) {
-        kdsUnsubscribe();
-      }
-
-      const isToday = targetDateStr === getLocalDateString();
-      document.getElementById('kds-active-date-label').textContent = isToday 
-        ? "Viendo: Hoy (" + targetDateStr + ")" 
-        : "Viendo Historial: " + targetDateStr;
-
-      let isFirstLoad = true;
-
+    function startKDSListener() {
       if (isCloud && db) {
-        const q = db.collection("orders").where("dateStr", "==", targetDateStr);
-
-        kdsUnsubscribe = q.onSnapshot(snapshot => {
+        db.collection("orders").orderBy("createdAt", "desc").onSnapshot(snapshot => {
           orders = [];
-          let hasNewOrders = false;
-
-          snapshot.docChanges().forEach(change => {
-            if (change.type === "added") hasNewOrders = true;
-          });
-
           snapshot.forEach(doc => orders.push({ id: doc.id, ...doc.data() }));
-          orders.sort((a, b) => (b.timestampStr || '').localeCompare(a.timestampStr || ''));
           renderKDS();
-
-          // Solo suena la campana en la Tablet si no es la carga inicial, y si hay un pedido nuevo de HOY
-          if (!isFirstLoad && hasNewOrders && isToday) {
-            playChime();
-          }
-          isFirstLoad = false;
-
         }, error => {
           console.error("Error al escuchar comandas:", error);
         });
       } else {
-        const allOrders = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
-        orders = allOrders.filter(o => o.dateStr === targetDateStr);
+        orders = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
         renderKDS();
+        window.addEventListener('storage', e => {
+          if (e.key === 'maleza_orders') {
+            orders = JSON.parse(e.newValue || '[]');
+            renderKDS();
+          }
+        });
       }
     }
 
-    // Modal de Historial
-    window.openHistoryModal = () => document.getElementById('history-modal').classList.remove('hidden');
-    window.closeHistoryModal = () => document.getElementById('history-modal').classList.add('hidden');
-
-    window.loadHistoryDate = function() {
-      const selected = document.getElementById('history-date-picker').value;
-      if (!selected) return alert("Selecciona una fecha válida.");
-      selectedKdsDateStr = selected;
-      startKDSListener(selectedKdsDateStr);
-      closeHistoryModal();
-    };
-
-    window.resetToToday = function() {
-      selectedKdsDateStr = getLocalDateString();
-      document.getElementById('history-date-picker').value = selectedKdsDateStr;
-      startKDSListener(selectedKdsDateStr);
-      closeHistoryModal();
-    };
-
-    // Cierre de Turno
-    window.handleShiftClosing = function() {
-      if (orders.length === 0) {
-        alert("No hay comandas registradas en esta fecha para realizar corte.");
-        return;
-      }
-
-      const totalShift = orders.reduce((s, o) => s + (o.total || 0), 0);
-      const confirmClose = confirm(
-        `¿Deseas cerrar el turno activo?\n\n` +
-        `• Total vendido: $${totalShift.toFixed(2)}\n` +
-        `• Total de comandas: ${orders.length}\n\n` +
-        `Al confirmar, se descargará automáticamente el reporte en Excel (CSV) y las órdenes quedarán archivadas.`
-      );
-
-      if (!confirmClose) return;
-
-      exportCurrentOrdersCSV(`Corte_Caja_Maleza_${selectedKdsDateStr}.csv`);
-
-      if (isCloud && db) {
-        const batch = db.batch();
-        orders.forEach(o => {
-          if (o.id && o.status !== 'archived') {
-            const ref = db.collection("orders").doc(o.id);
-            batch.update(ref, { status: 'archived' });
-          }
-        });
-        batch.commit().then(() => {
-          alert("¡Cierre de turno completado y guardado con éxito!");
-        }).catch(err => {
-          console.error("Error al archivar en batch:", err);
-        });
-      } else {
-        const all = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
-        all.forEach(o => {
-          if (o.dateStr === selectedKdsDateStr) o.status = 'archived';
-        });
-        localStorage.setItem('maleza_orders', JSON.stringify(all));
-        startKDSListener(selectedKdsDateStr);
-        alert("¡Cierre de turno completado y guardado con éxito!");
-      }
-    };
-
-    // =========================================================================
-    // ENVIAR COMANDA DESDE CELULAR
-    // =========================================================================
+    // Enviar Comanda
     window.sendOrder = async function() {
       const name = document.getElementById('client-name').value.trim();
-      if (!name) return alert("Por favor escribe tu nombre o número de mesa.");
+      if (!name) return alert("Por favor escribe tu nombre.");
       if (cart.length === 0) return alert("Tu carrito está vacío.");
 
       const total = cart.reduce((s, i) => s + i.total, 0);
       const payment = document.querySelector('input[name="payment_method"]:checked').value;
-      
+
       const order = {
         clientName: name,
         items: cart,
         total: total,
         paymentMethod: payment,
         status: 'pending',
-        dateStr: getLocalDateString(), // Aquí se guarda la fecha exacta local (Evita salto al día siguiente)
         timestampStr: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         createdAt: isCloud ? firebase.firestore.FieldValue.serverTimestamp() : new Date().toISOString()
       };
@@ -518,19 +368,17 @@
           await db.collection("orders").add(order);
         } else {
           order.id = 'ORD-' + Date.now().toString().slice(-4);
-          const allOrders = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
-          allOrders.unshift(order);
-          localStorage.setItem('maleza_orders', JSON.stringify(allOrders));
+          orders.unshift(order);
+          localStorage.setItem('maleza_orders', JSON.stringify(orders));
         }
-        
-        // ¡Ya NO suena en el celular! El cliente solo ve su alerta:
+        playChime();
         alert(`¡Gracias ${name}! Tu comanda ha sido enviada a la barra.`);
         cart = [];
         updateCartUI();
         closeCartModal();
       } catch (err) {
         console.error("Error al enviar:", err);
-        alert("Error de conexión con la base de datos.");
+        alert("Error de conexión con la nube. Asegúrate de tener conexión o haber configurado las Reglas en Firebase.");
       } finally {
         btn.disabled = false;
         btn.textContent = "🛎️ Enviar Comanda a Cocina";
@@ -545,27 +393,26 @@
           console.error("Error al actualizar:", e);
         }
       } else {
-        const all = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
-        const o = all.find(x => x.id === id);
+        const o = orders.find(x => x.id === id);
         if (o) {
           o.status = status;
-          localStorage.setItem('maleza_orders', JSON.stringify(all));
-          startKDSListener(selectedKdsDateStr);
+          localStorage.setItem('maleza_orders', JSON.stringify(orders));
+          renderKDS();
         }
       }
     };
 
-    window.exportCurrentOrdersCSV = function(customFileName) {
-      if (orders.length === 0) return alert("No hay pedidos para exportar en esta fecha.");
-      let csv = "\uFEFFID,Fecha,Hora,Cliente,Productos,Pago,Total,Estatus\n";
+    window.exportToExcelCSV = function() {
+      if (orders.length === 0) return alert("No hay pedidos registrados.");
+      let csv = "\uFEFFID,Hora,Cliente,Productos,Pago,Total,Estatus\n";
       orders.forEach(o => {
         const items = `"${o.items.map(i => `${i.qty}x ${i.name} (${i.details || ''})`).join(' | ').replace(/"/g, '""')}"`;
-        csv += `${o.id || ''},${o.dateStr || selectedKdsDateStr},${o.timestampStr || ''},"${o.clientName}",${items},${o.paymentMethod || 'Efectivo'},${o.total.toFixed(2)},${o.status}\n`;
+        csv += `${o.id || ''},${o.timestampStr || ''},"${o.clientName}",${items},${o.paymentMethod || 'Efectivo'},${o.total.toFixed(2)},${o.status}\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = customFileName || `Ventas_Maleza_${selectedKdsDateStr}.csv`;
+      link.download = `Ventas_Maleza_${new Date().toISOString().slice(0,10)}.csv`;
       link.click();
     };
 
@@ -577,24 +424,23 @@
       if (totalEl) totalEl.textContent = `$${totalSum.toFixed(2)}`;
 
       if (orders.length === 0) {
-        grid.innerHTML = '<div class="col-span-full py-16 text-center text-zinc-400">☕ No hay pedidos registrados en esta fecha.</div>';
+        grid.innerHTML = '<div class="col-span-full py-16 text-center text-zinc-400">☕ Esperando pedidos...</div>';
         return;
       }
 
       grid.innerHTML = orders.map(o => {
         const isPend = o.status === 'pending';
         const isPrep = o.status === 'preparing';
-        const isArch = o.status === 'archived';
-        const border = isPend ? 'border-amber-400' : isPrep ? 'border-blue-500' : isArch ? 'border-zinc-300 opacity-50' : 'border-emerald-500 opacity-70';
-        const badgeTxt = isPend ? '⏳ PENDIENTE' : isPrep ? '🔥 PREPARANDO' : isArch ? '📁 ARCHIVADO' : '✓ LISTO';
+        const border = isPend ? 'border-amber-400' : isPrep ? 'border-blue-500' : 'border-emerald-500 opacity-60';
+        const badgeTxt = isPend ? '⏳ PENDIENTE' : isPrep ? '🔥 PREPARANDO' : '✓ LISTO';
 
         return `
           <div class="bg-white rounded-2xl border-2 ${border} p-4 shadow-sm flex flex-col justify-between">
             <div>
               <div class="flex justify-between border-b pb-2 mb-2">
                 <div>
-                  <span class="text-[10px] text-zinc-400 font-mono">${o.id ? o.id.slice(-5) : ''}</span>
-                  <h4 class="font-bold text-base leading-tight">${o.clientName}</h4>
+                  <span class="text-[10px] text-zinc-400">${o.id ? o.id.slice(-5) : ''}</span>
+                  <h4 class="font-bold text-base">${o.clientName}</h4>
                 </div>
                 <div class="text-right">
                   <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-100">${badgeTxt}</span>
@@ -620,7 +466,7 @@
               ` : isPrep ? `
                 <button onclick="updateOrderStatus('${o.id}', 'ready')" class="w-full bg-emerald-600 text-white text-xs py-2 rounded-xl font-semibold">Marcar Listo</button>
               ` : `
-                <button onclick="updateOrderStatus('${o.id}', 'preparing')" class="w-full text-zinc-500 border text-xs py-1.5 rounded-lg hover:bg-zinc-50">Reabrir</button>
+                <button onclick="updateOrderStatus('${o.id}', 'preparing')" class="w-full text-zinc-500 border text-xs py-1.5 rounded-lg">Reabrir</button>
               `}
             </div>
           </div>
@@ -629,8 +475,8 @@
     }
 
     window.filterCategory = function(cat, btn) {
-      document.querySelectorAll('.cat-btn').forEach(b => b.className = 'cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200');
-      btn.className = 'cat-btn px-4 py-2.5 rounded-full bg-maleza text-white whitespace-nowrap shadow-sm';
+      document.querySelectorAll('.cat-btn').forEach(b => b.className = 'cat-btn px-4 py-2 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200');
+      btn.className = 'cat-btn px-4 py-2 rounded-full bg-maleza text-white whitespace-nowrap shadow-sm';
       renderProducts(cat);
     };
 
@@ -645,7 +491,7 @@
             </div>
             <p class="text-xs text-zinc-500 mb-3">${p.desc}</p>
           </div>
-          <button onclick="handleProductClick('${p.id}')" class="w-full bg-[#F4F2EB] hover:bg-maleza hover:text-white text-zinc-700 text-xs font-semibold py-2 rounded-xl transition-colors">
+          <button onclick="handleProductClick('${p.id}')" class="w-full bg-zinc-100 hover:bg-maleza hover:text-white text-zinc-700 text-xs font-semibold py-2 rounded-xl">
             ${p.type === 'simple' ? 'Agregar al Pedido' : 'Personalizar +'}
           </button>
         </div>
@@ -702,17 +548,17 @@
     function renderCrepaOptions(item, container) {
       document.getElementById('modal-base-price').textContent = `Precio base: $${item.price}`;
       
-      const bases = ['Crema de avellanas', 'Mermelada fresa', 'Mermelada zarzamora', 'Cajeta', 'Lechera', 'Philadelphia'];[cite: 4, 5]
-      const frutas = ['Fresa', 'Plátano', 'Durazno'];[cite: 4, 5]
+      const bases = ['Crema de avellanas', 'Mermelada fresa', 'Mermelada zarzamora', 'Cajeta', 'Lechera', 'Philadelphia'];
+      const frutas = ['Fresa', 'Plátano', 'Durazno'];
       const toppings = [
         { name: 'Nuez', cost: 10 },
         { name: 'Chispas de chocolate', cost: 10 },
         { name: 'Oreo', cost: 10 },
         { name: 'Fruta extra', cost: 10 },
         { name: 'Ingrediente extra', cost: 10 }
-      ];[cite: 4, 5]
+      ];
       if (item.isWaffle) {
-        toppings.push({ name: 'Bola de helado', cost: 15 });[cite: 5]
+        toppings.push({ name: 'Bola de helado', cost: 15 });
       }
 
       let html = `
@@ -723,7 +569,7 @@
           <div class="grid grid-cols-2 gap-1.5 text-xs">
             ${bases.map(b => `
               <label class="flex items-center gap-2 p-2 rounded-lg bg-zinc-50 border border-zinc-200 cursor-pointer">
-                <input type="checkbox" name="opt_base" value="${b}" onchange="checkMaxBases(${item.maxBases}, this)">
+                <input type="checkbox" name="opt_base" value="${b}" onchange="checkMaxBases(${item.maxBases})">
                 <span>${b}</span>
               </label>
             `).join('')}
@@ -768,11 +614,11 @@
       updateCrepaSubtotal();
     }
 
-    window.checkMaxBases = function(max, currentCheckbox) {
+    window.checkMaxBases = function(max) {
       const selected = document.querySelectorAll('input[name="opt_base"]:checked');
       if (selected.length > max) {
         alert(`Solo puedes elegir máximo ${max} base(s) para esta opción.`);
-        if (currentCheckbox) currentCheckbox.checked = false;
+        event.target.checked = false;
       }
     };
 
@@ -853,7 +699,7 @@
       const total = cart.reduce((s, i) => s + i.total, 0);
       document.getElementById('cart-checkout-total').textContent = `$${total.toFixed(2)}`;
       list.innerHTML = cart.map((it, idx) => `
-        <div class="flex justify-between items-center p-2.5 bg-[#FAF9F5] rounded-xl border border-zinc-200 text-xs">
+        <div class="flex justify-between items-center p-2.5 bg-zinc-50 rounded-xl border text-xs">
           <div>
             <strong>${it.qty}x ${it.name}</strong> ($${it.total})
             ${it.details ? `<p class="text-[10px] text-zinc-500">${it.details}</p>` : ''}
@@ -863,7 +709,6 @@
       `).join('');
     }
 
-    // SONIDO KDS: Solo se dispara en la tablet cuando la orden cae
     function playChime() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
