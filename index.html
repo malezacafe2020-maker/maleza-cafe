@@ -47,6 +47,7 @@
 </head>
 <body class="text-zinc-800 antialiased pb-28 relative">
 
+  <!-- BARRA SUPERIOR CLIENTE -->
   <header id="client-header" class="sticky top-0 z-40 bg-[#F4F2EB]/95 backdrop-blur-md border-b border-[#E7E3D8] px-4 py-3.5">
     <div class="max-w-2xl mx-auto flex items-center justify-center relative">
       <div class="flex items-center space-x-2">
@@ -60,19 +61,21 @@
     </div>
   </header>
 
-  <div id="order-monitor" class="hidden fixed top-[68px] inset-x-4 max-w-md mx-auto z-40 bg-white rounded-2xl shadow-xl border-2 border-zinc-200 p-4 transition-all">
+  <!-- MONITOR FLOTANTE DE PEDIDO (Z-50 Y CLIC CORREGIDO) -->
+  <div id="order-monitor" class="hidden fixed top-[78px] inset-x-4 max-w-md mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-zinc-200 p-4 transition-all">
     <div class="flex items-center justify-between mb-2">
       <h3 class="font-serif font-bold text-maleza-dark text-lg">Estado de tu pedido</h3>
       <span id="monitor-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">PENDIENTE</span>
     </div>
     <p id="monitor-msg" class="text-xs text-zinc-600 mb-4">Tu pedido está en fila. Aún puedes hacer cambios si te equivocaste.</p>
     <div id="monitor-actions" class="flex gap-2">
-      <button type="button" onclick="window.modifyActiveOrder()" class="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold py-2.5 rounded-xl border border-zinc-300">
-        Cancelar y Modificar
+      <button type="button" onclick="window.modifyActiveOrder()" class="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-semibold py-2.5 rounded-xl border border-zinc-300 active:scale-95 transition-transform cursor-pointer">
+        ✏️ Modificar Pedido
       </button>
     </div>
   </div>
 
+  <!-- VISTA CLIENTE -->
   <main id="view-client" class="max-w-2xl mx-auto p-4 sm:p-6">
     <section class="py-4 sm:py-6 text-center flex flex-col items-center">
       <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-maleza-badge text-maleza-badgeText text-xs font-semibold tracking-wider uppercase mb-4">
@@ -96,6 +99,7 @@
       </div>
     </section>
 
+    <!-- Barra de pestañas adaptable -->
     <nav class="flex flex-wrap justify-center gap-2 pb-3 mb-5 text-xs font-semibold">
       <button type="button" onclick="window.filterCategory('crepas', this)" class="cat-btn px-3.5 py-2 rounded-full bg-maleza text-white shadow-sm">Crepas & Waffles</button>
       <button type="button" onclick="window.filterCategory('banderillas', this)" class="cat-btn px-3.5 py-2 rounded-full bg-white text-zinc-600 border border-zinc-200">Banderillas Coreanas</button>
@@ -104,10 +108,12 @@
       <button type="button" onclick="window.filterCategory('cafe', this)" class="cat-btn px-3.5 py-2 rounded-full bg-white text-zinc-600 border border-zinc-200">Cafetería & Bebidas</button>
     </nav>
 
+    <!-- Grid de productos -->
     <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
 
+    <!-- Barra Carrito Flotante -->
     <div id="cart-float" class="hidden fixed bottom-5 inset-x-4 max-w-md mx-auto z-30">
-      <button type="button" onclick="window.openCartModal()" class="w-full bg-maleza-dark text-white p-4 rounded-2xl shadow-xl flex items-center justify-between border border-emerald-950/40">
+      <button type="button" onclick="window.openCartModal()" class="w-full bg-maleza-dark text-white p-4 rounded-2xl shadow-xl flex items-center justify-between border border-emerald-950/40 cursor-pointer">
         <div class="flex items-center space-x-3">
           <span id="cart-count" class="bg-maleza-accent text-white font-bold text-xs px-2.5 py-1 rounded-full">0</span>
           <span class="font-semibold text-sm">Ver Mi Comanda</span>
@@ -117,18 +123,20 @@
     </div>
   </main>
 
+  <!-- PANTALLA PIN KDS -->
   <section id="kds-auth-screen" class="hidden min-h-screen flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-xl border border-zinc-200">
       <span class="w-12 h-12 bg-maleza/10 text-maleza flex items-center justify-center rounded-full mx-auto text-xl mb-3">🔒</span>
       <h3 class="font-serif font-bold text-xl text-maleza-dark">Acceso a Cocina / KDS</h3>
       <p class="text-xs text-zinc-500 mb-5">Ingresa el PIN de seguridad de la cafetería</p>
       <input type="password" id="kds-pin-input" maxlength="4" placeholder="••••" class="text-center tracking-widest text-2xl font-mono font-bold w-36 mx-auto bg-zinc-100 border border-zinc-300 rounded-xl py-2 mb-4 focus:outline-none focus:border-maleza">
-      <button type="button" onclick="window.unlockKDS()" class="w-full bg-maleza hover:bg-maleza-dark text-white font-semibold text-sm py-3 rounded-xl shadow-md transition-all">
+      <button type="button" onclick="window.unlockKDS()" class="w-full bg-maleza hover:bg-maleza-dark text-white font-semibold text-sm py-3 rounded-xl shadow-md transition-all cursor-pointer">
         Ingresar al Tablero
       </button>
     </div>
   </section>
 
+  <!-- VISTA TABLERO KDS -->
   <section id="view-tablet" class="hidden max-w-7xl mx-auto p-4">
     <div class="bg-white rounded-2xl p-4 mb-6 shadow-sm border border-zinc-200 flex flex-wrap items-center justify-between gap-4">
       <div>
@@ -139,18 +147,18 @@
         <div class="flex items-center gap-2 mt-1">
           <span id="kds-active-date-label" class="text-xs font-semibold text-maleza-dark">Viendo: Hoy</span>
           <span class="text-zinc-300">|</span>
-          <button type="button" onclick="window.openHistoryModal()" class="text-xs text-maleza-accent hover:underline font-semibold flex items-center gap-1">
+          <button type="button" onclick="window.openHistoryModal()" class="text-xs text-maleza-accent hover:underline font-semibold flex items-center gap-1 cursor-pointer">
             Ver Historial / Otra Fecha
           </button>
         </div>
       </div>
 
       <div class="flex items-center flex-wrap gap-2.5">
-        <button type="button" onclick="window.exportCurrentOrdersCSV()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition-all">
+        <button type="button" onclick="window.exportCurrentOrdersCSV()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition-all cursor-pointer">
           Exportar Excel (CSV)
         </button>
 
-        <button type="button" onclick="window.handleShiftClosing()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition-all">
+        <button type="button" onclick="window.handleShiftClosing()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition-all cursor-pointer">
           Limpiar y Cerrar Turno
         </button>
 
@@ -159,7 +167,7 @@
           <span id="kds-sales-total" class="font-serif font-bold text-lg text-maleza-dark">$0.00</span>
         </div>
 
-        <button type="button" onclick="window.lockKDS()" title="Bloquear pantalla" class="bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-xs p-2.5 rounded-xl transition-all">
+        <button type="button" onclick="window.lockKDS()" title="Bloquear pantalla" class="bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-xs p-2.5 rounded-xl transition-all cursor-pointer">
           Salir
         </button>
       </div>
@@ -168,6 +176,7 @@
     <div id="kds-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
   </section>
 
+  <!-- MODAL HISTORIAL -->
   <div id="history-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl">
       <div class="flex justify-between items-center border-b border-zinc-100 pb-3 mb-4">
@@ -175,7 +184,7 @@
           <h3 class="font-serif font-bold text-xl text-maleza-dark">Historial de Comandas</h3>
           <p class="text-xs text-zinc-500">Selecciona una fecha para ver sus ventas completas</p>
         </div>
-        <button type="button" onclick="window.closeHistoryModal()" class="text-zinc-400 hover:text-zinc-700 text-2xl leading-none">&times;</button>
+        <button type="button" onclick="window.closeHistoryModal()" class="text-zinc-400 hover:text-zinc-700 text-2xl leading-none cursor-pointer">&times;</button>
       </div>
       <div class="space-y-4 mb-6">
         <div>
@@ -183,10 +192,10 @@
           <input type="date" id="history-date-picker" class="w-full bg-zinc-50 text-zinc-800 text-sm px-3 py-2.5 rounded-xl border border-zinc-200 focus:outline-none focus:border-maleza font-medium">
         </div>
         <div class="grid grid-cols-2 gap-2">
-          <button type="button" onclick="window.loadHistoryDate()" class="w-full bg-maleza text-white font-semibold text-xs py-3 rounded-xl hover:bg-maleza-dark transition-all">
+          <button type="button" onclick="window.loadHistoryDate()" class="w-full bg-maleza text-white font-semibold text-xs py-3 rounded-xl hover:bg-maleza-dark transition-all cursor-pointer">
             Ver Comandas
           </button>
-          <button type="button" onclick="window.resetToToday()" class="w-full bg-zinc-100 text-zinc-700 font-semibold text-xs py-3 rounded-xl hover:bg-zinc-200 transition-all">
+          <button type="button" onclick="window.resetToToday()" class="w-full bg-zinc-100 text-zinc-700 font-semibold text-xs py-3 rounded-xl hover:bg-zinc-200 transition-all cursor-pointer">
             Volver a Hoy
           </button>
         </div>
@@ -194,6 +203,7 @@
     </div>
   </div>
 
+  <!-- MODAL PERSONALIZACIÓN -->
   <div id="custom-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white w-full max-w-lg rounded-t-3xl sm:rounded-3xl max-h-[90vh] overflow-y-auto p-6 shadow-2xl">
       <div class="flex justify-between items-start border-b border-zinc-100 pb-3 mb-4">
@@ -201,7 +211,7 @@
           <h3 id="modal-title" class="font-serif font-bold text-xl text-maleza-dark"></h3>
           <p id="modal-base-price" class="text-sm font-semibold text-maleza-accent"></p>
         </div>
-        <button type="button" onclick="window.closeCustomModal()" class="text-zinc-400 text-2xl leading-none p-1">&times;</button>
+        <button type="button" onclick="window.closeCustomModal()" class="text-zinc-400 text-2xl leading-none p-1 cursor-pointer">&times;</button>
       </div>
       <div id="modal-options-container" class="space-y-4 mb-6 text-sm"></div>
       <div class="border-t border-zinc-100 pt-4 flex items-center justify-between">
@@ -209,18 +219,19 @@
           <span class="text-xs text-zinc-400 block">Subtotal</span>
           <span id="modal-subtotal" class="font-serif font-bold text-xl text-maleza-dark">$0.00</span>
         </div>
-        <button type="button" onclick="window.confirmAddToCart()" class="bg-maleza hover:bg-maleza-dark text-white font-semibold text-sm px-6 py-3 rounded-xl shadow-md active:scale-95 transition-transform">
+        <button type="button" onclick="window.confirmAddToCart()" class="bg-maleza hover:bg-maleza-dark text-white font-semibold text-sm px-6 py-3 rounded-xl shadow-md active:scale-95 transition-transform cursor-pointer">
           Agregar al Pedido
         </button>
       </div>
     </div>
   </div>
 
+  <!-- MODAL CARRITO -->
   <div id="cart-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[90vh] overflow-y-auto p-6 shadow-2xl">
       <div class="flex justify-between items-center border-b border-zinc-100 pb-3 mb-4">
         <h3 class="font-serif font-bold text-xl text-maleza-dark">Resumen de Comanda</h3>
-        <button type="button" onclick="window.closeCartModal()" class="text-zinc-400 text-2xl leading-none p-1">&times;</button>
+        <button type="button" onclick="window.closeCartModal()" class="text-zinc-400 text-2xl leading-none p-1 cursor-pointer">&times;</button>
       </div>
       <div id="cart-items-list" class="space-y-3 mb-6"></div>
       <div class="bg-zinc-50 p-4 rounded-2xl border border-zinc-200 mb-6">
@@ -243,7 +254,7 @@
         <span class="text-sm font-semibold text-zinc-600">Total a pagar:</span>
         <span id="cart-checkout-total" class="font-serif font-bold text-2xl text-maleza-accent">$0.00</span>
       </div>
-      <button type="button" onclick="window.sendOrder()" id="btn-submit-order" class="w-full bg-maleza-accent text-white font-bold text-base py-3.5 rounded-2xl shadow-lg active:scale-95 transition-transform">
+      <button type="button" onclick="window.sendOrder()" id="btn-submit-order" class="w-full bg-maleza-accent text-white font-bold text-base py-3.5 rounded-2xl shadow-lg active:scale-95 transition-transform cursor-pointer">
         Enviar Comanda a Cocina
       </button>
     </div>
@@ -296,7 +307,7 @@
           isCloud = true;
         }
       } catch (e) {
-        console.warn("Operando en Modo Local:", e);
+        console.warn("Modo Local Activo:", e);
       }
 
       const MENU_DATA = [
@@ -579,7 +590,7 @@
         list.innerHTML = cart.map(function(it, idx) {
           return '<div class="flex justify-between items-center p-2.5 bg-[#FAF9F5] rounded-xl border border-zinc-200 text-xs">' +
             '<div><strong>' + it.qty + 'x ' + it.name + '</strong> ($' + it.total + ') ' + (it.details ? '<p class="text-[10px] text-zinc-500">' + it.details + '</p>' : '') + '</div>' +
-            '<button type="button" onclick="window.removeCartItem(' + idx + ')" class="text-red-500 font-bold px-2">✕</button>' +
+            '<button type="button" onclick="window.removeCartItem(' + idx + ')" class="text-red-500 font-bold px-2 cursor-pointer">✕</button>' +
           '</div>';
         }).join('');
       }
@@ -623,24 +634,24 @@
         monitor.classList.remove('hidden');
         
         if (data.status === 'pending') {
-          monitor.className = 'fixed top-[68px] inset-x-4 max-w-md mx-auto z-40 bg-white rounded-2xl shadow-xl border-2 border-amber-400 p-4 transition-all';
+          monitor.className = 'fixed top-[78px] inset-x-4 max-w-md mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-amber-400 p-4 transition-all';
           badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-amber-100 text-amber-800';
           badge.textContent = 'PENDIENTE';
           msg.textContent = 'Tu pedido está en fila. Aún puedes hacer cambios si te equivocaste.';
-          actions.innerHTML = '<button type="button" onclick="window.modifyActiveOrder()" class="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold py-2.5 rounded-xl border border-zinc-300">Cancelar y Modificar</button>';
+          actions.innerHTML = '<button type="button" onclick="window.modifyActiveOrder()" class="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-semibold py-2.5 rounded-xl border border-zinc-300 active:scale-95 transition-transform cursor-pointer">✏️ Modificar Pedido</button>';
           actions.classList.remove('hidden');
         } else if (data.status === 'preparing') {
-          monitor.className = 'fixed top-[68px] inset-x-4 max-w-md mx-auto z-40 bg-white rounded-2xl shadow-xl border-2 border-blue-500 p-4 transition-all';
+          monitor.className = 'fixed top-[78px] inset-x-4 max-w-md mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-blue-500 p-4 transition-all';
           badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-blue-100 text-blue-800';
           badge.textContent = 'PREPARANDO';
           msg.textContent = '¡Ya estamos preparando tu pedido! Ya no es posible modificarlo desde aquí.';
           actions.classList.add('hidden');
         } else if (data.status === 'ready') {
-          monitor.className = 'fixed top-[68px] inset-x-4 max-w-md mx-auto z-40 bg-white rounded-2xl shadow-xl border-2 border-emerald-500 p-4 transition-all';
+          monitor.className = 'fixed top-[78px] inset-x-4 max-w-md mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-emerald-500 p-4 transition-all';
           badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-emerald-100 text-emerald-800';
           badge.textContent = 'LISTO';
           msg.textContent = '¡Tu pedido está listo! Te lo entregaremos en breve.';
-          actions.innerHTML = '<button type="button" onclick="window.dismissMonitor()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-2.5 rounded-xl shadow-md">Entendido</button>';
+          actions.innerHTML = '<button type="button" onclick="window.dismissMonitor()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-2.5 rounded-xl shadow-md cursor-pointer">Entendido</button>';
           actions.classList.remove('hidden');
         } else if (data.status === 'returned') {
           alert("La barra devolvió tu pedido para que puedas hacer modificaciones.");
@@ -655,28 +666,62 @@
       }
 
       window.modifyActiveOrder = async function() {
-        if (!activeClientOrderId || !activeClientOrderData) return;
-        const confirmModify = confirm("¿Deseas cancelar el pedido actual para modificarlo?");
-        if (!confirmModify) return;
-        
-        const backupItems = Array.isArray(activeClientOrderData.items) ? activeClientOrderData.items.slice() : [];
+        const orderId = activeClientOrderId || SafeStorage.getItem('maleza_active_order');
+        if (!orderId) {
+          alert("No se encontró una comanda activa para modificar.");
+          return;
+        }
 
-        if (isCloud && db) {
-          await db.collection("orders").doc(activeClientOrderId).update({ status: 'canceled' });
+        const confirmModify = confirm("¿Deseas editar tu comanda actual?");
+        if (!confirmModify) return;
+
+        let itemsToRestore = [];
+
+        if (activeClientOrderData && Array.isArray(activeClientOrderData.items)) {
+          itemsToRestore = activeClientOrderData.items.slice();
+        } else if (isCloud && db) {
+          try {
+            const docSnap = await db.collection("orders").doc(orderId).get();
+            if (docSnap.exists) {
+              const d = docSnap.data();
+              if (Array.isArray(d.items)) itemsToRestore = d.items.slice();
+            }
+          } catch (e) {
+            console.error("Error al recuperar pedido:", e);
+          }
         } else {
           const all = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
-          const o = all.find(function(x) { return x.id === activeClientOrderId; });
+          const o = all.find(function(x) { return x.id === orderId; });
+          if (o && Array.isArray(o.items)) itemsToRestore = o.items.slice();
+        }
+
+        if (isCloud && db) {
+          try {
+            await db.collection("orders").doc(orderId).update({ status: 'canceled' });
+          } catch (e) {
+            console.error("Error al cancelar orden previa:", e);
+          }
+        } else {
+          const all = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
+          const o = all.find(function(x) { return x.id === orderId; });
           if (o) {
             o.status = 'canceled';
             SafeStorage.setItem('maleza_orders', JSON.stringify(all));
           }
         }
-        
+
         document.getElementById('order-monitor').classList.add('hidden');
         SafeStorage.removeItem('maleza_active_order');
-        if (clientUnsubscribe) clientUnsubscribe();
+        activeClientOrderId = null;
+        activeClientOrderData = null;
+        if (clientUnsubscribe) {
+          clientUnsubscribe();
+          clientUnsubscribe = null;
+        }
 
-        cart = backupItems;
+        if (itemsToRestore.length > 0) {
+          cart = itemsToRestore;
+        }
         updateCartUI();
         window.openCartModal();
       };
@@ -909,16 +954,16 @@
           let buttonsHtml = '';
           if (isPend) {
             buttonsHtml = '<div class="grid grid-cols-2 gap-2">' +
-              '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'preparing\')" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs py-2 rounded-xl font-semibold">Iniciar Prep.</button>' +
-              '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'returned\')" class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs py-2 rounded-xl font-semibold">Devolver a Cliente</button>' +
+              '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'preparing\')" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs py-2 rounded-xl font-semibold cursor-pointer">Iniciar Prep.</button>' +
+              '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'returned\')" class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs py-2 rounded-xl font-semibold cursor-pointer">Devolver a Cliente</button>' +
             '</div>';
           } else if (isPrep) {
-            buttonsHtml = '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'ready\')" class="w-full bg-emerald-600 text-white text-xs py-2 rounded-xl font-semibold">Marcar Listo</button>';
+            buttonsHtml = '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'ready\')" class="w-full bg-emerald-600 text-white text-xs py-2 rounded-xl font-semibold cursor-pointer">Marcar Listo</button>';
           } else if (isArch || isCanc) {
             buttonsHtml = '<span class="block w-full text-center text-zinc-400 text-[11px] py-1.5 font-semibold">Historial (No interactivo)</span>';
           } else {
-            buttonsHtml = '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'archived\')" class="w-full text-zinc-500 border border-zinc-300 text-xs py-1.5 rounded-lg hover:bg-zinc-50 font-semibold mb-1">Archivar y Ocultar</button>' +
-              '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'preparing\')" class="w-full text-zinc-400 text-[10px] py-1">Reabrir</button>';
+            buttonsHtml = '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'archived\')" class="w-full text-zinc-500 border border-zinc-300 text-xs py-1.5 rounded-lg hover:bg-zinc-50 font-semibold mb-1 cursor-pointer">Archivar y Ocultar</button>' +
+              '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'preparing\')" class="w-full text-zinc-400 text-[10px] py-1 cursor-pointer">Reabrir</button>';
           }
 
           return '<div class="bg-white rounded-2xl border-2 ' + border + ' p-4 shadow-sm flex flex-col justify-between">' +
