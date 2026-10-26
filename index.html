@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maleza Café | Pedidos</title>
   
-  <!-- Tailwind CSS & Fuentes -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Firebase Compat Scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
 
@@ -46,7 +44,7 @@
 </head>
 <body class="text-zinc-800 antialiased pb-24 relative">
 
-  <!-- ================= BARRA SUPERIOR (VISTA CLIENTE) ================= -->
+  <!-- BARRA SUPERIOR CLIENTE -->
   <header id="client-header" class="sticky top-0 z-40 bg-[#F4F2EB]/90 backdrop-blur-md border-b border-[#E7E3D8] px-4 py-3.5">
     <div class="max-w-2xl mx-auto flex items-center justify-center relative">
       <div class="flex items-center space-x-2">
@@ -60,7 +58,7 @@
     </div>
   </header>
 
-  <!-- ================= MONITOR FLOTANTE (ESTATUS DEL CLIENTE) ================= -->
+  <!-- MONITOR FLOTANTE DE PEDIDO ACTIVO (CLIENTE) -->
   <div id="order-monitor" class="hidden fixed top-[72px] inset-x-4 max-w-md mx-auto z-40 bg-white rounded-2xl shadow-xl border-2 border-zinc-200 p-4 transition-all">
     <div class="flex items-center justify-between mb-2">
       <h3 class="font-serif font-bold text-maleza-dark text-lg">Estado de tu pedido</h3>
@@ -68,13 +66,13 @@
     </div>
     <p id="monitor-msg" class="text-xs text-zinc-600 mb-4">Tu pedido está en fila. Aún puedes hacer cambios si te equivocaste.</p>
     <div id="monitor-actions" class="flex gap-2">
-      <button onclick="modifyActiveOrder()" class="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold py-2.5 rounded-xl border border-zinc-300">
+      <button type="button" onclick="modifyActiveOrder()" class="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold py-2.5 rounded-xl border border-zinc-300">
         ✏️ Cancelar y Modificar
       </button>
     </div>
   </div>
 
-  <!-- ================= 1. VISTA CLIENTE ================= -->
+  <!-- 1. VISTA CLIENTE -->
   <main id="view-client" class="max-w-2xl mx-auto p-4 sm:p-6">
     <section class="py-6 sm:py-8 text-center flex flex-col items-center">
       <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-maleza-badge text-maleza-badgeText text-xs font-semibold tracking-wider uppercase mb-5">
@@ -98,21 +96,21 @@
       </div>
     </section>
 
-    <!-- Pestañas de categorías -->
+    <!-- Categorías -->
     <nav class="flex space-x-2 overflow-x-auto no-scrollbar pb-3 mb-5 text-xs font-semibold">
-      <button onclick="filterCategory('crepas', this)" class="cat-btn px-4 py-2.5 rounded-full bg-maleza text-white whitespace-nowrap shadow-sm">Crepas & Waffles</button>
-      <button onclick="filterCategory('banderillas', this)" class="cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200">Banderillas Coreanas</button>
-      <button onclick="filterCategory('especiales', this)" class="cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200">Lattes Especiales</button>
-      <button onclick="filterCategory('bubble', this)" class="cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200">Bubble Tea</button>
-      <button onclick="filterCategory('cafe', this)" class="cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200">Cafetería & Bebidas</button>
+      <button type="button" onclick="filterCategory('crepas', this)" class="cat-btn px-4 py-2.5 rounded-full bg-maleza text-white whitespace-nowrap shadow-sm">Crepas & Waffles</button>
+      <button type="button" onclick="filterCategory('banderillas', this)" class="cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200">Banderillas Coreanas</button>
+      <button type="button" onclick="filterCategory('especiales', this)" class="cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200">Lattes Especiales</button>
+      <button type="button" onclick="filterCategory('bubble', this)" class="cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200">Bubble Tea</button>
+      <button type="button" onclick="filterCategory('cafe', this)" class="cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200">Cafetería & Bebidas</button>
     </nav>
 
-    <!-- Grid de productos -->
+    <!-- Productos -->
     <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
 
-    <!-- Barra Carrito Flotante -->
+    <!-- Barra Flotante Carrito -->
     <div id="cart-float" class="hidden fixed bottom-5 inset-x-4 max-w-md mx-auto z-30">
-      <button onclick="openCartModal()" class="w-full bg-maleza-dark text-white p-4 rounded-2xl shadow-xl flex items-center justify-between border border-emerald-950/40">
+      <button type="button" onclick="openCartModal()" class="w-full bg-maleza-dark text-white p-4 rounded-2xl shadow-xl flex items-center justify-between border border-emerald-950/40">
         <div class="flex items-center space-x-3">
           <span id="cart-count" class="bg-maleza-accent text-white font-bold text-xs px-2.5 py-1 rounded-full">0</span>
           <span class="font-semibold text-sm">Ver Mi Comanda</span>
@@ -122,20 +120,20 @@
     </div>
   </main>
 
-  <!-- ================= PANTALLA DE BLOQUEO POR PIN (KDS) ================= -->
+  <!-- PANTALLA DE BLOQUEO POR PIN (KDS) -->
   <section id="kds-auth-screen" class="hidden min-h-screen flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-xl border border-zinc-200">
       <span class="w-12 h-12 bg-maleza/10 text-maleza flex items-center justify-center rounded-full mx-auto text-xl mb-3">🔒</span>
       <h3 class="font-serif font-bold text-xl text-maleza-dark">Acceso a Cocina / KDS</h3>
       <p class="text-xs text-zinc-500 mb-5">Ingresa el PIN de seguridad de la cafetería</p>
       <input type="password" id="kds-pin-input" maxlength="4" placeholder="••••" class="text-center tracking-widest text-2xl font-mono font-bold w-36 mx-auto bg-zinc-100 border border-zinc-300 rounded-xl py-2 mb-4 focus:outline-none focus:border-maleza">
-      <button onclick="unlockKDS()" class="w-full bg-maleza hover:bg-maleza-dark text-white font-semibold text-sm py-3 rounded-xl shadow-md transition-all">
+      <button type="button" onclick="unlockKDS()" class="w-full bg-maleza hover:bg-maleza-dark text-white font-semibold text-sm py-3 rounded-xl shadow-md transition-all">
         Ingresar al Tablero
       </button>
     </div>
   </section>
 
-  <!-- ================= 2. VISTA KDS PROTEGIDA (TABLET) ================= -->
+  <!-- 2. VISTA KDS PROTEGIDA (TABLET) -->
   <section id="view-tablet" class="hidden max-w-7xl mx-auto p-4">
     <div class="bg-white rounded-2xl p-4 mb-6 shadow-sm border border-zinc-200 flex flex-wrap items-center justify-between gap-4">
       <div>
@@ -146,19 +144,18 @@
         <div class="flex items-center gap-2 mt-1">
           <span id="kds-active-date-label" class="text-xs font-semibold text-maleza-dark">Viendo: Hoy</span>
           <span class="text-zinc-300">|</span>
-          <button onclick="openHistoryModal()" class="text-xs text-maleza-accent hover:underline font-semibold flex items-center gap-1">
+          <button type="button" onclick="openHistoryModal()" class="text-xs text-maleza-accent hover:underline font-semibold flex items-center gap-1">
             📅 Ver Historial / Otra Fecha
           </button>
         </div>
       </div>
 
       <div class="flex items-center flex-wrap gap-2.5">
-        <button onclick="exportCurrentOrdersCSV()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition-all">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-          Exportar Excel (CSV)
+        <button type="button" onclick="exportCurrentOrdersCSV()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition-all">
+          📥 Exportar Excel (CSV)
         </button>
 
-        <button onclick="handleShiftClosing()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition-all">
+        <button type="button" onclick="handleShiftClosing()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition-all">
           💼 Limpiar y Cerrar Turno
         </button>
 
@@ -167,13 +164,12 @@
           <span id="kds-sales-total" class="font-serif font-bold text-lg text-maleza-dark">$0.00</span>
         </div>
 
-        <button onclick="lockKDS()" title="Bloquear pantalla" class="bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-xs p-2.5 rounded-xl transition-all">
+        <button type="button" onclick="lockKDS()" title="Bloquear pantalla" class="bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-xs p-2.5 rounded-xl transition-all">
           🔒 Salir
         </button>
       </div>
     </div>
 
-    <!-- Tablero de Comandas -->
     <div id="kds-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
   </section>
 
@@ -185,7 +181,7 @@
           <h3 class="font-serif font-bold text-xl text-maleza-dark">Historial de Comandas</h3>
           <p class="text-xs text-zinc-500">Selecciona una fecha para ver sus ventas completas</p>
         </div>
-        <button onclick="closeHistoryModal()" class="text-zinc-400 hover:text-zinc-700 text-2xl leading-none">&times;</button>
+        <button type="button" onclick="closeHistoryModal()" class="text-zinc-400 hover:text-zinc-700 text-2xl leading-none">&times;</button>
       </div>
       <div class="space-y-4 mb-6">
         <div>
@@ -193,10 +189,10 @@
           <input type="date" id="history-date-picker" class="w-full bg-zinc-50 text-zinc-800 text-sm px-3 py-2.5 rounded-xl border border-zinc-200 focus:outline-none focus:border-maleza font-medium">
         </div>
         <div class="grid grid-cols-2 gap-2">
-          <button onclick="loadHistoryDate()" class="w-full bg-maleza text-white font-semibold text-xs py-3 rounded-xl hover:bg-maleza-dark transition-all">
+          <button type="button" onclick="loadHistoryDate()" class="w-full bg-maleza text-white font-semibold text-xs py-3 rounded-xl hover:bg-maleza-dark transition-all">
             🔍 Ver Comandas
           </button>
-          <button onclick="resetToToday()" class="w-full bg-zinc-100 text-zinc-700 font-semibold text-xs py-3 rounded-xl hover:bg-zinc-200 transition-all">
+          <button type="button" onclick="resetToToday()" class="w-full bg-zinc-100 text-zinc-700 font-semibold text-xs py-3 rounded-xl hover:bg-zinc-200 transition-all">
             Volver a Hoy
           </button>
         </div>
@@ -212,7 +208,7 @@
           <h3 id="modal-title" class="font-serif font-bold text-xl text-maleza-dark"></h3>
           <p id="modal-base-price" class="text-sm font-semibold text-maleza-accent"></p>
         </div>
-        <button onclick="closeCustomModal()" class="text-zinc-400 text-2xl leading-none">&times;</button>
+        <button type="button" onclick="closeCustomModal()" class="text-zinc-400 text-2xl leading-none">&times;</button>
       </div>
       <div id="modal-options-container" class="space-y-4 mb-6 text-sm"></div>
       <div class="border-t border-zinc-100 pt-4 flex items-center justify-between">
@@ -220,7 +216,7 @@
           <span class="text-xs text-zinc-400 block">Subtotal</span>
           <span id="modal-subtotal" class="font-serif font-bold text-xl text-maleza-dark">$0.00</span>
         </div>
-        <button onclick="confirmAddToCart()" class="bg-maleza hover:bg-maleza-dark text-white font-semibold text-sm px-6 py-3 rounded-xl shadow-md">
+        <button type="button" onclick="confirmAddToCart()" class="bg-maleza hover:bg-maleza-dark text-white font-semibold text-sm px-6 py-3 rounded-xl shadow-md">
           Agregar al Pedido
         </button>
       </div>
@@ -232,7 +228,7 @@
     <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[90vh] overflow-y-auto p-6 shadow-2xl">
       <div class="flex justify-between items-center border-b border-zinc-100 pb-3 mb-4">
         <h3 class="font-serif font-bold text-xl text-maleza-dark">Resumen de Comanda</h3>
-        <button onclick="closeCartModal()" class="text-zinc-400 text-2xl leading-none">&times;</button>
+        <button type="button" onclick="closeCartModal()" class="text-zinc-400 text-2xl leading-none">&times;</button>
       </div>
       <div id="cart-items-list" class="space-y-3 mb-6"></div>
       <div class="bg-zinc-50 p-4 rounded-2xl border border-zinc-200 mb-6">
@@ -255,16 +251,13 @@
         <span class="text-sm font-semibold text-zinc-600">Total a pagar:</span>
         <span id="cart-checkout-total" class="font-serif font-bold text-2xl text-maleza-accent">$0.00</span>
       </div>
-      <button onclick="sendOrder()" id="btn-submit-order" class="w-full bg-maleza-accent text-white font-bold text-base py-3.5 rounded-2xl shadow-lg">
+      <button type="button" onclick="sendOrder()" id="btn-submit-order" class="w-full bg-maleza-accent text-white font-bold text-base py-3.5 rounded-2xl shadow-lg">
         🛎️ Enviar Comanda a Cocina
       </button>
     </div>
   </div>
 
   <script>
-    // =========================================================================
-    // CONFIGURACIÓN DE FIREBASE
-    // =========================================================================
     const KDS_PIN = "1234";
 
     const firebaseConfig = {
@@ -291,10 +284,9 @@
         }
       }
     } catch (e) {
-      console.warn("Fallback a Modo Local");
+      console.warn("Modo Local Activo");
     }
 
-    // CATÁLOGO COMPLETO LÍMPIO (Sin referencias externas)
     const MENU_DATA = [
       { id: 'c1', cat: 'crepas', name: 'Crepa Dulce Sencilla', price: 50, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false },
       { id: 'c2', cat: 'crepas', name: 'Crepa Dulce Doble', price: 60, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false },
@@ -305,25 +297,38 @@
       { id: 'w1', cat: 'crepas', name: 'Waffle Belga Sencillo', price: 40, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false, isWaffle: true },
       { id: 'w2', cat: 'crepas', name: 'Waffle Belga Doble', price: 45, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false, isWaffle: true },
       { id: 'w3', cat: 'crepas', name: 'Waffle Belga Con Fruta', price: 50, desc: '1 o 2 bases + 1 fruta', type: 'crepa', maxBases: 2, hasFruit: true, isWaffle: true },
-      { id: 'b1', cat: 'banderillas', name: 'Monstera Deliciosa', desc: 'Cubierta de papa en cubos + panko', type: 'banderilla', prices: { Salchicha: 70, 'Queso manchego': 80, Combinada: 75 } },
-      { id: 'b2', cat: 'banderillas', name: 'Monstera Thai', desc: 'Cubierta con ramen crocante + panko', type: 'banderilla', prices: { Salchicha: 65, 'Queso manchego': 75, Combinada: 70 } },
-      { id: 'b3', cat: 'banderillas', name: 'Monstera Fuego', desc: 'Empanizado especial flaming crunch', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },
-      { id: 'b4', cat: 'banderillas', name: 'Monstera Clásica', desc: 'Rebozado dorado tradicional con panko', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },
-      { id: 'b5', cat: 'banderillas', name: 'Monstera Mexicheese', desc: 'Empanizado con queso jalapeño', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },
+      { id: 'w4', cat: 'crepas', name: 'Waffle Salado Clásico', price: 50, desc: 'Jamón y queso manchego', type: 'simple' },
+      { id: 'w5', cat: 'crepas', name: 'Waffle Salado Peperoni', price: 50, desc: 'Peperoni y queso manchego', type: 'simple' },
+      { id: 'w6', cat: 'crepas', name: 'Waffle Salado Hawaiano', price: 55, desc: 'Jamón, queso manchego y piña', type: 'simple' },
+      { id: 'b1', cat: 'banderillas', name: 'Monstera Deliciosa', desc: 'Cubierta de papa en cubos + panko', type: 'banderilla', prices: { 'Salchicha': 70, 'Queso manchego': 80, 'Combinada': 75 } },
+      { id: 'b2', cat: 'banderillas', name: 'Monstera Thai', desc: 'Cubierta con ramen crocante + panko', type: 'banderilla', prices: { 'Salchicha': 65, 'Queso manchego': 75, 'Combinada': 70 } },
+      { id: 'b3', cat: 'banderillas', name: 'Monstera Fuego', desc: 'Empanizado especial flaming crunch', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },
+      { id: 'b4', cat: 'banderillas', name: 'Monstera Clásica', desc: 'Rebozado dorado tradicional con panko', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },
+      { id: 'b5', cat: 'banderillas', name: 'Monstera Mexicheese', desc: 'Empanizado con queso jalapeño', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },
       { id: 'e1', cat: 'especiales', name: 'Areca (Coconut Latte)', price: 70, desc: 'Fría, espresso, leche cremosa y coco', type: 'simple' },
-      { id: 'e2', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 80, desc: 'Fría, matcha, leche y fresa', type: 'simple' },
+      { id: 'e2', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 80, desc: 'Fría, matcha, leche cremosa y fresa', type: 'simple' },
       { id: 'e3', cat: 'especiales', name: 'Magnolia (Chocolate Latte)', price: 80, desc: 'Fría, espresso, leche y cold foam de chocolate', type: 'simple' },
-      { id: 'bt1', cat: 'bubble', name: 'Jacaranda (Taro Milk Tea)', price: 60, desc: 'Leche, taro, té negro y tapioca', type: 'bubble' },
-      { id: 'bt2', cat: 'bubble', name: 'Helecho (Matcha Milk Tea)', price: 60, desc: 'Leche, matcha, té negro y tapioca', type: 'bubble' },
-      { id: 'bt3', cat: 'bubble', name: 'Canela (Chai Milk Tea)', price: 60, desc: 'Leche, chai, té negro y tapioca', type: 'bubble' },
-      { id: 'bt4', cat: 'bubble', name: 'Palmera (Coco Milk Tea)', price: 70, desc: 'Leche, coco, té negro y tapioca', type: 'bubble' },
-      { id: 'bt5', cat: 'bubble', name: 'Alocasia (Cookies & Cream)', price: 70, desc: 'Leche, oreo, té negro y tapioca', type: 'bubble' },
-      { id: 'bt6', cat: 'bubble', name: 'Girasol (Mango Tea)', price: 70, desc: 'Té negro, infusión mango y tapioca', type: 'bubble' },
-      { id: 'bt7', cat: 'bubble', name: 'Diente de León (Maracuyá)', price: 70, desc: 'Té negro, maracuyá y tapioca', type: 'bubble' },
+      { id: 'e4', cat: 'especiales', name: 'Latte de Sabor Caliente', price: 65, desc: 'Caramelo, Vainilla, Avellana o Crema Irlandesa', type: 'simple' },
+      { id: 'e5', cat: 'especiales', name: 'Latte de Sabor Frío', price: 70, desc: 'Caramelo, Vainilla, Avellana o Crema Irlandesa', type: 'simple' },
+      { id: 'bt1', cat: 'bubble', name: 'Jacaranda (Taro Milk Tea)', price: 60, desc: 'Sabor taro, leche, té negro y tapioca', type: 'bubble' },
+      { id: 'bt2', cat: 'bubble', name: 'Helecho (Matcha Milk Tea)', price: 60, desc: 'Sabor matcha, leche, té negro y tapioca', type: 'bubble' },
+      { id: 'bt3', cat: 'bubble', name: 'Canela (Chai Milk Tea)', price: 60, desc: 'Sabor chai, leche, té negro y tapioca', type: 'bubble' },
+      { id: 'bt4', cat: 'bubble', name: 'Palmera (Coco Milk Tea)', price: 70, desc: 'Sabor coco, leche, té negro y tapioca', type: 'bubble' },
+      { id: 'bt5', cat: 'bubble', name: 'Alocasia (Cookies & Cream)', price: 70, desc: 'Cookies and cream, leche, té negro y tapioca', type: 'bubble' },
+      { id: 'bt6', cat: 'bubble', name: 'Dalia (Moka Milk Tea)', price: 70, desc: 'Sabor moka, leche, té negro y tapioca', type: 'bubble' },
+      { id: 'bt7', cat: 'bubble', name: 'Girasol (Mango Tea)', price: 70, desc: 'Sabor mango, té negro y tapioca', type: 'bubble' },
+      { id: 'bt8', cat: 'bubble', name: 'Diente de León (Maracuyá)', price: 70, desc: 'Sabor maracuyá, té negro y tapioca', type: 'bubble' },
+      { id: 'bt9', cat: 'bubble', name: 'Malus (Manzana Verde)', price: 70, desc: 'Sabor manzana verde, té negro y tapioca', type: 'bubble' },
       { id: 'cf1', cat: 'cafe', name: 'Capuchino Clásico', price: 50, desc: 'Espresso con espuma de leche', type: 'simple' },
       { id: 'cf2', cat: 'cafe', name: 'Café Americano', price: 45, desc: 'Extracción fresca de grano americano', type: 'simple' },
-      { id: 'cf3', cat: 'cafe', name: 'Frappé Moka / Caramelo', price: 60, desc: 'Frappé cremoso con crema batida', type: 'simple' },
-      { id: 'cf4', cat: 'cafe', name: 'Soda Italiana Frutos Rojos', price: 60, desc: 'Soda artesanal con frutos rojos', type: 'simple' }
+      { id: 'cf3', cat: 'cafe', name: 'Café Lechero', price: 55, desc: 'Café tradicional con leche', type: 'simple' },
+      { id: 'cf4', cat: 'cafe', name: 'Latte Clásico', price: 50, desc: 'Espresso con leche vaporizada', type: 'simple' },
+      { id: 'cf5', cat: 'cafe', name: 'Mocha Caliente', price: 55, desc: 'Espresso, chocolate y leche', type: 'simple' },
+      { id: 'cf6', cat: 'cafe', name: 'Frappé Clásico (Oreo/Moka/Chai)', price: 60, desc: 'Frappé cremoso a elegir', type: 'simple' },
+      { id: 'cf7', cat: 'cafe', name: 'Frappé Especial (Café/Matcha)', price: 70, desc: 'Frappé de café o matcha', type: 'simple' },
+      { id: 'cf8', cat: 'cafe', name: 'Soda Italiana / Refresh', price: 60, desc: 'Mora azul, Manzana verde, Frutos rojos o Maracuyá', type: 'simple' },
+      { id: 'cf9', cat: 'cafe', name: 'Malteada / Smoothie', price: 60, desc: 'Fresa, Vainilla, Chocolate, Coco o Mango', type: 'simple' },
+      { id: 'cf10', cat: 'cafe', name: 'Esquimo Tradicional', price: 40, desc: 'Café, Chocolate, Vainilla, Fresa, Moka o Taro', type: 'simple' }
     ];
 
     let cart = [];
@@ -331,7 +336,6 @@
     let currentCustomItem = null;
     let kdsUnsubscribe = null;
 
-    // FECHA LOCAL EXACTA
     function getLocalDateString(d = new Date()) {
       const tzOffset = d.getTimezoneOffset() * 60000;
       return new Date(d.getTime() - tzOffset).toISOString().slice(0, 10);
@@ -342,9 +346,6 @@
     const urlParams = new URLSearchParams(window.location.search);
     const isKdsRequested = urlParams.has('kds');
 
-    // =========================================================================
-    // LÓGICA DE INICIO (CLIENTE Y KDS)
-    // =========================================================================
     if (isKdsRequested) {
       document.getElementById('client-header').classList.add('hidden');
       document.getElementById('view-client').classList.add('hidden');
@@ -358,7 +359,6 @@
       checkActiveClientOrder();
     }
 
-    // Funciones PIN KDS
     window.unlockKDS = function() {
       const pin = document.getElementById('kds-pin-input').value;
       if (pin === KDS_PIN) {
@@ -370,6 +370,7 @@
         document.getElementById('kds-pin-input').value = "";
       }
     };
+    
     window.lockKDS = function() {
       sessionStorage.removeItem('maleza_kds_unlocked');
       location.reload();
@@ -381,9 +382,6 @@
       startKDSListener(selectedKdsDateStr);
     }
 
-    // =========================================================================
-    // LÓGICA DEL MONITOR DEL CLIENTE
-    // =========================================================================
     let activeClientOrderId = null;
     let activeClientOrderData = null;
     let clientUnsubscribe = null;
@@ -397,6 +395,7 @@
 
     function listenToActiveClientOrder(orderId) {
       if (isCloud && db) {
+        if (clientUnsubscribe) clientUnsubscribe();
         clientUnsubscribe = db.collection("orders").doc(orderId).onSnapshot(doc => {
           if (doc.exists) {
             handleClientStatusChange(doc.id, doc.data());
@@ -430,7 +429,7 @@
         badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-amber-100 text-amber-800';
         badge.textContent = '⏳ PENDIENTE';
         msg.textContent = 'Tu pedido está en fila. Aún puedes hacer cambios si te equivocaste.';
-        actions.innerHTML = `<button onclick="modifyActiveOrder()" class="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold py-2.5 rounded-xl border border-zinc-300">✏️ Cancelar y Modificar</button>`;
+        actions.innerHTML = '<button type="button" onclick="modifyActiveOrder()" class="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold py-2.5 rounded-xl border border-zinc-300">✏️ Cancelar y Modificar</button>';
         actions.classList.remove('hidden');
       } 
       else if (data.status === 'preparing') {
@@ -445,12 +444,12 @@
         badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-emerald-100 text-emerald-800';
         badge.textContent = '✓ LISTO';
         msg.textContent = '¡Tu pedido está listo! Te lo entregaremos en breve.';
-        actions.innerHTML = `<button onclick="dismissMonitor()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-2.5 rounded-xl shadow-md">¡Entendido!</button>`;
+        actions.innerHTML = '<button type="button" onclick="dismissMonitor()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-2.5 rounded-xl shadow-md">¡Entendido!</button>';
         actions.classList.remove('hidden');
       }
       else if (data.status === 'returned') {
         alert("La barra devolvió tu pedido para que puedas hacer modificaciones.");
-        cart = data.items;
+        cart = Array.isArray(data.items) ? [...data.items] : [];
         updateCartUI();
         openCartModal();
         
@@ -465,6 +464,8 @@
       const confirmModify = confirm("¿Deseas cancelar el pedido actual para modificarlo?");
       if (!confirmModify) return;
       
+      const backupItems = Array.isArray(activeClientOrderData.items) ? [...activeClientOrderData.items] : [];
+
       if (isCloud && db) {
         await db.collection("orders").doc(activeClientOrderId).update({ status: 'canceled' });
       } else {
@@ -476,7 +477,11 @@
         }
       }
       
-      cart = activeClientOrderData.items;
+      document.getElementById('order-monitor').classList.add('hidden');
+      localStorage.removeItem('maleza_active_order');
+      if (clientUnsubscribe) clientUnsubscribe();
+
+      cart = backupItems;
       updateCartUI();
       openCartModal();
     };
@@ -485,11 +490,8 @@
       document.getElementById('order-monitor').classList.add('hidden');
       localStorage.removeItem('maleza_active_order');
       if (clientUnsubscribe) clientUnsubscribe();
-    }
+    };
 
-    // =========================================================================
-    // ENVIAR COMANDA DESDE CELULAR
-    // =========================================================================
     window.sendOrder = async function() {
       const name = document.getElementById('client-name').value.trim();
       if (!name) return alert("Por favor escribe tu nombre o número de mesa.");
@@ -542,9 +544,6 @@
       }
     };
 
-    // =========================================================================
-    // ESCUCHA EN TIEMPO REAL KDS
-    // =========================================================================
     function startKDSListener(targetDateStr) {
       if (kdsUnsubscribe) kdsUnsubscribe();
 
@@ -575,7 +574,6 @@
       }
     }
 
-    // Modal Historial
     window.openHistoryModal = () => document.getElementById('history-modal').classList.remove('hidden');
     window.closeHistoryModal = () => document.getElementById('history-modal').classList.add('hidden');
 
@@ -586,6 +584,7 @@
       startKDSListener(selectedKdsDateStr);
       closeHistoryModal();
     };
+    
     window.resetToToday = function() {
       selectedKdsDateStr = getLocalDateString();
       document.getElementById('history-date-picker').value = selectedKdsDateStr;
@@ -593,16 +592,15 @@
       closeHistoryModal();
     };
 
-    // Cierre de Turno
     window.handleShiftClosing = function() {
       const validOrders = orders.filter(o => o.status !== 'canceled' && o.status !== 'returned');
       if (validOrders.length === 0) return alert("No hay comandas válidas registradas en esta fecha para realizar corte.");
 
       const totalShift = validOrders.reduce((s, o) => s + (o.total || 0), 0);
-      const confirmClose = confirm(`¿Limpiar tablero y hacer corte?\n\n• Total del día: $${totalShift.toFixed(2)}\n• Comandas: ${validOrders.length}`);
+      const confirmClose = confirm("¿Limpiar tablero y hacer corte?\n\nTotal: $" + totalShift.toFixed(2) + "\nComandas: " + validOrders.length);
       if (!confirmClose) return;
 
-      exportCurrentOrdersCSV(`Corte_Caja_Maleza_${selectedKdsDateStr}.csv`);
+      exportCurrentOrdersCSV("Corte_Caja_Maleza_" + selectedKdsDateStr + ".csv");
 
       if (isCloud && db) {
         const batch = db.batch();
@@ -611,7 +609,7 @@
             batch.update(db.collection("orders").doc(o.id), { status: 'archived' });
           }
         });
-        batch.commit().then(() => alert("¡Tablero limpio!")).catch(console.error);
+        batch.commit().then(() => alert("Tablero limpio.")).catch(console.error);
       } else {
         const all = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
         all.forEach(o => {
@@ -619,7 +617,7 @@
         });
         localStorage.setItem('maleza_orders', JSON.stringify(all));
         startKDSListener(selectedKdsDateStr);
-        alert("¡Tablero limpio!");
+        alert("Tablero limpio.");
       }
     };
 
@@ -647,9 +645,6 @@
       link.click();
     };
 
-    // =========================================================================
-    // RENDERIZADO KDS (Filtrando Cancelados)
-    // =========================================================================
     function renderKDS() {
       const grid = document.getElementById('kds-grid');
       const totalEl = document.getElementById('kds-sales-total');
@@ -707,16 +702,16 @@
               </div>
               ${isPend ? `
                 <div class="grid grid-cols-2 gap-2">
-                  <button onclick="updateOrderStatus('${o.id}', 'preparing')" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs py-2 rounded-xl font-semibold">Iniciar Prep.</button>
-                  <button onclick="updateOrderStatus('${o.id}', 'returned')" class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs py-2 rounded-xl font-semibold">Devolver a Cliente</button>
+                  <button type="button" onclick="updateOrderStatus('${o.id}', 'preparing')" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs py-2 rounded-xl font-semibold">Iniciar Prep.</button>
+                  <button type="button" onclick="updateOrderStatus('${o.id}', 'returned')" class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs py-2 rounded-xl font-semibold">Devolver a Cliente</button>
                 </div>
               ` : isPrep ? `
-                <button onclick="updateOrderStatus('${o.id}', 'ready')" class="w-full bg-emerald-600 text-white text-xs py-2 rounded-xl font-semibold">Marcar Listo</button>
+                <button type="button" onclick="updateOrderStatus('${o.id}', 'ready')" class="w-full bg-emerald-600 text-white text-xs py-2 rounded-xl font-semibold">Marcar Listo</button>
               ` : isArch || isCanc ? `
                 <span class="block w-full text-center text-zinc-400 text-[11px] py-1.5 font-semibold">Historial (No interactivo)</span>
               ` : `
-                <button onclick="updateOrderStatus('${o.id}', 'archived')" class="w-full text-zinc-500 border border-zinc-300 text-xs py-1.5 rounded-lg hover:bg-zinc-50 font-semibold mb-1">Archivar y Ocultar</button>
-                <button onclick="updateOrderStatus('${o.id}', 'preparing')" class="w-full text-zinc-400 text-[10px] py-1">Reabrir</button>
+                <button type="button" onclick="updateOrderStatus('${o.id}', 'archived')" class="w-full text-zinc-500 border border-zinc-300 text-xs py-1.5 rounded-lg hover:bg-zinc-50 font-semibold mb-1">Archivar y Ocultar</button>
+                <button type="button" onclick="updateOrderStatus('${o.id}', 'preparing')" class="w-full text-zinc-400 text-[10px] py-1">Reabrir</button>
               `}
             </div>
           </div>
@@ -724,9 +719,6 @@
       }).join('');
     }
 
-    // =========================================================================
-    // FUNCIONES DEL MENÚ Y CARRITO 
-    // =========================================================================
     window.filterCategory = function(cat, btn) {
       document.querySelectorAll('.cat-btn').forEach(b => b.className = 'cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200');
       btn.className = 'cat-btn px-4 py-2.5 rounded-full bg-maleza text-white whitespace-nowrap shadow-sm';
@@ -735,6 +727,7 @@
 
     function renderProducts(cat = 'crepas') {
       const grid = document.getElementById('products-grid');
+      if (!grid) return;
       grid.innerHTML = MENU_DATA.filter(p => p.cat === cat).map(p => `
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-zinc-200 flex flex-col justify-between">
           <div>
@@ -744,7 +737,7 @@
             </div>
             <p class="text-xs text-zinc-500 mb-3">${p.desc}</p>
           </div>
-          <button onclick="handleProductClick('${p.id}')" class="w-full bg-[#F4F2EB] hover:bg-maleza hover:text-white text-zinc-700 text-xs font-semibold py-2 rounded-xl transition-colors">
+          <button type="button" onclick="handleProductClick('${p.id}')" class="w-full bg-[#F4F2EB] hover:bg-maleza hover:text-white text-zinc-700 text-xs font-semibold py-2 rounded-xl transition-colors">
             ${p.type === 'simple' ? 'Agregar al Pedido' : 'Personalizar +'}
           </button>
         </div>
@@ -766,22 +759,23 @@
       const c = document.getElementById('modal-options-container');
       c.innerHTML = '';
 
-      if (item.type === 'crepa') renderCrepaOptions(item, c);
-      else if (item.type === 'banderilla') {
+      if (item.type === 'crepa') {
+        renderCrepaOptions(item, c);
+      } else if (item.type === 'banderilla') {
         document.getElementById('modal-base-price').textContent = "Selecciona relleno:";
-        let html = `<div class="space-y-1">`;
+        let html = '<div class="space-y-1.5">';
         Object.entries(item.prices).forEach(([r, p], i) => {
-          html += `<label class="flex justify-between p-3 rounded-xl border border-zinc-200 cursor-pointer hover:border-maleza">
-              <span class="text-xs font-semibold"><input type="radio" name="opt_band" value="${r}" data-p="${p}" ${i===0?'checked':''} onchange="updateBanderillaSubtotal()"> ${r}</span>
+          html += `<label class="flex justify-between items-center p-3 rounded-xl border border-zinc-200 cursor-pointer hover:border-maleza">
+              <span class="text-xs font-semibold flex items-center gap-2"><input type="radio" name="opt_band" value="${r}" data-p="${p}" ${i===0?'checked':''} onchange="updateBanderillaSubtotal()"> ${r}</span>
               <span class="font-bold text-xs text-maleza">$${p}</span></label>`;
         });
-        html += `</div>`;
+        html += '</div>';
+        html += `<div class="mt-3"><label class="flex items-center justify-between p-3 rounded-xl border border-zinc-200 cursor-pointer"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" id="band_extra" onchange="updateBanderillaSubtotal()"> Ingrediente extra</span><span class="font-bold text-xs text-maleza-accent">+$15</span></label></div>`;
         c.innerHTML = html;
         updateBanderillaSubtotal();
       } else if (item.type === 'bubble') {
         document.getElementById('modal-base-price').textContent = `Precio: $${item.price}`;
-        c.innerHTML = `<label class="flex items-center gap-2 p-3 rounded-xl border border-zinc-200 text-xs font-semibold cursor-pointer">
-            <input type="checkbox" id="bubble_extra" onchange="updateBubbleSubtotal()"> <span>Tapioca / Ingrediente extra (+$15)</span></label>`;
+        c.innerHTML = '<label class="flex items-center justify-between p-3 rounded-xl border border-zinc-200 text-xs font-semibold cursor-pointer"><span class="flex items-center gap-2"><input type="checkbox" id="bubble_extra" onchange="updateBubbleSubtotal()"> Tapioca / Ingrediente extra</span><span class="font-bold text-maleza-accent">+$15</span></label>';
         document.getElementById('modal-subtotal').textContent = `$${item.price.toFixed(2)}`;
       }
       document.getElementById('custom-modal').classList.remove('hidden');
@@ -791,8 +785,16 @@
       document.getElementById('modal-base-price').textContent = `Precio base: $${item.price}`;
       const bases = ['Crema de avellanas', 'Mermelada fresa', 'Mermelada zarzamora', 'Cajeta', 'Lechera', 'Philadelphia'];
       const frutas = ['Fresa', 'Plátano', 'Durazno'];
-      const toppings = [{ name: 'Nuez', cost: 10 }, { name: 'Chispas de chocolate', cost: 10 }, { name: 'Oreo', cost: 10 }, { name: 'Fruta extra', cost: 10 }, { name: 'Ingrediente extra', cost: 10 }];
-      if (item.isWaffle) toppings.push({ name: 'Bola de helado', cost: 15 });
+      const toppings = [
+        { name: 'Nuez', cost: 10 },
+        { name: 'Chispas de chocolate', cost: 10 },
+        { name: 'Oreo', cost: 10 },
+        { name: 'Fruta extra', cost: 10 },
+        { name: 'Ingrediente extra', cost: 10 }
+      ];
+      if (item.isWaffle) {
+        toppings.push({ name: 'Bola de helado', cost: 15 });
+      }
 
       let html = `<div><label class="font-semibold block text-xs text-zinc-700 mb-1">Elige tus bases (Máximo ${item.maxBases}):</label><div class="grid grid-cols-2 gap-1.5 text-xs">
             ${bases.map(b => `<label class="flex items-center gap-2 p-2 rounded-lg bg-zinc-50 border border-zinc-200 cursor-pointer"><input type="checkbox" name="opt_base" value="${b}" onchange="checkMaxBases(${item.maxBases}, this)"><span>${b}</span></label>`).join('')}</div></div>`;
@@ -812,20 +814,28 @@
         if (currentCheckbox) currentCheckbox.checked = false;
       }
     };
+    
     window.updateCrepaSubtotal = function() {
       let total = currentCustomItem.price || 0;
       document.querySelectorAll('input[name="opt_topping"]:checked').forEach(cb => total += parseInt(cb.dataset.cost));
       document.getElementById('modal-subtotal').textContent = `$${total.toFixed(2)}`;
     };
+    
     window.updateBanderillaSubtotal = function() {
       const b = document.querySelector('input[name="opt_band"]:checked');
-      if (b) document.getElementById('modal-subtotal').textContent = `$${parseInt(b.dataset.p).toFixed(2)}`;
-    };
-    window.updateBubbleSubtotal = function() {
-      let total = currentCustomItem.price || 0;
-      if (document.getElementById('bubble_extra') && document.getElementById('bubble_extra').checked) total += 15;
+      let total = b ? parseInt(b.dataset.p) : 0;
+      const ex = document.getElementById('band_extra');
+      if (ex && ex.checked) total += 15;
       document.getElementById('modal-subtotal').textContent = `$${total.toFixed(2)}`;
     };
+    
+    window.updateBubbleSubtotal = function() {
+      let total = currentCustomItem.price || 0;
+      const ex = document.getElementById('bubble_extra');
+      if (ex && ex.checked) total += 15;
+      document.getElementById('modal-subtotal').textContent = `$${total.toFixed(2)}`;
+    };
+    
     window.confirmAddToCart = function() {
       let details = [], price = currentCustomItem.price || 0;
       if (currentCustomItem.type === 'crepa') {
@@ -838,8 +848,11 @@
       } else if (currentCustomItem.type === 'banderilla') {
         const b = document.querySelector('input[name="opt_band"]:checked');
         if (b) { price = parseInt(b.dataset.p); details.push(`Relleno: ${b.value}`); }
+        const ex = document.getElementById('band_extra');
+        if (ex && ex.checked) { price += 15; details.push("Con ingrediente extra"); }
       } else if (currentCustomItem.type === 'bubble') {
-        if (document.getElementById('bubble_extra').checked) { price += 15; details.push("Con extra tapioca"); }
+        const ex = document.getElementById('bubble_extra');
+        if (ex && ex.checked) { price += 15; details.push("Con extra tapioca"); }
       }
       cart.push({ id: currentCustomItem.id, name: currentCustomItem.name, price: price, total: price, qty: 1, details: details.join(' | ') });
       closeCustomModal();
@@ -865,7 +878,7 @@
       list.innerHTML = cart.map((it, idx) => `
         <div class="flex justify-between items-center p-2.5 bg-[#FAF9F5] rounded-xl border border-zinc-200 text-xs">
           <div><strong>${it.qty}x ${it.name}</strong> ($${it.total}) ${it.details ? `<p class="text-[10px] text-zinc-500">${it.details}</p>` : ''}</div>
-          <button onclick="cart.splice(${idx},1);updateCartUI();renderCartModalItems();" class="text-red-500 font-bold px-2">✕</button>
+          <button type="button" onclick="cart.splice(${idx},1);updateCartUI();renderCartModalItems();" class="text-red-500 font-bold px-2">✕</button>
         </div>
       `).join('');
     }
