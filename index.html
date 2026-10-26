@@ -44,7 +44,7 @@
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="text-zinc-800 antialiased pb-24">
+<body class="text-zinc-800 antialiased pb-24 relative">
 
   <!-- ================= BARRA SUPERIOR (VISTA CLIENTE) ================= -->
   <header id="client-header" class="sticky top-0 z-40 bg-[#F4F2EB]/90 backdrop-blur-md border-b border-[#E7E3D8] px-4 py-3.5">
@@ -55,10 +55,24 @@
             <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-12 5 4-2 9-1 11-1-1 4-5 7-9 8 3-1 6-3 8-6-3 2-6 3-9 3-2 0-3.5-1-4-2 3-1 6-4 8-7z"/>
           </svg>
         </span>
-        <h1 class="font-serif font-bold text-2xl text-maleza-dark tracking-tight">maleza</h1>
+        <h1 class="font-serif font-bold text-2xl text-maleza-dark tracking-tight">maleza.cafe</h1>
       </div>
     </div>
   </header>
+
+  <!-- ================= MONITOR FLOTANTE (ESTATUS DEL CLIENTE) ================= -->
+  <div id="order-monitor" class="hidden fixed top-[72px] inset-x-4 max-w-md mx-auto z-40 bg-white rounded-2xl shadow-xl border-2 border-zinc-200 p-4 transition-all">
+    <div class="flex items-center justify-between mb-2">
+      <h3 class="font-serif font-bold text-maleza-dark text-lg">Estado de tu pedido</h3>
+      <span id="monitor-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">⏳ PENDIENTE</span>
+    </div>
+    <p id="monitor-msg" class="text-xs text-zinc-600 mb-4">Tu pedido está en fila. Aún puedes hacer cambios si te equivocaste.</p>
+    <div id="monitor-actions" class="flex gap-2">
+      <button onclick="modifyActiveOrder()" class="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold py-2.5 rounded-xl border border-zinc-300">
+        ✏️ Cancelar y Modificar
+      </button>
+    </div>
+  </div>
 
   <!-- ================= 1. VISTA CLIENTE ================= -->
   <main id="view-client" class="max-w-2xl mx-auto p-4 sm:p-6">
@@ -114,9 +128,7 @@
       <span class="w-12 h-12 bg-maleza/10 text-maleza flex items-center justify-center rounded-full mx-auto text-xl mb-3">🔒</span>
       <h3 class="font-serif font-bold text-xl text-maleza-dark">Acceso a Cocina / KDS</h3>
       <p class="text-xs text-zinc-500 mb-5">Ingresa el PIN de seguridad de la cafetería</p>
-      
       <input type="password" id="kds-pin-input" maxlength="4" placeholder="••••" class="text-center tracking-widest text-2xl font-mono font-bold w-36 mx-auto bg-zinc-100 border border-zinc-300 rounded-xl py-2 mb-4 focus:outline-none focus:border-maleza">
-      
       <button onclick="unlockKDS()" class="w-full bg-maleza hover:bg-maleza-dark text-white font-semibold text-sm py-3 rounded-xl shadow-md transition-all">
         Ingresar al Tablero
       </button>
@@ -146,7 +158,6 @@
           Exportar Excel (CSV)
         </button>
 
-        <!-- Botón de limpieza de turno -->
         <button onclick="handleShiftClosing()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition-all">
           💼 Limpiar y Cerrar Turno
         </button>
@@ -172,17 +183,15 @@
       <div class="flex justify-between items-center border-b border-zinc-100 pb-3 mb-4">
         <div>
           <h3 class="font-serif font-bold text-xl text-maleza-dark">Historial de Comandas</h3>
-          <p class="text-xs text-zinc-500">Selecciona una fecha para ver sus ventas completas</p>
+          <p class="text-xs text-zinc-500">Selecciona una fecha para ver sus ventas</p>
         </div>
         <button onclick="closeHistoryModal()" class="text-zinc-400 hover:text-zinc-700 text-2xl leading-none">&times;</button>
       </div>
-
       <div class="space-y-4 mb-6">
         <div>
           <label class="block text-xs font-semibold text-zinc-600 mb-1">Fecha a consultar:</label>
           <input type="date" id="history-date-picker" class="w-full bg-zinc-50 text-zinc-800 text-sm px-3 py-2.5 rounded-xl border border-zinc-200 focus:outline-none focus:border-maleza font-medium">
         </div>
-
         <div class="grid grid-cols-2 gap-2">
           <button onclick="loadHistoryDate()" class="w-full bg-maleza text-white font-semibold text-xs py-3 rounded-xl hover:bg-maleza-dark transition-all">
             🔍 Ver Comandas
@@ -253,10 +262,11 @@
   </div>
 
   <script>
-    // PIN KDS
+    // =========================================================================
+    // CONFIGURACIÓN DE FIREBASE
+    // =========================================================================
     const KDS_PIN = "1234";
 
-    // FIREBASE CONFIG INTEGRADA
     const firebaseConfig = {
       apiKey: "AIzaSyC-R4TAHZqtW4jU-mKrvEWOhJiQq1Z5raQ",
       authDomain: "maleza-cafe.firebaseapp.com",
@@ -281,12 +291,7 @@
         }
       }
     } catch (e) {
-      console.warn("Fallback a Modo Local:", e);
-      const b = document.getElementById('cloud-badge');
-      if (b) {
-        b.textContent = 'Modo Local (Pruebas)';
-        b.className = 'text-[11px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-medium';
-      }
+      console.warn("Fallback a Modo Local");
     }
 
     // CATÁLOGO COMPLETO
@@ -297,21 +302,17 @@
       { id: 'c4', cat: 'crepas', name: 'Crepa Salada Clásica', price: 60, desc: 'Jamón y queso manchego', type: 'simple' },
       { id: 'c5', cat: 'crepas', name: 'Crepa Salada Peperoni', price: 60, desc: 'Peperoni y queso manchego', type: 'simple' },
       { id: 'c6', cat: 'crepas', name: 'Crepa Salada Hawaiana', price: 70, desc: 'Jamón, queso manchego y piña', type: 'simple' },
-
       { id: 'w1', cat: 'crepas', name: 'Waffle Belga Sencillo', price: 40, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false, isWaffle: true },
       { id: 'w2', cat: 'crepas', name: 'Waffle Belga Doble', price: 45, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false, isWaffle: true },
       { id: 'w3', cat: 'crepas', name: 'Waffle Belga Con Fruta', price: 50, desc: '1 o 2 bases + 1 fruta', type: 'crepa', maxBases: 2, hasFruit: true, isWaffle: true },
-
       { id: 'b1', cat: 'banderillas', name: 'Monstera Deliciosa', desc: 'Cubierta de papa en cubos + panko', type: 'banderilla', prices: { Salchicha: 70, 'Queso manchego': 80, Combinada: 75 } },
       { id: 'b2', cat: 'banderillas', name: 'Monstera Thai', desc: 'Cubierta con ramen crocante + panko', type: 'banderilla', prices: { Salchicha: 65, 'Queso manchego': 75, Combinada: 70 } },
       { id: 'b3', cat: 'banderillas', name: 'Monstera Fuego', desc: 'Empanizado especial flaming crunch', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },
       { id: 'b4', cat: 'banderillas', name: 'Monstera Clásica', desc: 'Rebozado dorado tradicional con panko', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },
       { id: 'b5', cat: 'banderillas', name: 'Monstera Mexicheese', desc: 'Empanizado con queso jalapeño', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },
-
       { id: 'e1', cat: 'especiales', name: 'Areca (Coconut Latte)', price: 70, desc: 'Fría, espresso, leche cremosa y coco', type: 'simple' },
       { id: 'e2', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 80, desc: 'Fría, matcha, leche y fresa', type: 'simple' },
       { id: 'e3', cat: 'especiales', name: 'Magnolia (Chocolate Latte)', price: 80, desc: 'Fría, espresso, leche y cold foam de chocolate', type: 'simple' },
-
       { id: 'bt1', cat: 'bubble', name: 'Jacaranda (Taro Milk Tea)', price: 60, desc: 'Leche, taro, té negro y tapioca', type: 'bubble' },
       { id: 'bt2', cat: 'bubble', name: 'Helecho (Matcha Milk Tea)', price: 60, desc: 'Leche, matcha, té negro y tapioca', type: 'bubble' },
       { id: 'bt3', cat: 'bubble', name: 'Canela (Chai Milk Tea)', price: 60, desc: 'Leche, chai, té negro y tapioca', type: 'bubble' },
@@ -319,7 +320,6 @@
       { id: 'bt5', cat: 'bubble', name: 'Alocasia (Cookies & Cream)', price: 70, desc: 'Leche, oreo, té negro y tapioca', type: 'bubble' },
       { id: 'bt6', cat: 'bubble', name: 'Girasol (Mango Tea)', price: 70, desc: 'Té negro, infusión mango y tapioca', type: 'bubble' },
       { id: 'bt7', cat: 'bubble', name: 'Diente de León (Maracuyá)', price: 70, desc: 'Té negro, maracuyá y tapioca', type: 'bubble' },
-
       { id: 'cf1', cat: 'cafe', name: 'Capuchino Clásico', price: 50, desc: 'Espresso con espuma de leche', type: 'simple' },
       { id: 'cf2', cat: 'cafe', name: 'Café Americano', price: 45, desc: 'Extracción fresca de grano americano', type: 'simple' },
       { id: 'cf3', cat: 'cafe', name: 'Frappé Moka / Caramelo', price: 60, desc: 'Frappé cremoso con crema batida', type: 'simple' },
@@ -342,6 +342,9 @@
     const urlParams = new URLSearchParams(window.location.search);
     const isKdsRequested = urlParams.has('kds');
 
+    // =========================================================================
+    // LÓGICA DE INICIO (CLIENTE Y KDS)
+    // =========================================================================
     if (isKdsRequested) {
       document.getElementById('client-header').classList.add('hidden');
       document.getElementById('view-client').classList.add('hidden');
@@ -352,6 +355,7 @@
       }
     } else {
       renderProducts('crepas');
+      checkActiveClientOrder(); // Inicia el monitor si el cliente ya tenía pedido
     }
 
     // Funciones PIN KDS
@@ -366,7 +370,6 @@
         document.getElementById('kds-pin-input').value = "";
       }
     };
-
     window.lockKDS = function() {
       sessionStorage.removeItem('maleza_kds_unlocked');
       location.reload();
@@ -378,115 +381,121 @@
       startKDSListener(selectedKdsDateStr);
     }
 
-    // ESCUCHA KDS EN TIEMPO REAL
-    function startKDSListener(targetDateStr) {
-      if (kdsUnsubscribe) {
-        kdsUnsubscribe();
-      }
+    // =========================================================================
+    // LÓGICA DEL MONITOR DEL CLIENTE (Modificar / Devolver)
+    // =========================================================================
+    let activeClientOrderId = null;
+    let activeClientOrderData = null;
+    let clientUnsubscribe = null;
 
-      const isToday = targetDateStr === getLocalDateString();
-      document.getElementById('kds-active-date-label').textContent = isToday 
-        ? "Viendo: Hoy (" + targetDateStr + ")" 
-        : "Viendo Historial: " + targetDateStr;
-
-      let isFirstLoad = true;
-
-      if (isCloud && db) {
-        const q = db.collection("orders").where("dateStr", "==", targetDateStr);
-
-        kdsUnsubscribe = q.onSnapshot(snapshot => {
-          orders = [];
-          let hasNewOrders = false;
-
-          snapshot.docChanges().forEach(change => {
-            if (change.type === "added") hasNewOrders = true;
-          });
-
-          snapshot.forEach(doc => orders.push({ id: doc.id, ...doc.data() }));
-          orders.sort((a, b) => (b.timestampStr || '').localeCompare(a.timestampStr || ''));
-          renderKDS();
-
-          if (!isFirstLoad && hasNewOrders && isToday) {
-            playChime();
-          }
-          isFirstLoad = false;
-
-        }, error => {
-          console.error("Error al escuchar comandas:", error);
-        });
-      } else {
-        const allOrders = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
-        orders = allOrders.filter(o => o.dateStr === targetDateStr);
-        renderKDS();
+    function checkActiveClientOrder() {
+      activeClientOrderId = localStorage.getItem('maleza_active_order');
+      if (activeClientOrderId) {
+        listenToActiveClientOrder(activeClientOrderId);
       }
     }
 
-    // Modal de Historial
-    window.openHistoryModal = () => document.getElementById('history-modal').classList.remove('hidden');
-    window.closeHistoryModal = () => document.getElementById('history-modal').classList.add('hidden');
-
-    window.loadHistoryDate = function() {
-      const selected = document.getElementById('history-date-picker').value;
-      if (!selected) return alert("Selecciona una fecha válida.");
-      selectedKdsDateStr = selected;
-      startKDSListener(selectedKdsDateStr);
-      closeHistoryModal();
-    };
-
-    window.resetToToday = function() {
-      selectedKdsDateStr = getLocalDateString();
-      document.getElementById('history-date-picker').value = selectedKdsDateStr;
-      startKDSListener(selectedKdsDateStr);
-      closeHistoryModal();
-    };
-
-    // =========================================================================
-    // CIERRE DE TURNO: Limpia visualmente la pantalla archivando los completados
-    // =========================================================================
-    window.handleShiftClosing = function() {
-      if (orders.length === 0) {
-        alert("No hay comandas registradas en esta fecha para realizar corte.");
-        return;
-      }
-
-      // Calcula el total incluyendo todos (archivados y no archivados)
-      const totalShift = orders.reduce((s, o) => s + (o.total || 0), 0);
-      const confirmClose = confirm(
-        `¿Limpiar tablero activo y hacer corte?\n\n` +
-        `• Total del día: $${totalShift.toFixed(2)}\n` +
-        `• Total de comandas: ${orders.length}\n\n` +
-        `Al confirmar, se descargará el Excel y se ocultarán los pedidos de la vista principal.`
-      );
-
-      if (!confirmClose) return;
-
-      exportCurrentOrdersCSV(`Corte_Caja_Maleza_${selectedKdsDateStr}.csv`);
-
+    function listenToActiveClientOrder(orderId) {
       if (isCloud && db) {
-        const batch = db.batch();
-        orders.forEach(o => {
-          if (o.id && o.status !== 'archived') {
-            const ref = db.collection("orders").doc(o.id);
-            batch.update(ref, { status: 'archived' });
+        clientUnsubscribe = db.collection("orders").doc(orderId).onSnapshot(doc => {
+          if (doc.exists) {
+            handleClientStatusChange(doc.id, doc.data());
           }
-        });
-        batch.commit().then(() => {
-          alert("¡Tablero limpio! Las órdenes están en el Historial.");
-        }).catch(err => {
-          console.error("Error al archivar en batch:", err);
         });
       } else {
         const all = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
-        all.forEach(o => {
-          if (o.dateStr === selectedKdsDateStr) o.status = 'archived';
-        });
-        localStorage.setItem('maleza_orders', JSON.stringify(all));
-        startKDSListener(selectedKdsDateStr);
-        alert("¡Tablero limpio! Las órdenes están en el Historial.");
+        const o = all.find(x => x.id === orderId);
+        if (o) handleClientStatusChange(o.id, o);
       }
+    }
+
+    function handleClientStatusChange(id, data) {
+      activeClientOrderData = data;
+      const monitor = document.getElementById('order-monitor');
+      const badge = document.getElementById('monitor-badge');
+      const msg = document.getElementById('monitor-msg');
+      const actions = document.getElementById('monitor-actions');
+      
+      // Si el pedido se archivó o canceló por completo, quitamos el monitor
+      if (data.status === 'canceled' || data.status === 'archived') {
+        monitor.classList.add('hidden');
+        localStorage.removeItem('maleza_active_order');
+        if (clientUnsubscribe) clientUnsubscribe();
+        return;
+      }
+      
+      monitor.classList.remove('hidden');
+      
+      if (data.status === 'pending') {
+        monitor.className = 'fixed top-[72px] inset-x-4 max-w-md mx-auto z-40 bg-white rounded-2xl shadow-xl border-2 border-amber-400 p-4 transition-all';
+        badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-amber-100 text-amber-800';
+        badge.textContent = '⏳ PENDIENTE';
+        msg.textContent = 'Tu pedido está en fila. Aún puedes hacer cambios si te equivocaste.';
+        actions.innerHTML = `<button onclick="modifyActiveOrder()" class="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold py-2.5 rounded-xl border border-zinc-300">✏️ Cancelar y Modificar</button>`;
+        actions.classList.remove('hidden');
+      } 
+      else if (data.status === 'preparing') {
+        // Bloqueado: Ya no se puede modificar
+        monitor.className = 'fixed top-[72px] inset-x-4 max-w-md mx-auto z-40 bg-white rounded-2xl shadow-xl border-2 border-blue-500 p-4 transition-all';
+        badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-blue-100 text-blue-800';
+        badge.textContent = '🔥 PREPARANDO';
+        msg.textContent = '¡Ya estamos preparando tu pedido! Ya no es posible modificarlo desde aquí.';
+        actions.classList.add('hidden');
+      }
+      else if (data.status === 'ready') {
+        monitor.className = 'fixed top-[72px] inset-x-4 max-w-md mx-auto z-40 bg-white rounded-2xl shadow-xl border-2 border-emerald-500 p-4 transition-all';
+        badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-emerald-100 text-emerald-800';
+        badge.textContent = '✓ LISTO';
+        msg.textContent = '¡Tu pedido está listo! Te lo entregaremos en breve.';
+        actions.innerHTML = `<button onclick="dismissMonitor()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-2.5 rounded-xl shadow-md">¡Entendido!</button>`;
+        actions.classList.remove('hidden');
+      }
+      else if (data.status === 'returned') {
+        // La barra lo devolvió para corrección
+        alert("La barra devolvió tu pedido para que puedas hacer modificaciones.");
+        cart = data.items;
+        updateCartUI();
+        openCartModal();
+        
+        monitor.classList.add('hidden');
+        localStorage.removeItem('maleza_active_order');
+        if (clientUnsubscribe) clientUnsubscribe();
+      }
+    }
+
+    // Acción cuando el cliente decide modificar su pedido
+    window.modifyActiveOrder = async function() {
+      if (!activeClientOrderId || !activeClientOrderData) return;
+      const confirmModify = confirm("¿Deseas cancelar el pedido actual para modificarlo?");
+      if (!confirmModify) return;
+      
+      // Anulamos el pedido anterior
+      if (isCloud && db) {
+        await db.collection("orders").doc(activeClientOrderId).update({ status: 'canceled' });
+      } else {
+        const all = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
+        const o = all.find(x => x.id === activeClientOrderId);
+        if (o) {
+          o.status = 'canceled';
+          localStorage.setItem('maleza_orders', JSON.stringify(all));
+        }
+      }
+      
+      // Restauramos el carrito para que no tenga que picar todo de nuevo
+      cart = activeClientOrderData.items;
+      updateCartUI();
+      openCartModal();
     };
 
-    // Enviar Comanda
+    window.dismissMonitor = function() {
+      document.getElementById('order-monitor').classList.add('hidden');
+      localStorage.removeItem('maleza_active_order');
+      if (clientUnsubscribe) clientUnsubscribe();
+    }
+
+    // =========================================================================
+    // ENVIAR COMANDA DESDE CELULAR
+    // =========================================================================
     window.sendOrder = async function() {
       const name = document.getElementById('client-name').value.trim();
       if (!name) return alert("Por favor escribe tu nombre o número de mesa.");
@@ -511,19 +520,27 @@
       btn.textContent = "Enviando comanda...";
 
       try {
+        let newOrderId = null;
         if (isCloud && db) {
-          await db.collection("orders").add(order);
+          const docRef = await db.collection("orders").add(order);
+          newOrderId = docRef.id;
         } else {
-          order.id = 'ORD-' + Date.now().toString().slice(-4);
+          newOrderId = 'ORD-' + Date.now().toString().slice(-4);
+          order.id = newOrderId;
           const allOrders = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
           allOrders.unshift(order);
           localStorage.setItem('maleza_orders', JSON.stringify(allOrders));
         }
         
-        alert(`¡Gracias ${name}! Tu comanda ha sido enviada a la barra.`);
+        // Configurar el monitor del cliente
+        localStorage.setItem('maleza_active_order', newOrderId);
+        listenToActiveClientOrder(newOrderId);
+        
+        // Limpiamos carrito local y cerramos modal
         cart = [];
         updateCartUI();
         closeCartModal();
+        window.scrollTo({ top: 0, behavior: 'smooth' }); // Subimos para que vea el monitor
       } catch (err) {
         console.error("Error al enviar:", err);
         alert("Error de conexión con la base de datos.");
@@ -533,21 +550,95 @@
       }
     };
 
+
+    // =========================================================================
+    // ESCUCHA EN TIEMPO REAL KDS
+    // =========================================================================
+    function startKDSListener(targetDateStr) {
+      if (kdsUnsubscribe) kdsUnsubscribe();
+
+      const isToday = targetDateStr === getLocalDateString();
+      document.getElementById('kds-active-date-label').textContent = isToday 
+        ? "Viendo: Hoy (" + targetDateStr + ")" 
+        : "Viendo Historial: " + targetDateStr;
+
+      let isFirstLoad = true;
+
+      if (isCloud && db) {
+        const q = db.collection("orders").where("dateStr", "==", targetDateStr);
+        kdsUnsubscribe = q.onSnapshot(snapshot => {
+          orders = [];
+          let hasNewOrders = false;
+          snapshot.docChanges().forEach(change => { if (change.type === "added") hasNewOrders = true; });
+          snapshot.forEach(doc => orders.push({ id: doc.id, ...doc.data() }));
+          orders.sort((a, b) => (b.timestampStr || '').localeCompare(a.timestampStr || ''));
+          renderKDS();
+
+          if (!isFirstLoad && hasNewOrders && isToday) playChime();
+          isFirstLoad = false;
+        });
+      } else {
+        const allOrders = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
+        orders = allOrders.filter(o => o.dateStr === targetDateStr);
+        renderKDS();
+      }
+    }
+
+    // Modal Historial
+    window.openHistoryModal = () => document.getElementById('history-modal').classList.remove('hidden');
+    window.closeHistoryModal = () => document.getElementById('history-modal').classList.add('hidden');
+
+    window.loadHistoryDate = function() {
+      const selected = document.getElementById('history-date-picker').value;
+      if (!selected) return alert("Selecciona una fecha válida.");
+      selectedKdsDateStr = selected;
+      startKDSListener(selectedKdsDateStr);
+      closeHistoryModal();
+    };
+    window.resetToToday = function() {
+      selectedKdsDateStr = getLocalDateString();
+      document.getElementById('history-date-picker').value = selectedKdsDateStr;
+      startKDSListener(selectedKdsDateStr);
+      closeHistoryModal();
+    };
+
+    // Cierre de Turno
+    window.handleShiftClosing = function() {
+      const validOrders = orders.filter(o => o.status !== 'canceled' && o.status !== 'returned');
+      if (validOrders.length === 0) return alert("No hay comandas válidas registradas en esta fecha para realizar corte.");
+
+      const totalShift = validOrders.reduce((s, o) => s + (o.total || 0), 0);
+      const confirmClose = confirm(`¿Limpiar tablero y hacer corte?\n\n• Total del día: $${totalShift.toFixed(2)}\n• Comandas: ${validOrders.length}`);
+      if (!confirmClose) return;
+
+      exportCurrentOrdersCSV(`Corte_Caja_Maleza_${selectedKdsDateStr}.csv`);
+
+      if (isCloud && db) {
+        const batch = db.batch();
+        orders.forEach(o => {
+          if (o.id && o.status !== 'archived' && o.status !== 'canceled' && o.status !== 'returned') {
+            batch.update(db.collection("orders").doc(o.id), { status: 'archived' });
+          }
+        });
+        batch.commit().then(() => alert("¡Tablero limpio!")).catch(console.error);
+      } else {
+        const all = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
+        all.forEach(o => {
+          if (o.dateStr === selectedKdsDateStr && o.status !== 'canceled' && o.status !== 'returned') o.status = 'archived';
+        });
+        localStorage.setItem('maleza_orders', JSON.stringify(all));
+        startKDSListener(selectedKdsDateStr);
+        alert("¡Tablero limpio!");
+      }
+    };
+
     window.updateOrderStatus = async function(id, status) {
       if (isCloud && db) {
-        try {
-          await db.collection("orders").doc(id).update({ status });
-        } catch (e) {
-          console.error("Error al actualizar:", e);
-        }
+        try { await db.collection("orders").doc(id).update({ status }); } catch (e) { console.error(e); }
       } else {
         const all = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
         const o = all.find(x => x.id === id);
-        if (o) {
-          o.status = status;
-          localStorage.setItem('maleza_orders', JSON.stringify(all));
-          startKDSListener(selectedKdsDateStr);
-        }
+        if (o) { o.status = status; localStorage.setItem('maleza_orders', JSON.stringify(all)); startKDSListener(selectedKdsDateStr); }
       }
     };
 
@@ -566,7 +657,7 @@
     };
 
     // =========================================================================
-    // RENDERIZADO KDS Y FILTRO VISUAL DE "ARCHIVADOS"
+    // RENDERIZADO KDS (Filtrando Cancelados)
     // =========================================================================
     function renderKDS() {
       const grid = document.getElementById('kds-grid');
@@ -574,12 +665,14 @@
       
       const isToday = selectedKdsDateStr === getLocalDateString();
       
-      // Si estamos viendo "Hoy", ocultamos los archivados para limpiar la pantalla.
-      // Si estamos en "Historial", mostramos todos para poder revisarlos.
-      const visibleOrders = isToday ? orders.filter(o => o.status !== 'archived') : orders;
+      // En la vista de "Hoy" ocultamos archivados, devueltos y cancelados.
+      const visibleOrders = isToday 
+        ? orders.filter(o => o.status !== 'archived' && o.status !== 'canceled' && o.status !== 'returned') 
+        : orders;
 
-      // El total monetario siempre debe sumar todo el día (incluso los archivados)
-      const totalSum = orders.reduce((s, o) => s + (o.total || 0), 0);
+      // El total monetario IGNORA los pedidos cancelados o devueltos (para no descuadrar caja)
+      const validOrders = orders.filter(o => o.status !== 'canceled' && o.status !== 'returned');
+      const totalSum = validOrders.reduce((s, o) => s + (o.total || 0), 0);
       if (totalEl) totalEl.textContent = `$${totalSum.toFixed(2)}`;
 
       if (visibleOrders.length === 0) {
@@ -591,8 +684,10 @@
         const isPend = o.status === 'pending';
         const isPrep = o.status === 'preparing';
         const isArch = o.status === 'archived';
-        const border = isPend ? 'border-amber-400' : isPrep ? 'border-blue-500' : isArch ? 'border-zinc-300 opacity-50 bg-zinc-50' : 'border-emerald-500 opacity-70 bg-emerald-50';
-        const badgeTxt = isPend ? '⏳ PENDIENTE' : isPrep ? '🔥 PREPARANDO' : isArch ? '📁 ARCHIVADO' : '✓ LISTO';
+        const isCanc = o.status === 'canceled' || o.status === 'returned';
+        
+        const border = isPend ? 'border-amber-400' : isPrep ? 'border-blue-500' : isCanc ? 'border-red-300 opacity-50 bg-red-50' : isArch ? 'border-zinc-300 opacity-50 bg-zinc-50' : 'border-emerald-500 opacity-70 bg-emerald-50';
+        const badgeTxt = isPend ? '⏳ PENDIENTE' : isPrep ? '🔥 PREPARANDO' : isCanc ? '❌ CANCELADO' : isArch ? '📁 ARCHIVADO' : '✓ LISTO';
 
         return `
           <div class="bg-white rounded-2xl border-2 ${border} p-4 shadow-sm flex flex-col justify-between">
@@ -619,14 +714,17 @@
             <div class="border-t pt-2">
               <div class="flex justify-between text-xs mb-2">
                 <span>Pago: <strong>${o.paymentMethod || 'Efectivo'}</strong></span>
-                <span class="font-bold text-maleza-dark">$${o.total.toFixed(2)}</span>
+                <span class="font-bold text-maleza-dark ${isCanc ? 'line-through text-red-400' : ''}">$${o.total.toFixed(2)}</span>
               </div>
               ${isPend ? `
-                <button onclick="updateOrderStatus('${o.id}', 'preparing')" class="w-full bg-blue-600 text-white text-xs py-2 rounded-xl font-semibold">Iniciar Preparación</button>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="updateOrderStatus('${o.id}', 'preparing')" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs py-2 rounded-xl font-semibold">Iniciar Prep.</button>
+                  <button onclick="updateOrderStatus('${o.id}', 'returned')" class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs py-2 rounded-xl font-semibold">Devolver a Cliente</button>
+                </div>
               ` : isPrep ? `
                 <button onclick="updateOrderStatus('${o.id}', 'ready')" class="w-full bg-emerald-600 text-white text-xs py-2 rounded-xl font-semibold">Marcar Listo</button>
-              ` : isArch ? `
-                <span class="block w-full text-center text-zinc-400 text-xs py-1.5 font-semibold">Despachado y Cerrado</span>
+              ` : isArch || isCanc ? `
+                <span class="block w-full text-center text-zinc-400 text-[11px] py-1.5 font-semibold">Historial (No interactivo)</span>
               ` : `
                 <button onclick="updateOrderStatus('${o.id}', 'archived')" class="w-full text-zinc-500 border border-zinc-300 text-xs py-1.5 rounded-lg hover:bg-zinc-50 font-semibold mb-1">Archivar y Ocultar</button>
                 <button onclick="updateOrderStatus('${o.id}', 'preparing')" class="w-full text-zinc-400 text-[10px] py-1">Reabrir</button>
@@ -637,6 +735,7 @@
       }).join('');
     }
 
+    // Funciones de Menú / Carrito (No sufrieron cambios)
     window.filterCategory = function(cat, btn) {
       document.querySelectorAll('.cat-btn').forEach(b => b.className = 'cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200');
       btn.className = 'cat-btn px-4 py-2.5 rounded-full bg-maleza text-white whitespace-nowrap shadow-sm';
@@ -676,170 +775,81 @@
       const c = document.getElementById('modal-options-container');
       c.innerHTML = '';
 
-      if (item.type === 'crepa') {
-        renderCrepaOptions(item, c);
-      } else if (item.type === 'banderilla') {
+      if (item.type === 'crepa') renderCrepaOptions(item, c);
+      else if (item.type === 'banderilla') {
         document.getElementById('modal-base-price').textContent = "Selecciona relleno:";
         let html = `<div class="space-y-1">`;
         Object.entries(item.prices).forEach(([r, p], i) => {
-          html += `
-            <label class="flex justify-between p-3 rounded-xl border border-zinc-200 cursor-pointer hover:border-maleza">
-              <span class="text-xs font-semibold">
-                <input type="radio" name="opt_band" value="${r}" data-p="${p}" ${i===0?'checked':''} onchange="updateBanderillaSubtotal()"> ${r}
-              </span>
-              <span class="font-bold text-xs text-maleza">$${p}</span>
-            </label>
-          `;
+          html += `<label class="flex justify-between p-3 rounded-xl border border-zinc-200 cursor-pointer hover:border-maleza">
+              <span class="text-xs font-semibold"><input type="radio" name="opt_band" value="${r}" data-p="${p}" ${i===0?'checked':''} onchange="updateBanderillaSubtotal()"> ${r}</span>
+              <span class="font-bold text-xs text-maleza">$${p}</span></label>`;
         });
         html += `</div>`;
         c.innerHTML = html;
         updateBanderillaSubtotal();
       } else if (item.type === 'bubble') {
         document.getElementById('modal-base-price').textContent = `Precio: $${item.price}`;
-        c.innerHTML = `
-          <label class="flex items-center gap-2 p-3 rounded-xl border border-zinc-200 text-xs font-semibold cursor-pointer">
-            <input type="checkbox" id="bubble_extra" onchange="updateBubbleSubtotal()"> 
-            <span>Tapioca / Ingrediente extra (+$15)</span>
-          </label>
-        `;
+        c.innerHTML = `<label class="flex items-center gap-2 p-3 rounded-xl border border-zinc-200 text-xs font-semibold cursor-pointer">
+            <input type="checkbox" id="bubble_extra" onchange="updateBubbleSubtotal()"> <span>Tapioca / Ingrediente extra (+$15)</span></label>`;
         document.getElementById('modal-subtotal').textContent = `$${item.price.toFixed(2)}`;
       }
-
       document.getElementById('custom-modal').classList.remove('hidden');
     };
 
     function renderCrepaOptions(item, container) {
       document.getElementById('modal-base-price').textContent = `Precio base: $${item.price}`;
-      
       const bases = ['Crema de avellanas', 'Mermelada fresa', 'Mermelada zarzamora', 'Cajeta', 'Lechera', 'Philadelphia'];
       const frutas = ['Fresa', 'Plátano', 'Durazno'];
-      const toppings = [
-        { name: 'Nuez', cost: 10 },
-        { name: 'Chispas de chocolate', cost: 10 },
-        { name: 'Oreo', cost: 10 },
-        { name: 'Fruta extra', cost: 10 },
-        { name: 'Ingrediente extra', cost: 10 }
-      ];
-      if (item.isWaffle) {
-        toppings.push({ name: 'Bola de helado', cost: 15 });
-      }
+      const toppings = [{ name: 'Nuez', cost: 10 }, { name: 'Chispas de chocolate', cost: 10 }, { name: 'Oreo', cost: 10 }, { name: 'Fruta extra', cost: 10 }, { name: 'Ingrediente extra', cost: 10 }];
+      if (item.isWaffle) toppings.push({ name: 'Bola de helado', cost: 15 });
 
-      let html = `
-        <div>
-          <label class="font-semibold block text-xs text-zinc-700 mb-1">
-            Elige tus bases (Máximo ${item.maxBases}):
-          </label>
-          <div class="grid grid-cols-2 gap-1.5 text-xs">
-            ${bases.map(b => `
-              <label class="flex items-center gap-2 p-2 rounded-lg bg-zinc-50 border border-zinc-200 cursor-pointer">
-                <input type="checkbox" name="opt_base" value="${b}" onchange="checkMaxBases(${item.maxBases}, this)">
-                <span>${b}</span>
-              </label>
-            `).join('')}
-          </div>
-        </div>
-      `;
-
+      let html = `<div><label class="font-semibold block text-xs text-zinc-700 mb-1">Elige tus bases (Máximo ${item.maxBases}):</label><div class="grid grid-cols-2 gap-1.5 text-xs">
+            ${bases.map(b => `<label class="flex items-center gap-2 p-2 rounded-lg bg-zinc-50 border border-zinc-200 cursor-pointer"><input type="checkbox" name="opt_base" value="${b}" onchange="checkMaxBases(${item.maxBases}, this)"><span>${b}</span></label>`).join('')}</div></div>`;
       if (item.hasFruit) {
-        html += `
-          <div class="mt-3">
-            <label class="font-semibold block text-xs text-zinc-700 mb-1">Elige tu fruta:</label>
-            <div class="grid grid-cols-3 gap-1.5 text-xs">
-              ${frutas.map((f, i) => `
-                <label class="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-zinc-50 border border-zinc-200 cursor-pointer">
-                  <input type="radio" name="opt_fruta" value="${f}" ${i === 0 ? 'checked' : ''}>
-                  <span>${f}</span>
-                </label>
-              `).join('')}
-            </div>
-          </div>
-        `;
+        html += `<div class="mt-3"><label class="font-semibold block text-xs text-zinc-700 mb-1">Elige tu fruta:</label><div class="grid grid-cols-3 gap-1.5 text-xs">
+              ${frutas.map((f, i) => `<label class="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-zinc-50 border border-zinc-200 cursor-pointer"><input type="radio" name="opt_fruta" value="${f}" ${i === 0 ? 'checked' : ''}><span>${f}</span></label>`).join('')}</div></div>`;
       }
-
-      html += `
-        <div class="mt-3">
-          <label class="font-semibold block text-xs text-zinc-700 mb-1">Toppings opcionales:</label>
-          <div class="grid grid-cols-2 gap-1.5 text-xs">
-            ${toppings.map(t => `
-              <label class="flex items-center justify-between p-2 rounded-lg bg-zinc-50 border border-zinc-200 cursor-pointer">
-                <div class="flex items-center gap-2">
-                  <input type="checkbox" name="opt_topping" value="${t.name}" data-cost="${t.cost}" onchange="updateCrepaSubtotal()">
-                  <span>${t.name}</span>
-                </div>
-                <span class="font-bold text-maleza-accent text-[11px]">+$${t.cost}</span>
-              </label>
-            `).join('')}
-          </div>
-        </div>
-      `;
-
+      html += `<div class="mt-3"><label class="font-semibold block text-xs text-zinc-700 mb-1">Toppings opcionales:</label><div class="grid grid-cols-2 gap-1.5 text-xs">
+            ${toppings.map(t => `<label class="flex items-center justify-between p-2 rounded-lg bg-zinc-50 border border-zinc-200 cursor-pointer"><div class="flex items-center gap-2"><input type="checkbox" name="opt_topping" value="${t.name}" data-cost="${t.cost}" onchange="updateCrepaSubtotal()"><span>${t.name}</span></div><span class="font-bold text-maleza-accent text-[11px]">+$${t.cost}</span></label>`).join('')}</div></div>`;
       container.innerHTML = html;
       updateCrepaSubtotal();
     }
 
     window.checkMaxBases = function(max, currentCheckbox) {
-      const selected = document.querySelectorAll('input[name="opt_base"]:checked');
-      if (selected.length > max) {
+      if (document.querySelectorAll('input[name="opt_base"]:checked').length > max) {
         alert(`Solo puedes elegir máximo ${max} base(s) para esta opción.`);
         if (currentCheckbox) currentCheckbox.checked = false;
       }
     };
-
     window.updateCrepaSubtotal = function() {
-      if (!currentCustomItem) return;
       let total = currentCustomItem.price || 0;
-      document.querySelectorAll('input[name="opt_topping"]:checked').forEach(cb => {
-        total += parseInt(cb.dataset.cost);
-      });
+      document.querySelectorAll('input[name="opt_topping"]:checked').forEach(cb => total += parseInt(cb.dataset.cost));
       document.getElementById('modal-subtotal').textContent = `$${total.toFixed(2)}`;
     };
-
     window.updateBanderillaSubtotal = function() {
       const b = document.querySelector('input[name="opt_band"]:checked');
-      if (b) {
-        const price = parseInt(b.dataset.p);
-        document.getElementById('modal-subtotal').textContent = `$${price.toFixed(2)}`;
-      }
+      if (b) document.getElementById('modal-subtotal').textContent = `$${parseInt(b.dataset.p).toFixed(2)}`;
     };
-
     window.updateBubbleSubtotal = function() {
-      if (!currentCustomItem) return;
       let total = currentCustomItem.price || 0;
-      const ex = document.getElementById('bubble_extra');
-      if (ex && ex.checked) total += 15;
+      if (document.getElementById('bubble_extra') && document.getElementById('bubble_extra').checked) total += 15;
       document.getElementById('modal-subtotal').textContent = `$${total.toFixed(2)}`;
     };
-
     window.confirmAddToCart = function() {
-      let details = [];
-      let price = currentCustomItem.price || 0;
-
+      let details = [], price = currentCustomItem.price || 0;
       if (currentCustomItem.type === 'crepa') {
         const bases = Array.from(document.querySelectorAll('input[name="opt_base"]:checked')).map(x => x.value);
         if (bases.length > 0) details.push(`Bases: ${bases.join(', ')}`);
-        
         const fruta = document.querySelector('input[name="opt_fruta"]:checked');
         if (fruta && currentCustomItem.hasFruit) details.push(`Fruta: ${fruta.value}`);
-
-        const toppings = Array.from(document.querySelectorAll('input[name="opt_topping"]:checked')).map(cb => {
-          price += parseInt(cb.dataset.cost);
-          return cb.value;
-        });
+        const toppings = Array.from(document.querySelectorAll('input[name="opt_topping"]:checked')).map(cb => { price += parseInt(cb.dataset.cost); return cb.value; });
         if (toppings.length > 0) details.push(`Toppings: ${toppings.join(', ')}`);
       } else if (currentCustomItem.type === 'banderilla') {
         const b = document.querySelector('input[name="opt_band"]:checked');
-        if (b) {
-          price = parseInt(b.dataset.p);
-          details.push(`Relleno: ${b.value}`);
-        }
+        if (b) { price = parseInt(b.dataset.p); details.push(`Relleno: ${b.value}`); }
       } else if (currentCustomItem.type === 'bubble') {
-        const ex = document.getElementById('bubble_extra');
-        if (ex && ex.checked) {
-          price += 15;
-          details.push("Con extra tapioca");
-        }
+        if (document.getElementById('bubble_extra').checked) { price += 15; details.push("Con extra tapioca"); }
       }
-
       cart.push({ id: currentCustomItem.id, name: currentCustomItem.name, price: price, total: price, qty: 1, details: details.join(' | ') });
       closeCustomModal();
       updateCartUI();
@@ -863,10 +873,7 @@
       document.getElementById('cart-checkout-total').textContent = `$${total.toFixed(2)}`;
       list.innerHTML = cart.map((it, idx) => `
         <div class="flex justify-between items-center p-2.5 bg-[#FAF9F5] rounded-xl border border-zinc-200 text-xs">
-          <div>
-            <strong>${it.qty}x ${it.name}</strong> ($${it.total})
-            ${it.details ? `<p class="text-[10px] text-zinc-500">${it.details}</p>` : ''}
-          </div>
+          <div><strong>${it.qty}x ${it.name}</strong> ($${it.total}) ${it.details ? `<p class="text-[10px] text-zinc-500">${it.details}</p>` : ''}</div>
           <button onclick="cart.splice(${idx},1);updateCartUI();renderCartModalItems();" class="text-red-500 font-bold px-2">✕</button>
         </div>
       `).join('');
