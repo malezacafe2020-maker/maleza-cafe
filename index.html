@@ -62,10 +62,7 @@
 
   <!-- ================= 1. VISTA CLIENTE ================= -->
   <main id="view-client" class="max-w-2xl mx-auto p-4 sm:p-6">
-    
-    <!-- Hero / Encabezado idéntico a la imagen -->
     <section class="py-6 sm:py-8 text-center flex flex-col items-center">
-      <!-- Badge Café de especialidad -->
       <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-maleza-badge text-maleza-badgeText text-xs font-semibold tracking-wider uppercase mb-5">
         <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
           <path d="M12 2L14.2 8.2L20.5 9.1L15.6 13.3L17.2 19.5L12 16.1L6.8 19.5L8.4 13.3L3.5 9.1L9.8 8.2L12 2Z"/>
@@ -73,17 +70,14 @@
         <span>Café de Especialidad</span>
       </div>
 
-      <!-- Título principal -->
       <h2 class="font-serif text-4xl sm:text-5xl font-bold text-maleza-dark leading-[1.15] max-w-md tracking-tight">
         Un lugar para <span class="italic font-normal text-maleza-accent">quedarte</span> un ratito.
       </h2>
 
-      <!-- Subtítulo / Descripción -->
       <p class="text-sm sm:text-base text-zinc-600 font-medium max-w-md mt-4 leading-relaxed">
         Café honesto, comida rica y una pausa que se siente bien. Pide desde tu mesa y disfruta sin prisas.
       </p>
 
-      <!-- Input de Mesa / Nombre -->
       <div class="w-full max-w-sm mt-6 bg-white p-3.5 rounded-2xl border border-[#E7E3D8] shadow-sm text-left">
         <label class="block text-xs font-semibold text-zinc-600 mb-1">¿A nombre de quién o qué mesa preparamos?</label>
         <input type="text" id="client-name" placeholder="Ej. Mesa 2 - Carlos" class="w-full bg-[#FAF9F5] text-zinc-900 text-sm px-3 py-2.5 rounded-xl border border-zinc-200 focus:outline-none focus:border-maleza font-medium">
@@ -137,25 +131,69 @@
           <h2 class="font-serif text-2xl font-bold text-maleza-dark">Pantalla de Comandas (KDS)</h2>
           <span id="cloud-badge" class="text-[11px] bg-zinc-200 text-zinc-700 px-2 py-0.5 rounded-full font-medium">Iniciando...</span>
         </div>
-        <p class="text-xs text-zinc-500">Recepción en tiempo real desde los celulares</p>
+        <div class="flex items-center gap-2 mt-1">
+          <span id="kds-active-date-label" class="text-xs font-semibold text-maleza-dark">Viendo: Hoy</span>
+          <span class="text-zinc-300">|</span>
+          <button onclick="openHistoryModal()" class="text-xs text-maleza-accent hover:underline font-semibold flex items-center gap-1">
+            📅 Ver Historial / Otra Fecha
+          </button>
+        </div>
       </div>
 
-      <div class="flex items-center gap-3">
-        <button onclick="exportToExcelCSV()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm flex items-center gap-2">
-          📥 Exportar a Excel (CSV)
+      <div class="flex items-center flex-wrap gap-2.5">
+        <button onclick="exportCurrentOrdersCSV()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition-all">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Exportar Excel (CSV)
         </button>
-        <div class="bg-[#FAF9F5] border border-maleza/20 px-4 py-2 rounded-xl text-right">
-          <span class="block text-[10px] text-zinc-500 font-bold uppercase">Corte del Turno</span>
+
+        <!-- Botón de limpieza de turno -->
+        <button onclick="handleShiftClosing()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition-all">
+          💼 Limpiar y Cerrar Turno
+        </button>
+
+        <div class="bg-[#FAF9F5] border border-maleza/20 px-3.5 py-2 rounded-xl text-right">
+          <span class="block text-[10px] text-zinc-500 font-bold uppercase">Corte del Día</span>
           <span id="kds-sales-total" class="font-serif font-bold text-lg text-maleza-dark">$0.00</span>
         </div>
-        <button onclick="lockKDS()" title="Bloquear pantalla" class="bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-xs p-2.5 rounded-xl">
+
+        <button onclick="lockKDS()" title="Bloquear pantalla" class="bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-xs p-2.5 rounded-xl transition-all">
           🔒 Salir
         </button>
       </div>
     </div>
 
+    <!-- Tablero de Comandas -->
     <div id="kds-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
   </section>
+
+  <!-- MODAL: HISTORIAL -->
+  <div id="history-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl">
+      <div class="flex justify-between items-center border-b border-zinc-100 pb-3 mb-4">
+        <div>
+          <h3 class="font-serif font-bold text-xl text-maleza-dark">Historial de Comandas</h3>
+          <p class="text-xs text-zinc-500">Selecciona una fecha para ver sus ventas completas</p>
+        </div>
+        <button onclick="closeHistoryModal()" class="text-zinc-400 hover:text-zinc-700 text-2xl leading-none">&times;</button>
+      </div>
+
+      <div class="space-y-4 mb-6">
+        <div>
+          <label class="block text-xs font-semibold text-zinc-600 mb-1">Fecha a consultar:</label>
+          <input type="date" id="history-date-picker" class="w-full bg-zinc-50 text-zinc-800 text-sm px-3 py-2.5 rounded-xl border border-zinc-200 focus:outline-none focus:border-maleza font-medium">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="loadHistoryDate()" class="w-full bg-maleza text-white font-semibold text-xs py-3 rounded-xl hover:bg-maleza-dark transition-all">
+            🔍 Ver Comandas
+          </button>
+          <button onclick="resetToToday()" class="w-full bg-zinc-100 text-zinc-700 font-semibold text-xs py-3 rounded-xl hover:bg-zinc-200 transition-all">
+            Volver a Hoy
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL: PERSONALIZAR PRODUCTO -->
   <div id="custom-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
@@ -201,7 +239,7 @@
           </label>
         </div>
         <div class="mt-2 text-[11px] text-zinc-500 leading-snug">
-          Transferencias BBVA: <span class="font-mono font-bold">4152 3145 8769 0465</span> (Daniela I. Zacatelco)[cite: 9]
+          Transferencias BBVA: <span class="font-mono font-bold">4152 3145 8769 0465</span> (Daniela I. Zacatelco)
         </div>
       </div>
       <div class="border-t border-zinc-100 pt-4 flex items-center justify-between mb-4">
@@ -218,7 +256,7 @@
     // PIN KDS
     const KDS_PIN = "1234";
 
-    // FIREBASE CONFIG
+    // FIREBASE CONFIG INTEGRADA
     const firebaseConfig = {
       apiKey: "AIzaSyC-R4TAHZqtW4jU-mKrvEWOhJiQq1Z5raQ",
       authDomain: "maleza-cafe.firebaseapp.com",
@@ -253,7 +291,6 @@
 
     // CATÁLOGO COMPLETO
     const MENU_DATA = [
-      // Crepas
       { id: 'c1', cat: 'crepas', name: 'Crepa Dulce Sencilla', price: 50, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false },
       { id: 'c2', cat: 'crepas', name: 'Crepa Dulce Doble', price: 60, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false },
       { id: 'c3', cat: 'crepas', name: 'Crepa Dulce Con Fruta', price: 70, desc: '1 o 2 bases + 1 fruta', type: 'crepa', maxBases: 2, hasFruit: true },
@@ -261,24 +298,20 @@
       { id: 'c5', cat: 'crepas', name: 'Crepa Salada Peperoni', price: 60, desc: 'Peperoni y queso manchego', type: 'simple' },
       { id: 'c6', cat: 'crepas', name: 'Crepa Salada Hawaiana', price: 70, desc: 'Jamón, queso manchego y piña', type: 'simple' },
 
-      // Waffles
       { id: 'w1', cat: 'crepas', name: 'Waffle Belga Sencillo', price: 40, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false, isWaffle: true },
       { id: 'w2', cat: 'crepas', name: 'Waffle Belga Doble', price: 45, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false, isWaffle: true },
       { id: 'w3', cat: 'crepas', name: 'Waffle Belga Con Fruta', price: 50, desc: '1 o 2 bases + 1 fruta', type: 'crepa', maxBases: 2, hasFruit: true, isWaffle: true },
 
-      // Banderillas Coreanas (Monstera)
       { id: 'b1', cat: 'banderillas', name: 'Monstera Deliciosa', desc: 'Cubierta de papa en cubos + panko', type: 'banderilla', prices: { Salchicha: 70, 'Queso manchego': 80, Combinada: 75 } },
       { id: 'b2', cat: 'banderillas', name: 'Monstera Thai', desc: 'Cubierta con ramen crocante + panko', type: 'banderilla', prices: { Salchicha: 65, 'Queso manchego': 75, Combinada: 70 } },
       { id: 'b3', cat: 'banderillas', name: 'Monstera Fuego', desc: 'Empanizado especial flaming crunch', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },
       { id: 'b4', cat: 'banderillas', name: 'Monstera Clásica', desc: 'Rebozado dorado tradicional con panko', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },
       { id: 'b5', cat: 'banderillas', name: 'Monstera Mexicheese', desc: 'Empanizado con queso jalapeño', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },
 
-      // Lattes Especiales
       { id: 'e1', cat: 'especiales', name: 'Areca (Coconut Latte)', price: 70, desc: 'Fría, espresso, leche cremosa y coco', type: 'simple' },
       { id: 'e2', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 80, desc: 'Fría, matcha, leche y fresa', type: 'simple' },
       { id: 'e3', cat: 'especiales', name: 'Magnolia (Chocolate Latte)', price: 80, desc: 'Fría, espresso, leche y cold foam de chocolate', type: 'simple' },
 
-      // Bubble Tea
       { id: 'bt1', cat: 'bubble', name: 'Jacaranda (Taro Milk Tea)', price: 60, desc: 'Leche, taro, té negro y tapioca', type: 'bubble' },
       { id: 'bt2', cat: 'bubble', name: 'Helecho (Matcha Milk Tea)', price: 60, desc: 'Leche, matcha, té negro y tapioca', type: 'bubble' },
       { id: 'bt3', cat: 'bubble', name: 'Canela (Chai Milk Tea)', price: 60, desc: 'Leche, chai, té negro y tapioca', type: 'bubble' },
@@ -287,7 +320,6 @@
       { id: 'bt6', cat: 'bubble', name: 'Girasol (Mango Tea)', price: 70, desc: 'Té negro, infusión mango y tapioca', type: 'bubble' },
       { id: 'bt7', cat: 'bubble', name: 'Diente de León (Maracuyá)', price: 70, desc: 'Té negro, maracuyá y tapioca', type: 'bubble' },
 
-      // Cafetería Clásica & Bebidas
       { id: 'cf1', cat: 'cafe', name: 'Capuchino Clásico', price: 50, desc: 'Espresso con espuma de leche', type: 'simple' },
       { id: 'cf2', cat: 'cafe', name: 'Café Americano', price: 45, desc: 'Extracción fresca de grano americano', type: 'simple' },
       { id: 'cf3', cat: 'cafe', name: 'Frappé Moka / Caramelo', price: 60, desc: 'Frappé cremoso con crema batida', type: 'simple' },
@@ -297,8 +329,16 @@
     let cart = [];
     let orders = [];
     let currentCustomItem = null;
+    let kdsUnsubscribe = null;
 
-    // RUTA CLIENTE vs KDS TABLET
+    // FECHA LOCAL EXACTA
+    function getLocalDateString(d = new Date()) {
+      const tzOffset = d.getTimezoneOffset() * 60000;
+      return new Date(d.getTime() - tzOffset).toISOString().slice(0, 10);
+    }
+    
+    let selectedKdsDateStr = getLocalDateString();
+
     const urlParams = new URLSearchParams(window.location.search);
     const isKdsRequested = urlParams.has('kds');
 
@@ -334,29 +374,117 @@
 
     function showKDSScreen() {
       document.getElementById('view-tablet').classList.remove('hidden');
-      startKDSListener();
+      document.getElementById('history-date-picker').value = selectedKdsDateStr;
+      startKDSListener(selectedKdsDateStr);
     }
 
-    function startKDSListener() {
+    // ESCUCHA KDS EN TIEMPO REAL
+    function startKDSListener(targetDateStr) {
+      if (kdsUnsubscribe) {
+        kdsUnsubscribe();
+      }
+
+      const isToday = targetDateStr === getLocalDateString();
+      document.getElementById('kds-active-date-label').textContent = isToday 
+        ? "Viendo: Hoy (" + targetDateStr + ")" 
+        : "Viendo Historial: " + targetDateStr;
+
+      let isFirstLoad = true;
+
       if (isCloud && db) {
-        db.collection("orders").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+        const q = db.collection("orders").where("dateStr", "==", targetDateStr);
+
+        kdsUnsubscribe = q.onSnapshot(snapshot => {
           orders = [];
+          let hasNewOrders = false;
+
+          snapshot.docChanges().forEach(change => {
+            if (change.type === "added") hasNewOrders = true;
+          });
+
           snapshot.forEach(doc => orders.push({ id: doc.id, ...doc.data() }));
+          orders.sort((a, b) => (b.timestampStr || '').localeCompare(a.timestampStr || ''));
           renderKDS();
+
+          if (!isFirstLoad && hasNewOrders && isToday) {
+            playChime();
+          }
+          isFirstLoad = false;
+
         }, error => {
           console.error("Error al escuchar comandas:", error);
         });
       } else {
-        orders = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
+        const allOrders = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
+        orders = allOrders.filter(o => o.dateStr === targetDateStr);
         renderKDS();
-        window.addEventListener('storage', e => {
-          if (e.key === 'maleza_orders') {
-            orders = JSON.parse(e.newValue || '[]');
-            renderKDS();
-          }
-        });
       }
     }
+
+    // Modal de Historial
+    window.openHistoryModal = () => document.getElementById('history-modal').classList.remove('hidden');
+    window.closeHistoryModal = () => document.getElementById('history-modal').classList.add('hidden');
+
+    window.loadHistoryDate = function() {
+      const selected = document.getElementById('history-date-picker').value;
+      if (!selected) return alert("Selecciona una fecha válida.");
+      selectedKdsDateStr = selected;
+      startKDSListener(selectedKdsDateStr);
+      closeHistoryModal();
+    };
+
+    window.resetToToday = function() {
+      selectedKdsDateStr = getLocalDateString();
+      document.getElementById('history-date-picker').value = selectedKdsDateStr;
+      startKDSListener(selectedKdsDateStr);
+      closeHistoryModal();
+    };
+
+    // =========================================================================
+    // CIERRE DE TURNO: Limpia visualmente la pantalla archivando los completados
+    // =========================================================================
+    window.handleShiftClosing = function() {
+      if (orders.length === 0) {
+        alert("No hay comandas registradas en esta fecha para realizar corte.");
+        return;
+      }
+
+      // Calcula el total incluyendo todos (archivados y no archivados)
+      const totalShift = orders.reduce((s, o) => s + (o.total || 0), 0);
+      const confirmClose = confirm(
+        `¿Limpiar tablero activo y hacer corte?\n\n` +
+        `• Total del día: $${totalShift.toFixed(2)}\n` +
+        `• Total de comandas: ${orders.length}\n\n` +
+        `Al confirmar, se descargará el Excel y se ocultarán los pedidos de la vista principal.`
+      );
+
+      if (!confirmClose) return;
+
+      exportCurrentOrdersCSV(`Corte_Caja_Maleza_${selectedKdsDateStr}.csv`);
+
+      if (isCloud && db) {
+        const batch = db.batch();
+        orders.forEach(o => {
+          if (o.id && o.status !== 'archived') {
+            const ref = db.collection("orders").doc(o.id);
+            batch.update(ref, { status: 'archived' });
+          }
+        });
+        batch.commit().then(() => {
+          alert("¡Tablero limpio! Las órdenes están en el Historial.");
+        }).catch(err => {
+          console.error("Error al archivar en batch:", err);
+        });
+      } else {
+        const all = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
+        all.forEach(o => {
+          if (o.dateStr === selectedKdsDateStr) o.status = 'archived';
+        });
+        localStorage.setItem('maleza_orders', JSON.stringify(all));
+        startKDSListener(selectedKdsDateStr);
+        alert("¡Tablero limpio! Las órdenes están en el Historial.");
+      }
+    };
 
     // Enviar Comanda
     window.sendOrder = async function() {
@@ -366,13 +494,14 @@
 
       const total = cart.reduce((s, i) => s + i.total, 0);
       const payment = document.querySelector('input[name="payment_method"]:checked').value;
-
+      
       const order = {
         clientName: name,
         items: cart,
         total: total,
         paymentMethod: payment,
         status: 'pending',
+        dateStr: getLocalDateString(), 
         timestampStr: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         createdAt: isCloud ? firebase.firestore.FieldValue.serverTimestamp() : new Date().toISOString()
       };
@@ -386,17 +515,18 @@
           await db.collection("orders").add(order);
         } else {
           order.id = 'ORD-' + Date.now().toString().slice(-4);
-          orders.unshift(order);
-          localStorage.setItem('maleza_orders', JSON.stringify(orders));
+          const allOrders = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
+          allOrders.unshift(order);
+          localStorage.setItem('maleza_orders', JSON.stringify(allOrders));
         }
-        playChime();
+        
         alert(`¡Gracias ${name}! Tu comanda ha sido enviada a la barra.`);
         cart = [];
         updateCartUI();
         closeCartModal();
       } catch (err) {
         console.error("Error al enviar:", err);
-        alert("Error de conexión. Asegúrate de tener conexión o haber configurado las Reglas en Firebase.");
+        alert("Error de conexión con la base de datos.");
       } finally {
         btn.disabled = false;
         btn.textContent = "🛎️ Enviar Comanda a Cocina";
@@ -411,54 +541,66 @@
           console.error("Error al actualizar:", e);
         }
       } else {
-        const o = orders.find(x => x.id === id);
+        const all = JSON.parse(localStorage.getItem('maleza_orders') || '[]');
+        const o = all.find(x => x.id === id);
         if (o) {
           o.status = status;
-          localStorage.setItem('maleza_orders', JSON.stringify(orders));
-          renderKDS();
+          localStorage.setItem('maleza_orders', JSON.stringify(all));
+          startKDSListener(selectedKdsDateStr);
         }
       }
     };
 
-    window.exportToExcelCSV = function() {
-      if (orders.length === 0) return alert("No hay pedidos registrados.");
-      let csv = "\uFEFFID,Hora,Cliente,Productos,Pago,Total,Estatus\n";
+    window.exportCurrentOrdersCSV = function(customFileName) {
+      if (orders.length === 0) return alert("No hay pedidos para exportar en esta fecha.");
+      let csv = "\uFEFFID,Fecha,Hora,Cliente,Productos,Pago,Total,Estatus\n";
       orders.forEach(o => {
         const items = `"${o.items.map(i => `${i.qty}x ${i.name} (${i.details || ''})`).join(' | ').replace(/"/g, '""')}"`;
-        csv += `${o.id || ''},${o.timestampStr || ''},"${o.clientName}",${items},${o.paymentMethod || 'Efectivo'},${o.total.toFixed(2)},${o.status}\n`;
+        csv += `${o.id || ''},${o.dateStr || selectedKdsDateStr},${o.timestampStr || ''},"${o.clientName}",${items},${o.paymentMethod || 'Efectivo'},${o.total.toFixed(2)},${o.status}\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = `Ventas_Maleza_${new Date().toISOString().slice(0,10)}.csv`;
+      link.download = customFileName || `Ventas_Maleza_${selectedKdsDateStr}.csv`;
       link.click();
     };
 
+    // =========================================================================
+    // RENDERIZADO KDS Y FILTRO VISUAL DE "ARCHIVADOS"
+    // =========================================================================
     function renderKDS() {
       const grid = document.getElementById('kds-grid');
       const totalEl = document.getElementById('kds-sales-total');
+      
+      const isToday = selectedKdsDateStr === getLocalDateString();
+      
+      // Si estamos viendo "Hoy", ocultamos los archivados para limpiar la pantalla.
+      // Si estamos en "Historial", mostramos todos para poder revisarlos.
+      const visibleOrders = isToday ? orders.filter(o => o.status !== 'archived') : orders;
 
+      // El total monetario siempre debe sumar todo el día (incluso los archivados)
       const totalSum = orders.reduce((s, o) => s + (o.total || 0), 0);
       if (totalEl) totalEl.textContent = `$${totalSum.toFixed(2)}`;
 
-      if (orders.length === 0) {
-        grid.innerHTML = '<div class="col-span-full py-16 text-center text-zinc-400">☕ Esperando pedidos...</div>';
+      if (visibleOrders.length === 0) {
+        grid.innerHTML = '<div class="col-span-full py-16 text-center text-zinc-400">☕ Pantalla limpia. Esperando pedidos...</div>';
         return;
       }
 
-      grid.innerHTML = orders.map(o => {
+      grid.innerHTML = visibleOrders.map(o => {
         const isPend = o.status === 'pending';
         const isPrep = o.status === 'preparing';
-        const border = isPend ? 'border-amber-400' : isPrep ? 'border-blue-500' : 'border-emerald-500 opacity-60';
-        const badgeTxt = isPend ? '⏳ PENDIENTE' : isPrep ? '🔥 PREPARANDO' : '✓ LISTO';
+        const isArch = o.status === 'archived';
+        const border = isPend ? 'border-amber-400' : isPrep ? 'border-blue-500' : isArch ? 'border-zinc-300 opacity-50 bg-zinc-50' : 'border-emerald-500 opacity-70 bg-emerald-50';
+        const badgeTxt = isPend ? '⏳ PENDIENTE' : isPrep ? '🔥 PREPARANDO' : isArch ? '📁 ARCHIVADO' : '✓ LISTO';
 
         return `
           <div class="bg-white rounded-2xl border-2 ${border} p-4 shadow-sm flex flex-col justify-between">
             <div>
               <div class="flex justify-between border-b pb-2 mb-2">
                 <div>
-                  <span class="text-[10px] text-zinc-400">${o.id ? o.id.slice(-5) : ''}</span>
-                  <h4 class="font-bold text-base">${o.clientName}</h4>
+                  <span class="text-[10px] text-zinc-400 font-mono">${o.id ? o.id.slice(-5) : ''}</span>
+                  <h4 class="font-bold text-base leading-tight">${o.clientName}</h4>
                 </div>
                 <div class="text-right">
                   <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-100">${badgeTxt}</span>
@@ -483,8 +625,11 @@
                 <button onclick="updateOrderStatus('${o.id}', 'preparing')" class="w-full bg-blue-600 text-white text-xs py-2 rounded-xl font-semibold">Iniciar Preparación</button>
               ` : isPrep ? `
                 <button onclick="updateOrderStatus('${o.id}', 'ready')" class="w-full bg-emerald-600 text-white text-xs py-2 rounded-xl font-semibold">Marcar Listo</button>
+              ` : isArch ? `
+                <span class="block w-full text-center text-zinc-400 text-xs py-1.5 font-semibold">Despachado y Cerrado</span>
               ` : `
-                <button onclick="updateOrderStatus('${o.id}', 'preparing')" class="w-full text-zinc-500 border text-xs py-1.5 rounded-lg">Reabrir</button>
+                <button onclick="updateOrderStatus('${o.id}', 'archived')" class="w-full text-zinc-500 border border-zinc-300 text-xs py-1.5 rounded-lg hover:bg-zinc-50 font-semibold mb-1">Archivar y Ocultar</button>
+                <button onclick="updateOrderStatus('${o.id}', 'preparing')" class="w-full text-zinc-400 text-[10px] py-1">Reabrir</button>
               `}
             </div>
           </div>
@@ -493,8 +638,8 @@
     }
 
     window.filterCategory = function(cat, btn) {
-      document.querySelectorAll('.cat-btn').forEach(b => b.className = 'cat-btn px-4 py-2 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200');
-      btn.className = 'cat-btn px-4 py-2 rounded-full bg-maleza text-white whitespace-nowrap shadow-sm';
+      document.querySelectorAll('.cat-btn').forEach(b => b.className = 'cat-btn px-4 py-2.5 rounded-full bg-white text-zinc-600 whitespace-nowrap border border-zinc-200');
+      btn.className = 'cat-btn px-4 py-2.5 rounded-full bg-maleza text-white whitespace-nowrap shadow-sm';
       renderProducts(cat);
     };
 
@@ -587,7 +732,7 @@
           <div class="grid grid-cols-2 gap-1.5 text-xs">
             ${bases.map(b => `
               <label class="flex items-center gap-2 p-2 rounded-lg bg-zinc-50 border border-zinc-200 cursor-pointer">
-                <input type="checkbox" name="opt_base" value="${b}" onchange="checkMaxBases(${item.maxBases})">
+                <input type="checkbox" name="opt_base" value="${b}" onchange="checkMaxBases(${item.maxBases}, this)">
                 <span>${b}</span>
               </label>
             `).join('')}
@@ -632,11 +777,11 @@
       updateCrepaSubtotal();
     }
 
-    window.checkMaxBases = function(max) {
+    window.checkMaxBases = function(max, currentCheckbox) {
       const selected = document.querySelectorAll('input[name="opt_base"]:checked');
       if (selected.length > max) {
         alert(`Solo puedes elegir máximo ${max} base(s) para esta opción.`);
-        event.target.checked = false;
+        if (currentCheckbox) currentCheckbox.checked = false;
       }
     };
 
