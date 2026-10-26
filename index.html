@@ -67,15 +67,15 @@
         <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
           <path d="M12 2L14.2 8.2L20.5 9.1L15.6 13.3L17.2 19.5L12 16.1L6.8 19.5L8.4 13.3L3.5 9.1L9.8 8.2L12 2Z"/>
         </svg>
-        <span>Café de Especialidad</span>[cite: 1]
+        <span>Café de Especialidad</span>
       </div>
 
       <h2 class="font-serif text-4xl sm:text-5xl font-bold text-maleza-dark leading-[1.15] max-w-md tracking-tight">
-        Un lugar para <span class="italic font-normal text-maleza-accent">quedarte</span> un ratito.[cite: 1]
+        Un lugar para <span class="italic font-normal text-maleza-accent">quedarte</span> un ratito.
       </h2>
 
       <p class="text-sm sm:text-base text-zinc-600 font-medium max-w-md mt-4 leading-relaxed">
-        Café honesto, comida rica y una pausa que se siente bien. Pide desde tu mesa y disfruta sin prisas.[cite: 1]
+        Café honesto, comida rica y una pausa que se siente bien. Pide desde tu mesa y disfruta sin prisas.
       </p>
 
       <div class="w-full max-w-sm mt-6 bg-white p-3.5 rounded-2xl border border-[#E7E3D8] shadow-sm text-left">
@@ -171,7 +171,7 @@
       <div class="flex justify-between items-center border-b border-zinc-100 pb-3 mb-4">
         <div>
           <h3 class="font-serif font-bold text-xl text-maleza-dark">Historial de Comandas</h3>
-          <p class="text-xs text-zinc-500">Selecciona una fecha para ver sus ventas pasadas</p>
+          <p class="text-xs text-zinc-500">Selecciona una fecha para ver sus ventas</p>
         </div>
         <button onclick="closeHistoryModal()" class="text-zinc-400 hover:text-zinc-700 text-2xl leading-none">&times;</button>
       </div>
@@ -238,7 +238,7 @@
           </label>
         </div>
         <div class="mt-2 text-[11px] text-zinc-500 leading-snug">
-          Transferencias BBVA: <span class="font-mono font-bold">4152 3145 8769 0465</span> (Daniela I. Zacatelco)[cite: 9]
+          Transferencias BBVA: <span class="font-mono font-bold">4152 3145 8769 0465</span> (Daniela I. Zacatelco)
         </div>
       </div>
       <div class="border-t border-zinc-100 pt-4 flex items-center justify-between mb-4">
@@ -255,7 +255,7 @@
     // PIN KDS
     const KDS_PIN = "1234";
 
-    // FIREBASE CONFIG
+    // FIREBASE CONFIG INTEGRADA
     const firebaseConfig = {
       apiKey: "AIzaSyC-R4TAHZqtW4jU-mKrvEWOhJiQq1Z5raQ",
       authDomain: "maleza-cafe.firebaseapp.com",
@@ -290,52 +290,55 @@
 
     // CATÁLOGO COMPLETO
     const MENU_DATA = [
-      // Crepas
-      { id: 'c1', cat: 'crepas', name: 'Crepa Dulce Sencilla', price: 50, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false },[cite: 5]
-      { id: 'c2', cat: 'crepas', name: 'Crepa Dulce Doble', price: 60, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false },[cite: 5]
-      { id: 'c3', cat: 'crepas', name: 'Crepa Dulce Con Fruta', price: 70, desc: '1 o 2 bases + 1 fruta', type: 'crepa', maxBases: 2, hasFruit: true },[cite: 5]
-      { id: 'c4', cat: 'crepas', name: 'Crepa Salada Clásica', price: 60, desc: 'Jamón y queso manchego', type: 'simple' },[cite: 5]
-      { id: 'c5', cat: 'crepas', name: 'Crepa Salada Peperoni', price: 60, desc: 'Peperoni y queso manchego', type: 'simple' },[cite: 5]
-      { id: 'c6', cat: 'crepas', name: 'Crepa Salada Hawaiana', price: 70, desc: 'Jamón, queso manchego y piña', type: 'simple' },[cite: 5]
+      { id: 'c1', cat: 'crepas', name: 'Crepa Dulce Sencilla', price: 50, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false },[cite: 4]
+      { id: 'c2', cat: 'crepas', name: 'Crepa Dulce Doble', price: 60, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false },[cite: 4]
+      { id: 'c3', cat: 'crepas', name: 'Crepa Dulce Con Fruta', price: 70, desc: '1 o 2 bases + 1 fruta', type: 'crepa', maxBases: 2, hasFruit: true },[cite: 4]
+      { id: 'c4', cat: 'crepas', name: 'Crepa Salada Clásica', price: 60, desc: 'Jamón y queso manchego', type: 'simple' },[cite: 4]
+      { id: 'c5', cat: 'crepas', name: 'Crepa Salada Peperoni', price: 60, desc: 'Peperoni y queso manchego', type: 'simple' },[cite: 4]
+      { id: 'c6', cat: 'crepas', name: 'Crepa Salada Hawaiana', price: 70, desc: 'Jamón, queso manchego y piña', type: 'simple' },[cite: 4]
 
-      // Waffles
-      { id: 'w1', cat: 'crepas', name: 'Waffle Belga Sencillo', price: 40, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false, isWaffle: true },[cite: 6]
-      { id: 'w2', cat: 'crepas', name: 'Waffle Belga Doble', price: 45, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false, isWaffle: true },[cite: 6]
-      { id: 'w3', cat: 'crepas', name: 'Waffle Belga Con Fruta', price: 50, desc: '1 o 2 bases + 1 fruta', type: 'crepa', maxBases: 2, hasFruit: true, isWaffle: true },[cite: 6]
+      { id: 'w1', cat: 'crepas', name: 'Waffle Belga Sencillo', price: 40, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false, isWaffle: true },[cite: 5]
+      { id: 'w2', cat: 'crepas', name: 'Waffle Belga Doble', price: 45, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false, isWaffle: true },[cite: 5]
+      { id: 'w3', cat: 'crepas', name: 'Waffle Belga Con Fruta', price: 50, desc: '1 o 2 bases + 1 fruta', type: 'crepa', maxBases: 2, hasFruit: true, isWaffle: true },[cite: 5]
 
-      // Banderillas Coreanas (Monstera)
-      { id: 'b1', cat: 'banderillas', name: 'Monstera Deliciosa', desc: 'Cubierta de papa en cubos + panko', type: 'banderilla', prices: { Salchicha: 70, 'Queso manchego': 80, Combinada: 75 } },[cite: 10]
-      { id: 'b2', cat: 'banderillas', name: 'Monstera Thai', desc: 'Cubierta con ramen crocante + panko', type: 'banderilla', prices: { Salchicha: 65, 'Queso manchego': 75, Combinada: 70 } },[cite: 10]
-      { id: 'b3', cat: 'banderillas', name: 'Monstera Fuego', desc: 'Empanizado especial flaming crunch', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },[cite: 10]
-      { id: 'b4', cat: 'banderillas', name: 'Monstera Clásica', desc: 'Rebozado dorado tradicional con panko', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },[cite: 10]
-      { id: 'b5', cat: 'banderillas', name: 'Monstera Mexicheese', desc: 'Empanizado con queso jalapeño', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },[cite: 10]
+      { id: 'b1', cat: 'banderillas', name: 'Monstera Deliciosa', desc: 'Cubierta de papa en cubos + panko', type: 'banderilla', prices: { Salchicha: 70, 'Queso manchego': 80, Combinada: 75 } },[cite: 9]
+      { id: 'b2', cat: 'banderillas', name: 'Monstera Thai', desc: 'Cubierta con ramen crocante + panko', type: 'banderilla', prices: { Salchicha: 65, 'Queso manchego': 75, Combinada: 70 } },[cite: 9]
+      { id: 'b3', cat: 'banderillas', name: 'Monstera Fuego', desc: 'Empanizado especial flaming crunch', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },[cite: 9]
+      { id: 'b4', cat: 'banderillas', name: 'Monstera Clásica', desc: 'Rebozado dorado tradicional con panko', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },[cite: 9]
+      { id: 'b5', cat: 'banderillas', name: 'Monstera Mexicheese', desc: 'Empanizado con queso jalapeño', type: 'banderilla', prices: { Salchicha: 60, 'Queso manchego': 70, Combinada: 65 } },[cite: 9]
 
-      // Lattes Especiales
-      { id: 'e1', cat: 'especiales', name: 'Areca (Coconut Latte)', price: 70, desc: 'Fría, espresso, leche cremosa y coco', type: 'simple' },[cite: 8]
-      { id: 'e2', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 80, desc: 'Fría, matcha, leche y fresa', type: 'simple' },[cite: 8]
-      { id: 'e3', cat: 'especiales', name: 'Magnolia (Chocolate Latte)', price: 80, desc: 'Fría, espresso, leche y cold foam de chocolate', type: 'simple' },[cite: 8]
+      { id: 'e1', cat: 'especiales', name: 'Areca (Coconut Latte)', price: 70, desc: 'Fría, espresso, leche cremosa y coco', type: 'simple' },[cite: 7]
+      { id: 'e2', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 80, desc: 'Fría, matcha, leche y fresa', type: 'simple' },[cite: 7]
+      { id: 'e3', cat: 'especiales', name: 'Magnolia (Chocolate Latte)', price: 80, desc: 'Fría, espresso, leche y cold foam de chocolate', type: 'simple' },[cite: 7]
 
-      // Bubble Tea
-      { id: 'bt1', cat: 'bubble', name: 'Jacaranda (Taro Milk Tea)', price: 60, desc: 'Leche, taro, té negro y tapioca', type: 'bubble' },[cite: 9]
-      { id: 'bt2', cat: 'bubble', name: 'Helecho (Matcha Milk Tea)', price: 60, desc: 'Leche, matcha, té negro y tapioca', type: 'bubble' },[cite: 9]
-      { id: 'bt3', cat: 'bubble', name: 'Canela (Chai Milk Tea)', price: 60, desc: 'Leche, chai, té negro y tapioca', type: 'bubble' },[cite: 9]
-      { id: 'bt4', cat: 'bubble', name: 'Palmera (Coco Milk Tea)', price: 70, desc: 'Leche, coco, té negro y tapioca', type: 'bubble' },[cite: 9]
-      { id: 'bt5', cat: 'bubble', name: 'Alocasia (Cookies & Cream)', price: 70, desc: 'Leche, oreo, té negro y tapioca', type: 'bubble' },[cite: 9]
-      { id: 'bt6', cat: 'bubble', name: 'Girasol (Mango Tea)', price: 70, desc: 'Té negro, infusión mango y tapioca', type: 'bubble' },[cite: 9]
-      { id: 'bt7', cat: 'bubble', name: 'Diente de León (Maracuyá)', price: 70, desc: 'Té negro, maracuyá y tapioca', type: 'bubble' },[cite: 9]
+      { id: 'bt1', cat: 'bubble', name: 'Jacaranda (Taro Milk Tea)', price: 60, desc: 'Leche, taro, té negro y tapioca', type: 'bubble' },[cite: 8]
+      { id: 'bt2', cat: 'bubble', name: 'Helecho (Matcha Milk Tea)', price: 60, desc: 'Leche, matcha, té negro y tapioca', type: 'bubble' },[cite: 8]
+      { id: 'bt3', cat: 'bubble', name: 'Canela (Chai Milk Tea)', price: 60, desc: 'Leche, chai, té negro y tapioca', type: 'bubble' },[cite: 8]
+      { id: 'bt4', cat: 'bubble', name: 'Palmera (Coco Milk Tea)', price: 70, desc: 'Leche, coco, té negro y tapioca', type: 'bubble' },[cite: 8]
+      { id: 'bt5', cat: 'bubble', name: 'Alocasia (Cookies & Cream)', price: 70, desc: 'Leche, oreo, té negro y tapioca', type: 'bubble' },[cite: 8]
+      { id: 'bt6', cat: 'bubble', name: 'Girasol (Mango Tea)', price: 70, desc: 'Té negro, infusión mango y tapioca', type: 'bubble' },[cite: 8]
+      { id: 'bt7', cat: 'bubble', name: 'Diente de León (Maracuyá)', price: 70, desc: 'Té negro, maracuyá y tapioca', type: 'bubble' },[cite: 8]
 
-      // Cafetería Clásica & Bebidas
-      { id: 'cf1', cat: 'cafe', name: 'Capuchino Clásico', price: 50, desc: 'Espresso con espuma de leche', type: 'simple' },[cite: 8]
-      { id: 'cf2', cat: 'cafe', name: 'Café Americano', price: 45, desc: 'Extracción fresca de grano americano', type: 'simple' },[cite: 8]
-      { id: 'cf3', cat: 'cafe', name: 'Frappé Moka / Caramelo', price: 60, desc: 'Frappé cremoso con crema batida', type: 'simple' },[cite: 7]
-      { id: 'cf4', cat: 'cafe', name: 'Soda Italiana Frutos Rojos', price: 60, desc: 'Soda artesanal con frutos rojos', type: 'simple' }[cite: 7]
+      { id: 'cf1', cat: 'cafe', name: 'Capuchino Clásico', price: 50, desc: 'Espresso con espuma de leche', type: 'simple' },[cite: 7]
+      { id: 'cf2', cat: 'cafe', name: 'Café Americano', price: 45, desc: 'Extracción fresca de grano americano', type: 'simple' },[cite: 7]
+      { id: 'cf3', cat: 'cafe', name: 'Frappé Moka / Caramelo', price: 60, desc: 'Frappé cremoso con crema batida', type: 'simple' },[cite: 6]
+      { id: 'cf4', cat: 'cafe', name: 'Soda Italiana Frutos Rojos', price: 60, desc: 'Soda artesanal con frutos rojos', type: 'simple' }[cite: 6]
     ];
 
     let cart = [];
     let orders = [];
     let currentCustomItem = null;
     let kdsUnsubscribe = null;
-    let selectedKdsDateStr = new Date().toISOString().slice(0, 10);
+
+    // =========================================================================
+    // FUNCIÓN DE ZONA HORARIA LOCAL (Arregla el bug de pedidos ocultos de noche)
+    // =========================================================================
+    function getLocalDateString(d = new Date()) {
+      const tzOffset = d.getTimezoneOffset() * 60000;
+      return new Date(d.getTime() - tzOffset).toISOString().slice(0, 10);
+    }
+    
+    let selectedKdsDateStr = getLocalDateString();
 
     const urlParams = new URLSearchParams(window.location.search);
     const isKdsRequested = urlParams.has('kds');
@@ -377,28 +380,41 @@
     }
 
     // =========================================================================
-    // ESCUCHA EN TIEMPO REAL ROBUSTA (SIN ERRORES DE ÍNDICE COMPUESTO)
+    // ESCUCHA EN TIEMPO REAL KDS
     // =========================================================================
     function startKDSListener(targetDateStr) {
       if (kdsUnsubscribe) {
         kdsUnsubscribe();
       }
 
-      const isToday = targetDateStr === new Date().toISOString().slice(0, 10);
+      const isToday = targetDateStr === getLocalDateString();
       document.getElementById('kds-active-date-label').textContent = isToday 
         ? "Viendo: Hoy (" + targetDateStr + ")" 
         : "Viendo Historial: " + targetDateStr;
 
+      let isFirstLoad = true;
+
       if (isCloud && db) {
-        // Consulta directa por campo dateStr para máxima velocidad y cero errores de índice
         const q = db.collection("orders").where("dateStr", "==", targetDateStr);
 
         kdsUnsubscribe = q.onSnapshot(snapshot => {
           orders = [];
+          let hasNewOrders = false;
+
+          snapshot.docChanges().forEach(change => {
+            if (change.type === "added") hasNewOrders = true;
+          });
+
           snapshot.forEach(doc => orders.push({ id: doc.id, ...doc.data() }));
-          // Ordenar por hora descendente en memoria
           orders.sort((a, b) => (b.timestampStr || '').localeCompare(a.timestampStr || ''));
           renderKDS();
+
+          // Solo suena la campana en la Tablet si no es la carga inicial, y si hay un pedido nuevo de HOY
+          if (!isFirstLoad && hasNewOrders && isToday) {
+            playChime();
+          }
+          isFirstLoad = false;
+
         }, error => {
           console.error("Error al escuchar comandas:", error);
         });
@@ -422,7 +438,7 @@
     };
 
     window.resetToToday = function() {
-      selectedKdsDateStr = new Date().toISOString().slice(0, 10);
+      selectedKdsDateStr = getLocalDateString();
       document.getElementById('history-date-picker').value = selectedKdsDateStr;
       startKDSListener(selectedKdsDateStr);
       closeHistoryModal();
@@ -471,7 +487,9 @@
       }
     };
 
-    // Enviar Comanda
+    // =========================================================================
+    // ENVIAR COMANDA DESDE CELULAR
+    // =========================================================================
     window.sendOrder = async function() {
       const name = document.getElementById('client-name').value.trim();
       if (!name) return alert("Por favor escribe tu nombre o número de mesa.");
@@ -479,15 +497,14 @@
 
       const total = cart.reduce((s, i) => s + i.total, 0);
       const payment = document.querySelector('input[name="payment_method"]:checked').value;
-      const todayISO = new Date().toISOString().slice(0, 10);
-
+      
       const order = {
         clientName: name,
         items: cart,
         total: total,
         paymentMethod: payment,
         status: 'pending',
-        dateStr: todayISO,
+        dateStr: getLocalDateString(), // Aquí se guarda la fecha exacta local (Evita salto al día siguiente)
         timestampStr: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         createdAt: isCloud ? firebase.firestore.FieldValue.serverTimestamp() : new Date().toISOString()
       };
@@ -505,7 +522,8 @@
           allOrders.unshift(order);
           localStorage.setItem('maleza_orders', JSON.stringify(allOrders));
         }
-        playChime();
+        
+        // ¡Ya NO suena en el celular! El cliente solo ve su alerta:
         alert(`¡Gracias ${name}! Tu comanda ha sido enviada a la barra.`);
         cart = [];
         updateCartUI();
@@ -674,7 +692,7 @@
             <input type="checkbox" id="bubble_extra" onchange="updateBubbleSubtotal()"> 
             <span>Tapioca / Ingrediente extra (+$15)</span>
           </label>
-        `;[cite: 9]
+        `;
         document.getElementById('modal-subtotal').textContent = `$${item.price.toFixed(2)}`;
       }
 
@@ -684,17 +702,17 @@
     function renderCrepaOptions(item, container) {
       document.getElementById('modal-base-price').textContent = `Precio base: $${item.price}`;
       
-      const bases = ['Crema de avellanas', 'Mermelada fresa', 'Mermelada zarzamora', 'Cajeta', 'Lechera', 'Philadelphia'];[cite: 5, 6]
-      const frutas = ['Fresa', 'Plátano', 'Durazno'];[cite: 5, 6]
+      const bases = ['Crema de avellanas', 'Mermelada fresa', 'Mermelada zarzamora', 'Cajeta', 'Lechera', 'Philadelphia'];[cite: 4, 5]
+      const frutas = ['Fresa', 'Plátano', 'Durazno'];[cite: 4, 5]
       const toppings = [
         { name: 'Nuez', cost: 10 },
         { name: 'Chispas de chocolate', cost: 10 },
         { name: 'Oreo', cost: 10 },
         { name: 'Fruta extra', cost: 10 },
         { name: 'Ingrediente extra', cost: 10 }
-      ];[cite: 5, 6]
+      ];[cite: 4, 5]
       if (item.isWaffle) {
-        toppings.push({ name: 'Bola de helado', cost: 15 });[cite: 6]
+        toppings.push({ name: 'Bola de helado', cost: 15 });[cite: 5]
       }
 
       let html = `
@@ -845,6 +863,7 @@
       `).join('');
     }
 
+    // SONIDO KDS: Solo se dispara en la tablet cuando la orden cae
     function playChime() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
