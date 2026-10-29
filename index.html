@@ -55,7 +55,7 @@
   <div class="w-full max-w-md bg-[#F4F2EB] min-h-screen shadow-2xl relative flex flex-col border-x border-[#E2DDD0]">
 
     <!-- BARRA SUPERIOR CLIENTE -->
-    <header id="client-header" class="sticky top-0 z-40 bg-[#F4F2EB]/95 backdrop-blur-md border-b border-[#E7E3D8] px-4 py-3">
+    <header id="client-header" class="sticky top-0 z-40 bg-[#F4F2EB]/95 backdrop-blur-md border-b border-[#E7E3D8] px-4 py-2.5">
       <div class="flex flex-col items-center justify-center text-center">
         <div class="flex items-center space-x-2">
           <span class="w-6 h-6 rounded-full bg-maleza-dark flex items-center justify-center text-white text-[11px]">
@@ -65,14 +65,17 @@
           </span>
           <h1 class="font-serif font-bold text-2xl text-maleza-dark tracking-tight">maleza<span class="text-maleza-accent text-lg">.cafe</span></h1>
         </div>
-        <span class="block text-[9px] uppercase font-bold tracking-[0.2em] text-maleza-light mt-0.5">
+        <span class="block text-[8.5px] uppercase font-bold tracking-[0.2em] text-maleza-light mt-0.5">
           Hecho a nuestro modo, porque sí
+        </span>
+        <span class="inline-block text-[8px] font-bold uppercase tracking-widest bg-maleza-badge text-maleza-badgeText px-2 py-0.5 rounded-full mt-1">
+          ★ Café de Especialidad
         </span>
       </div>
     </header>
 
     <!-- MONITOR FLOTANTE DE PEDIDO -->
-    <div id="order-monitor" class="hidden fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-zinc-200 p-3.5 transition-all">
+    <div id="order-monitor" class="hidden fixed top-[78px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-zinc-200 p-3.5 transition-all">
       <div class="flex items-center justify-between mb-1.5">
         <h3 class="font-serif font-bold text-maleza-dark text-base">Estado de tu pedido</h3>
         <span id="monitor-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">PENDIENTE</span>
@@ -82,58 +85,58 @@
     </div>
 
     <!-- VISTA CLIENTE -->
-    <main id="view-client" class="p-4 flex-1">
-      <section class="py-3 text-center flex flex-col items-center">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-maleza-badge text-maleza-badgeText text-[11px] font-semibold tracking-wider uppercase mb-2">
-          <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24">
-            <path d="M12 2L14.2 8.2L20.5 9.1L15.6 13.3L17.2 19.5L12 16.1L6.8 19.5L8.4 13.3L3.5 9.1L9.8 8.2L12 2Z"/>
-          </svg>
-          <span>Café de Especialidad</span>
-        </div>
-
-        <h2 class="font-serif text-3xl font-bold text-maleza-dark leading-tight tracking-tight">
-          Un lugar para <span class="italic font-normal text-maleza-accent">quedarte</span> un ratito.
-        </h2>
-
-        <p class="text-xs text-zinc-600 font-medium mt-1.5 leading-relaxed">
-          Café honesto, comida rica y una pausa que se siente bien. Pide desde tu mesa y disfruta.
-        </p>
-      </section>
-
-      <!-- BANNER ESTACIONAL RESPONSIVO MÓVIL -->
-      <div id="seasonal-promo-container" class="my-3 hidden">
-        <div onclick="window.handlePromoClick()" class="banner-hover bg-gradient-to-r from-[#1b281c] via-[#2a3f2d] to-[#3a443a] text-white rounded-2xl p-3.5 shadow-md border border-[#2f4832]/30 flex items-center justify-between gap-3 cursor-pointer relative overflow-hidden transition-all">
-          <div class="flex-1 min-w-0 z-10">
-            <span id="promo-badge" class="inline-block text-[9px] font-bold tracking-wider uppercase bg-[#b86543] text-white px-2 py-0.5 rounded-full mb-1">
-              EDICIÓN ESPECIAL
-            </span>
-            <h3 id="promo-title" class="font-serif text-base font-bold text-[#faf9f5] leading-snug truncate">
-              Tizana Maracuyá-Cempasúchil ($50)
-            </h3>
-            <p id="promo-desc" class="text-[11px] text-zinc-300 font-medium leading-tight mb-2 line-clamp-2">
-              Notas florales y cítricas para estos días frescos de otoño.
-            </p>
-            <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#f4e2c6]">
-              Probar ahora ✨
-            </span>
-          </div>
-          <div class="w-14 h-14 rounded-full bg-emerald-950/40 border border-white/10 flex items-center justify-center text-2xl shadow-inner shrink-0 relative">
-            🍵<span class="absolute bottom-0 right-0 text-xs">🍁</span>
+    <main id="view-client" class="p-4 flex-1 flex flex-col justify-between">
+      <div>
+        <!-- BANNER ESTACIONAL RESPONSIVO MÓVIL -->
+        <div id="seasonal-promo-container" class="mb-3 hidden">
+          <div onclick="window.handlePromoClick()" class="banner-hover bg-gradient-to-r from-[#1b281c] via-[#2a3f2d] to-[#3a443a] text-white rounded-2xl p-3.5 shadow-md border border-[#2f4832]/30 flex items-center justify-between gap-3 cursor-pointer relative overflow-hidden transition-all">
+            <div class="flex-1 min-w-0 z-10">
+              <span id="promo-badge" class="inline-block text-[9px] font-bold tracking-wider uppercase bg-[#b86543] text-white px-2 py-0.5 rounded-full mb-1">
+                EDICIÓN ESPECIAL
+              </span>
+              <h3 id="promo-title" class="font-serif text-base font-bold text-[#faf9f5] leading-snug truncate">
+                Tizana Maracuyá-Cempasúchil ($50)
+              </h3>
+              <p id="promo-desc" class="text-[11px] text-zinc-300 font-medium leading-tight mb-2 line-clamp-2">
+                Notas florales y cítricas para estos días frescos de otoño.
+              </p>
+              <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#f4e2c6]">
+                Probar ahora ✨
+              </span>
+            </div>
+            <div class="w-14 h-14 rounded-full bg-emerald-950/40 border border-white/10 flex items-center justify-center text-2xl shadow-inner shrink-0 relative">
+              🍵<span class="absolute bottom-0 right-0 text-xs">🍁</span>
+            </div>
           </div>
         </div>
+
+        <!-- CATEGORÍAS CON DESPLAZAMIENTO HORIZONTAL -->
+        <nav class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 mb-3 -mx-4 px-4 sticky top-[68px] bg-[#F4F2EB]/95 backdrop-blur-md z-30">
+          <button type="button" onclick="window.filterCategory('crepas', this)" class="cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-maleza text-white text-xs font-semibold shadow-sm shrink-0">Crepas & Waffles</button>
+          <button type="button" onclick="window.filterCategory('banderillas', this)" class="cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white text-zinc-600 border border-zinc-200 text-xs font-semibold shrink-0">Banderillas Coreanas</button>
+          <button type="button" onclick="window.filterCategory('especiales', this)" class="cat-btn px-3.5 py-2 rounded-full bg-white text-zinc-600 border border-zinc-200 text-xs font-semibold shrink-0">Lattes Especiales</button>
+          <button type="button" onclick="window.filterCategory('bubble', this)" class="cat-btn px-3.5 py-1.5 rounded-full bg-white text-zinc-600 border border-zinc-200 text-xs font-semibold shrink-0">Bubble Tea</button>
+          <button type="button" onclick="window.filterCategory('cafe', this)" class="cat-btn px-3.5 py-1.5 rounded-full bg-white text-zinc-600 border border-zinc-200 text-xs font-semibold shrink-0">Cafetería & Bebidas</button>
+        </nav>
+
+        <!-- LISTA DE PRODUCTOS -->
+        <div id="products-grid" class="flex flex-col gap-2.5"></div>
       </div>
 
-      <!-- CATEGORÍAS CON DESPLAZAMIENTO HORIZONTAL (PILLS SLIDER) -->
-      <nav class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 mb-3 -mx-4 px-4 sticky top-[57px] bg-[#F4F2EB]/95 backdrop-blur-md z-30">
-        <button type="button" onclick="window.filterCategory('crepas', this)" class="cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-maleza text-white text-xs font-semibold shadow-sm shrink-0">Crepas & Waffles</button>
-        <button type="button" onclick="window.filterCategory('banderillas', this)" class="cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white text-zinc-600 border border-zinc-200 text-xs font-semibold shrink-0">Banderillas Coreanas</button>
-        <button type="button" onclick="window.filterCategory('especiales', this)" class="cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white text-zinc-600 border border-zinc-200 text-xs font-semibold shrink-0">Lattes Especiales</button>
-        <button type="button" onclick="window.filterCategory('bubble', this)" class="cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white text-zinc-600 border border-zinc-200 text-xs font-semibold shrink-0">Bubble Tea</button>
-        <button type="button" onclick="window.filterCategory('cafe', this)" class="cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white text-zinc-600 border border-zinc-200 text-xs font-semibold shrink-0">Cafetería & Bebidas</button>
-      </nav>
-
-      <!-- LISTA DE PRODUCTOS (1 COLUMNA COMPACTA MÓVIL) -->
-      <div id="products-grid" class="flex flex-col gap-2.5"></div>
+      <!-- FOOTER DE BIENVENIDA Y CIERRE DE MARCA -->
+      <footer class="mt-8 pt-6 pb-2 text-center border-t border-[#E7E3D8]">
+        <h2 class="font-serif text-2xl font-bold text-maleza-dark leading-tight tracking-tight">
+          Un lugar para <span class="italic font-normal text-maleza-accent">quedarte</span> un ratito.
+        </h2>
+        <p class="text-xs text-zinc-600 font-medium mt-2 leading-relaxed max-w-xs mx-auto">
+          Café honesto, comida rica y una pausa que se siente bien. Pide desde tu mesa y disfruta sin prisas.
+        </p>
+        <div class="mt-4 flex items-center justify-center gap-1.5 text-zinc-400 text-[11px] font-medium">
+          <span>@maleza.cafe</span>
+          <span>•</span>
+          <span>Hecho a nuestro modo</span>
+        </div>
+      </footer>
 
       <!-- BOTÓN CARRITO FLOTANTE -->
       <div id="cart-float" class="hidden fixed bottom-4 inset-x-4 max-w-md mx-auto z-40">
@@ -160,7 +163,7 @@
       </div>
     </section>
 
-    <!-- VISTA TABLERO KDS (OPTIMIZADO PARA TABLET/LAPTOP) -->
+    <!-- VISTA TABLERO KDS -->
     <section id="view-tablet" class="hidden p-4 w-full">
       <div class="bg-white rounded-2xl p-4 mb-4 shadow-sm border border-zinc-200 flex flex-wrap items-center justify-between gap-3">
         <div>
@@ -307,7 +310,6 @@
   <script>
     (function() {
       const KDS_PIN = "1234";
-      // NÚMERO DE WHATSAPP PARA RECEPCIÓN DE COMPROBANTES DE MALEZA CAFÉ:
       const WA_PHONE_NUMBER = "525547605797"; 
 
       const FEATURED_PROMO = {
@@ -673,7 +675,6 @@
         }
       };
 
-      // COPIAR TARJETA BBVA CON FALLBACK SEGURO PARA MÓVILES
       window.copyBBVA = function(btn) {
         const num = "4152314587690465";
         function onCopied() {
@@ -750,7 +751,6 @@
         
         monitor.classList.remove('hidden');
         
-        // BOTÓN DIRECTO DE WHATSAPP PARA BBVA
         let waBtn = '';
         if (data.paymentMethod === 'Transferencia BBVA') {
           const msgText = `Hola Maleza Café, soy ${data.clientName} y les comparto mi comprobante de pago de la comanda #${id.slice(-4).toUpperCase()} por un total de $${parseFloat(data.total).toFixed(2)}.`;
@@ -762,25 +762,24 @@
         }
 
         if (data.status === 'pending') {
-          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-amber-400 p-3.5 transition-all';
+          monitor.className = 'fixed top-[78px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-amber-400 p-3.5 transition-all';
           badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800';
           badge.textContent = 'PENDIENTE';
           msg.textContent = 'Tu pedido está en fila. Aún puedes hacer cambios si te equivocaste.';
           actions.innerHTML = `<button type="button" onclick="window.modifyActiveOrder()" class="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-semibold py-2 rounded-xl border border-zinc-300 active:scale-95 transition-transform cursor-pointer">✏️ Modificar Pedido</button>` + waBtn;
           actions.classList.remove('hidden');
         } else if (data.status === 'preparing') {
-          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-blue-500 p-3.5 transition-all';
+          monitor.className = 'fixed top-[78px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-blue-500 p-3.5 transition-all';
           badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800';
           badge.textContent = 'PREPARANDO';
           msg.textContent = '¡Ya estamos preparando tu pedido! En un momento estará listo.';
           actions.innerHTML = waBtn;
           if (waBtn) { actions.classList.remove('hidden'); } else { actions.classList.add('hidden'); }
         } else if (data.status === 'ready') {
-          // VIBRACIÓN HÁPTICA AL ESTAR LISTO
           if (navigator.vibrate) {
             try { navigator.vibrate([200, 100, 200]); } catch(e){}
           }
-          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-emerald-500 p-3.5 transition-all';
+          monitor.className = 'fixed top-[78px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-emerald-500 p-3.5 transition-all';
           badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
           badge.textContent = 'LISTO';
           msg.textContent = '¡Tu pedido está listo! Te lo entregaremos en breve.';
@@ -966,7 +965,6 @@
       };
 
       function showKDSScreen() {
-        // En KDS expandimos la pantalla para tablet/laptop
         const container = document.querySelector('body > div');
         if (container) {
           container.className = 'w-full min-h-screen bg-[#F4F2EB] relative flex flex-col';
