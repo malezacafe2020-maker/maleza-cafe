@@ -66,7 +66,7 @@
           <h1 class="font-serif font-bold text-2xl text-maleza-dark tracking-tight">maleza<span class="text-maleza-accent text-lg">.cafe</span></h1>
         </div>
         <span class="block text-[8.5px] uppercase font-bold tracking-[0.2em] text-maleza-light mt-0.5">
-          Hecho a nuestro modo, porque sí[cite: 9]
+          Hecho a nuestro modo, porque sí
         </span>
         <span class="inline-block text-[8px] font-bold uppercase tracking-widest bg-maleza-badge text-maleza-badgeText px-2 py-0.5 rounded-full mt-1">
           ★ Café de Especialidad
@@ -95,7 +95,7 @@
                 EDICIÓN ESPECIAL
               </span>
               <h3 id="promo-title" class="font-serif text-base font-bold text-[#faf9f5] leading-snug truncate">
-                Tizana Maracuyá-Cempasúchil ($50)[cite: 13]
+                Tizana Maracuyá-Cempasúchil ($50)
               </h3>
               <p id="promo-desc" class="text-[11px] text-zinc-300 font-medium leading-tight mb-2 line-clamp-2">
                 Notas florales y cítricas para estos días frescos de otoño.
@@ -132,9 +132,9 @@
           Café honesto, comida rica y una pausa que se siente bien. Pide desde tu mesa y disfruta sin prisas.
         </p>
         <div class="mt-4 flex items-center justify-center gap-1.5 text-zinc-400 text-[11px] font-medium">
-          <span>@maleza.cafe</span>[cite: 8, 15]
+          <span>@maleza.cafe</span>
           <span>•</span>
-          <span>Hecho a nuestro modo</span>[cite: 9]
+          <span>Hecho a nuestro modo</span>
         </div>
       </footer>
 
@@ -185,7 +185,6 @@
             Exportar CSV
           </button>
           
-          <!-- BOTÓN REINICIAR CORTE A CEROS (DUEÑO) -->
           <button type="button" onclick="window.openResetCutModal()" class="bg-rose-700 hover:bg-rose-800 text-white text-xs font-semibold px-3 py-2 rounded-xl shadow-sm cursor-pointer flex items-center gap-1">
             🔒 Reiniciar Corte a $0
           </button>
@@ -320,11 +319,10 @@
           </label>
         </div>
         
-        <!-- Bloque de datos BBVA con botón de copiado -->
         <div id="bbva-details" class="hidden mt-2.5 p-2.5 bg-white rounded-xl border border-zinc-200">
-          <p class="text-[10px] text-zinc-500 mb-1">Cuenta BBVA (Daniela I. Zacatelco):[cite: 14]</p>
+          <p class="text-[10px] text-zinc-500 mb-1">Cuenta BBVA (Daniela I. Zacatelco):</p>
           <div class="flex items-center justify-between bg-zinc-50 p-2 rounded-lg border border-zinc-100">
-            <span class="font-mono font-bold text-xs tracking-wider text-maleza-dark">4152 3145 8769 0465</span>[cite: 14]
+            <span class="font-mono font-bold text-xs tracking-wider text-maleza-dark">4152 3145 8769 0465</span>
             <button type="button" onclick="window.copyBBVA(this)" class="bg-maleza/10 text-maleza px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 active:scale-95 transition-all">
               📋 Copiar
             </button>
@@ -345,9 +343,9 @@
 
   <script>
     (function() {
-      const KDS_PIN = "1234";          // PIN para entrar al KDS
-      const OWNER_PIN = "0000";        // PIN del Dueño para reiniciar corte a ceros
-      const WA_PHONE_NUMBER = "525547605797"; // Teléfono WhatsApp Maleza Café
+      const KDS_PIN = "1234";
+      const OWNER_PIN = "0000";
+      const WA_PHONE_NUMBER = "525547605797";
 
       const FEATURED_PROMO = {
         active: true,
@@ -405,54 +403,54 @@
       }
 
       const MENU_DATA = [
-        { id: 'c1', cat: 'crepas', name: 'Crepa Dulce Sencilla', price: 50, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false },[cite: 10]
-        { id: 'c2', cat: 'crepas', name: 'Crepa Dulce Doble', price: 60, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false },[cite: 10]
-        { id: 'c3', cat: 'crepas', name: 'Crepa Dulce Con Fruta', price: 70, desc: '1 o 2 bases + 1 fruta', type: 'crepa', maxBases: 2, hasFruit: true },[cite: 10]
-        { id: 'c4', cat: 'crepas', name: 'Crepa Salada Clásica', price: 60, desc: 'Jamón y queso manchego', type: 'simple' },[cite: 10]
-        { id: 'c5', cat: 'crepas', name: 'Crepa Salada Peperoni', price: 60, desc: 'Peperoni y queso manchego', type: 'simple' },[cite: 10]
-        { id: 'c6', cat: 'crepas', name: 'Crepa Salada Hawaiana', price: 70, desc: 'Jamón, queso manchego y piña', type: 'simple' },[cite: 10]
-        { id: 'w1', cat: 'crepas', name: 'Waffle Belga Sencillo', price: 40, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false, isWaffle: true },[cite: 11]
-        { id: 'w2', cat: 'crepas', name: 'Waffle Belga Doble', price: 45, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false, isWaffle: true },[cite: 11]
-        { id: 'w3', cat: 'crepas', name: 'Waffle Belga Con Fruta', price: 50, desc: '1 o 2 bases + 1 fruta', type: 'crepa', maxBases: 2, hasFruit: true, isWaffle: true },[cite: 11]
-        { id: 'w4', cat: 'crepas', name: 'Waffle Salado Clásico', price: 50, desc: 'Jamón y queso manchego', type: 'simple' },[cite: 11]
-        { id: 'w5', cat: 'crepas', name: 'Waffle Salado Peperoni', price: 50, desc: 'Peperoni y queso manchego', type: 'simple' },[cite: 11]
-        { id: 'w6', cat: 'crepas', name: 'Waffle Salado Hawaiano', price: 55, desc: 'Jamón, queso manchego y piña', type: 'simple' },[cite: 11]
-        { id: 'b1', cat: 'banderillas', name: 'Monstera Deliciosa', desc: 'Cubierta de papa en cubos + panko', type: 'banderilla', prices: { 'Salchicha': 70, 'Queso manchego': 80, 'Combinada': 75 } },[cite: 15]
-        { id: 'b2', cat: 'banderillas', name: 'Monstera Thai', desc: 'Cubierta con ramen crocante + panko', type: 'banderilla', prices: { 'Salchicha': 65, 'Queso manchego': 75, 'Combinada': 70 } },[cite: 15]
-        { id: 'b3', cat: 'banderillas', name: 'Monstera Fuego', desc: 'Empanizado especial flaming crunch', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },[cite: 15]
-        { id: 'b4', cat: 'banderillas', name: 'Monstera Clásica', desc: 'Rebozado dorado tradicional con panko', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },[cite: 15]
-        { id: 'b5', cat: 'banderillas', name: 'Monstera Mexicheese', desc: 'Empanizado con queso jalapeño', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },[cite: 15]
-        { id: 'e1', cat: 'especiales', name: 'Areca (Coconut Latte)', price: 70, desc: 'Fría, espresso, leche cremosa y coco', type: 'flavor', flavors: ['Receta Original'], allowShot: true },[cite: 13]
-        { id: 'e2', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 80, desc: 'Fría, matcha, leche cremosa y fresa', type: 'flavor', flavors: ['Receta Original'], allowShot: true },[cite: 13]
-        { id: 'e3', cat: 'especiales', name: 'Magnolia (Chocolate Latte)', price: 80, desc: 'Fría, espresso, leche y cold foam de chocolate', type: 'flavor', flavors: ['Receta Original'], allowShot: true },[cite: 13]
-        { id: 'e4', cat: 'especiales', name: 'Latte de Sabor Caliente', price: 65, desc: 'Elige tu sabor favorito', type: 'flavor', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], allowShot: true },[cite: 13]
-        { id: 'e5', cat: 'especiales', name: 'Latte de Sabor Frío', price: 70, desc: 'Elige tu sabor favorito', type: 'flavor', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], allowShot: true },[cite: 13]
-        { id: 'bt1', cat: 'bubble', name: 'Jacaranda (Taro Milk Tea)', price: 60, desc: 'Sabor taro, leche, té negro y tapioca', type: 'bubble' },[cite: 14]
-        { id: 'bt2', cat: 'bubble', name: 'Helecho (Matcha Milk Tea)', price: 60, desc: 'Sabor matcha, leche, té negro y tapioca', type: 'bubble' },[cite: 14]
-        { id: 'bt3', cat: 'bubble', name: 'Canela (Chai Milk Tea)', price: 60, desc: 'Sabor chai, leche, té negro y tapioca', type: 'bubble' },[cite: 14]
-        { id: 'bt4', cat: 'bubble', name: 'Palmera (Coco Milk Tea)', price: 70, desc: 'Sabor coco, leche, té negro y tapioca', type: 'bubble' },[cite: 14]
-        { id: 'bt5', cat: 'bubble', name: 'Alocasia (Cookies & Cream)', price: 70, desc: 'Cookies and cream, leche, té negro y tapioca', type: 'bubble' },[cite: 14]
-        { id: 'bt6', cat: 'bubble', name: 'Dalia (Moka Milk Tea)', price: 70, desc: 'Sabor moka, leche, té negro y tapioca', type: 'bubble' },[cite: 14]
-        { id: 'bt7', cat: 'bubble', name: 'Girasol (Mango Tea)', price: 70, desc: 'Sabor mango, té negro y tapioca', type: 'bubble' },[cite: 14]
-        { id: 'bt8', cat: 'bubble', name: 'Diente de León (Maracuyá)', price: 70, desc: 'Sabor maracuyá, té negro y tapioca', type: 'bubble' },[cite: 14]
-        { id: 'bt9', cat: 'bubble', name: 'Malus (Manzana Verde)', price: 70, desc: 'Sabor manzana verde, té negro y tapioca', type: 'bubble' },[cite: 14]
-        { id: 'cf1', cat: 'cafe', name: 'Capuchino Clásico', price: 50, desc: 'Espresso con espuma de leche', type: 'flavor', flavors: ['Clásico'], allowShot: true },[cite: 13]
-        { id: 'cf2', cat: 'cafe', name: 'Café Americano', price: 45, desc: 'Extracción fresca de grano americano', type: 'flavor', flavors: ['Tradicional'], allowShot: true },[cite: 13]
-        { id: 'cf3', cat: 'cafe', name: 'Café Lechero', price: 55, desc: 'Café tradicional con leche', type: 'flavor', flavors: ['Tradicional'], allowShot: true },[cite: 13]
-        { id: 'cf4', cat: 'cafe', name: 'Latte Clásico', price: 50, desc: 'Espresso con leche vaporizada', type: 'flavor', flavors: ['Clásico'], allowShot: true },[cite: 13]
-        { id: 'cf5', cat: 'cafe', name: 'Mocha Caliente', price: 55, desc: 'Espresso, chocolate y leche', type: 'flavor', flavors: ['Clásico'], allowShot: true },[cite: 13]
-        { id: 'cf6', cat: 'cafe', name: 'Capuchino de Sabor', price: 60, desc: 'Caliente con toque de sabor', type: 'flavor', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], allowShot: true },[cite: 13]
-        { id: 'cf7', cat: 'cafe', name: 'Bebida Caliente Sin Café', price: 60, desc: 'Chocolate, Chai o Matcha caliente', type: 'flavor', flavors: ['Chocolate', 'Chai', 'Matcha'] },[cite: 13]
-        { id: 'cf8', cat: 'cafe', name: 'Tizana Frutal Caliente', price: 50, desc: 'Infusión frutal a elegir', type: 'flavor', flavors: ['Frutos rojos', 'Maracuyá-cempasúchil'] },[cite: 13]
-        { id: 'cf9', cat: 'cafe', name: 'Frappé Clásico ($60)', price: 60, desc: 'Oreo, Chocolate Abuelita, Moka o Chai', type: 'flavor', flavors: ['Oreo', 'Chocolate abuelita', 'Moka', 'Chai'] },[cite: 12]
-        { id: 'cf10', cat: 'cafe', name: 'Frappé Especial ($70)', price: 70, desc: 'Café, Matcha o Con Alcohol', type: 'flavor', flavors: ['Café', 'Matcha', 'Con Alcohol: Rompope', 'Con Alcohol: Piña colada', 'Con Alcohol: Baileys'] },[cite: 12]
-        { id: 'cf11', cat: 'cafe', name: 'Frappé Gourmet ($75)', price: 75, desc: 'Caramelo o Crema Irlandesa', type: 'flavor', flavors: ['Caramelo', 'Crema irlandesa'] },[cite: 12]
-        { id: 'cf12', cat: 'cafe', name: 'Soda Italiana', price: 60, desc: 'Burbujeante y refrescante', type: 'flavor', flavors: ['Mora azul', 'Mora azul y lavanda', 'Manzana verde', 'Frutos Rojos'] },[cite: 12]
-        { id: 'cf13', cat: 'cafe', name: 'Refresh Frutal', price: 60, desc: 'Bebida fría refrescante', type: 'flavor', flavors: ['Maracuyá', 'Dragón Fruit'] },[cite: 12]
-        { id: 'cf14', cat: 'cafe', name: 'Smoothie Frutal', price: 60, desc: 'Cremoso de fruta natural', type: 'flavor', flavors: ['Coco', 'Mango'] },[cite: 12]
-        { id: 'cf15', cat: 'cafe', name: 'Malteada Clásica', price: 60, desc: 'Fresa, Vainilla o Chocolate', type: 'flavor', flavors: ['Fresa', 'Vainilla', 'Chocolate'] },[cite: 12]
-        { id: 'cf16', cat: 'cafe', name: 'Malteada con Alcohol', price: 75, desc: 'Rompope, Piña Colada o Baileys', type: 'flavor', flavors: ['Rompope', 'Piña Colada', 'Baileys'] },[cite: 12]
-        { id: 'cf17', cat: 'cafe', name: 'Esquimo Tradicional', price: 40, desc: 'Espumoso batido al momento', type: 'flavor', flavors: ['Café', 'Chocolate', 'Vainilla', 'Fresa', 'Chocolate abuelita', 'Caramelo', 'Moka', 'Chai', 'Matcha', 'Taro'] }[cite: 12]
+        { id: 'c1', cat: 'crepas', name: 'Crepa Dulce Sencilla', price: 50, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false },
+        { id: 'c2', cat: 'crepas', name: 'Crepa Dulce Doble', price: 60, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false },
+        { id: 'c3', cat: 'crepas', name: 'Crepa Dulce Con Fruta', price: 70, desc: '1 o 2 bases + 1 fruta', type: 'crepa', maxBases: 2, hasFruit: true },
+        { id: 'c4', cat: 'crepas', name: 'Crepa Salada Clásica', price: 60, desc: 'Jamón y queso manchego', type: 'simple' },
+        { id: 'c5', cat: 'crepas', name: 'Crepa Salada Peperoni', price: 60, desc: 'Peperoni y queso manchego', type: 'simple' },
+        { id: 'c6', cat: 'crepas', name: 'Crepa Salada Hawaiana', price: 70, desc: 'Jamón, queso manchego y piña', type: 'simple' },
+        { id: 'w1', cat: 'crepas', name: 'Waffle Belga Sencillo', price: 40, desc: '1 Base a elegir', type: 'crepa', maxBases: 1, hasFruit: false, isWaffle: true },
+        { id: 'w2', cat: 'crepas', name: 'Waffle Belga Doble', price: 45, desc: '2 Bases a elegir', type: 'crepa', maxBases: 2, hasFruit: false, isWaffle: true },
+        { id: 'w3', cat: 'crepas', name: 'Waffle Belga Con Fruta', price: 50, desc: '1 o 2 bases + 1 fruta', type: 'crepa', maxBases: 2, hasFruit: true, isWaffle: true },
+        { id: 'w4', cat: 'crepas', name: 'Waffle Salado Clásico', price: 50, desc: 'Jamón y queso manchego', type: 'simple' },
+        { id: 'w5', cat: 'crepas', name: 'Waffle Salado Peperoni', price: 50, desc: 'Peperoni y queso manchego', type: 'simple' },
+        { id: 'w6', cat: 'crepas', name: 'Waffle Salado Hawaiano', price: 55, desc: 'Jamón, queso manchego y piña', type: 'simple' },
+        { id: 'b1', cat: 'banderillas', name: 'Monstera Deliciosa', desc: 'Cubierta de papa en cubos + panko', type: 'banderilla', prices: { 'Salchicha': 70, 'Queso manchego': 80, 'Combinada': 75 } },
+        { id: 'b2', cat: 'banderillas', name: 'Monstera Thai', desc: 'Cubierta con ramen crocante + panko', type: 'banderilla', prices: { 'Salchicha': 65, 'Queso manchego': 75, 'Combinada': 70 } },
+        { id: 'b3', cat: 'banderillas', name: 'Monstera Fuego', desc: 'Empanizado especial flaming crunch', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },
+        { id: 'b4', cat: 'banderillas', name: 'Monstera Clásica', desc: 'Rebozado dorado tradicional con panko', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },
+        { id: 'b5', cat: 'banderillas', name: 'Monstera Mexicheese', desc: 'Empanizado con queso jalapeño', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },
+        { id: 'e1', cat: 'especiales', name: 'Areca (Coconut Latte)', price: 70, desc: 'Fría, espresso, leche cremosa y coco', type: 'flavor', flavors: ['Receta Original'], allowShot: true },
+        { id: 'e2', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 80, desc: 'Fría, matcha, leche cremosa y fresa', type: 'flavor', flavors: ['Receta Original'], allowShot: true },
+        { id: 'e3', cat: 'especiales', name: 'Magnolia (Chocolate Latte)', price: 80, desc: 'Fría, espresso, leche y cold foam de chocolate', type: 'flavor', flavors: ['Receta Original'], allowShot: true },
+        { id: 'e4', cat: 'especiales', name: 'Latte de Sabor Caliente', price: 65, desc: 'Elige tu sabor favorito', type: 'flavor', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], allowShot: true },
+        { id: 'e5', cat: 'especiales', name: 'Latte de Sabor Frío', price: 70, desc: 'Elige tu sabor favorito', type: 'flavor', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], allowShot: true },
+        { id: 'bt1', cat: 'bubble', name: 'Jacaranda (Taro Milk Tea)', price: 60, desc: 'Sabor taro, leche, té negro y tapioca', type: 'bubble' },
+        { id: 'bt2', cat: 'bubble', name: 'Helecho (Matcha Milk Tea)', price: 60, desc: 'Sabor matcha, leche, té negro y tapioca', type: 'bubble' },
+        { id: 'bt3', cat: 'bubble', name: 'Canela (Chai Milk Tea)', price: 60, desc: 'Sabor chai, leche, té negro y tapioca', type: 'bubble' },
+        { id: 'bt4', cat: 'bubble', name: 'Palmera (Coco Milk Tea)', price: 70, desc: 'Sabor coco, leche, té negro y tapioca', type: 'bubble' },
+        { id: 'bt5', cat: 'bubble', name: 'Alocasia (Cookies & Cream)', price: 70, desc: 'Cookies and cream, leche, té negro y tapioca', type: 'bubble' },
+        { id: 'bt6', cat: 'bubble', name: 'Dalia (Moka Milk Tea)', price: 70, desc: 'Sabor moka, leche, té negro y tapioca', type: 'bubble' },
+        { id: 'bt7', cat: 'bubble', name: 'Girasol (Mango Tea)', price: 70, desc: 'Sabor mango, té negro y tapioca', type: 'bubble' },
+        { id: 'bt8', cat: 'bubble', name: 'Diente de León (Maracuyá)', price: 70, desc: 'Sabor maracuyá, té negro y tapioca', type: 'bubble' },
+        { id: 'bt9', cat: 'bubble', name: 'Malus (Manzana Verde)', price: 70, desc: 'Sabor manzana verde, té negro y tapioca', type: 'bubble' },
+        { id: 'cf1', cat: 'cafe', name: 'Capuchino Clásico', price: 50, desc: 'Espresso con espuma de leche', type: 'flavor', flavors: ['Clásico'], allowShot: true },
+        { id: 'cf2', cat: 'cafe', name: 'Café Americano', price: 45, desc: 'Extracción fresca de grano americano', type: 'flavor', flavors: ['Tradicional'], allowShot: true },
+        { id: 'cf3', cat: 'cafe', name: 'Café Lechero', price: 55, desc: 'Café tradicional con leche', type: 'flavor', flavors: ['Tradicional'], allowShot: true },
+        { id: 'cf4', cat: 'cafe', name: 'Latte Clásico', price: 50, desc: 'Espresso con leche vaporizada', type: 'flavor', flavors: ['Clásico'], allowShot: true },
+        { id: 'cf5', cat: 'cafe', name: 'Mocha Caliente', price: 55, desc: 'Espresso, chocolate y leche', type: 'flavor', flavors: ['Clásico'], allowShot: true },
+        { id: 'cf6', cat: 'cafe', name: 'Capuchino de Sabor', price: 60, desc: 'Caliente con toque de sabor', type: 'flavor', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], allowShot: true },
+        { id: 'cf7', cat: 'cafe', name: 'Bebida Caliente Sin Café', price: 60, desc: 'Chocolate, Chai o Matcha caliente', type: 'flavor', flavors: ['Chocolate', 'Chai', 'Matcha'] },
+        { id: 'cf8', cat: 'cafe', name: 'Tizana Frutal Caliente', price: 50, desc: 'Infusión frutal a elegir', type: 'flavor', flavors: ['Frutos rojos', 'Maracuyá-cempasúchil'] },
+        { id: 'cf9', cat: 'cafe', name: 'Frappé Clásico ($60)', price: 60, desc: 'Oreo, Chocolate Abuelita, Moka o Chai', type: 'flavor', flavors: ['Oreo', 'Chocolate abuelita', 'Moka', 'Chai'] },
+        { id: 'cf10', cat: 'cafe', name: 'Frappé Especial ($70)', price: 70, desc: 'Café, Matcha o Con Alcohol', type: 'flavor', flavors: ['Café', 'Matcha', 'Con Alcohol: Rompope', 'Con Alcohol: Piña colada', 'Con Alcohol: Baileys'] },
+        { id: 'cf11', cat: 'cafe', name: 'Frappé Gourmet ($75)', price: 75, desc: 'Caramelo o Crema Irlandesa', type: 'flavor', flavors: ['Caramelo', 'Crema irlandesa'] },
+        { id: 'cf12', cat: 'cafe', name: 'Soda Italiana', price: 60, desc: 'Burbujeante y refrescante', type: 'flavor', flavors: ['Mora azul', 'Mora azul y lavanda', 'Manzana verde', 'Frutos Rojos'] },
+        { id: 'cf13', cat: 'cafe', name: 'Refresh Frutal', price: 60, desc: 'Bebida fría refrescante', type: 'flavor', flavors: ['Maracuyá', 'Dragón Fruit'] },
+        { id: 'cf14', cat: 'cafe', name: 'Smoothie Frutal', price: 60, desc: 'Cremoso de fruta natural', type: 'flavor', flavors: ['Coco', 'Mango'] },
+        { id: 'cf15', cat: 'cafe', name: 'Malteada Clásica', price: 60, desc: 'Fresa, Vainilla o Chocolate', type: 'flavor', flavors: ['Fresa', 'Vainilla', 'Chocolate'] },
+        { id: 'cf16', cat: 'cafe', name: 'Malteada con Alcohol', price: 75, desc: 'Rompope, Piña Colada o Baileys', type: 'flavor', flavors: ['Rompope', 'Piña Colada', 'Baileys'] },
+        { id: 'cf17', cat: 'cafe', name: 'Esquimo Tradicional', price: 40, desc: 'Espumoso batido al momento', type: 'flavor', flavors: ['Café', 'Chocolate', 'Vainilla', 'Fresa', 'Chocolate abuelita', 'Caramelo', 'Moka', 'Chai', 'Matcha', 'Taro'] }
       ];
 
       let cart = [];
@@ -529,12 +527,12 @@
               '<span class="font-bold text-xs text-maleza">$' + p + '</span></label>';
           });
           html += '</div>';
-          html += '<div class="mt-2.5"><label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 cursor-pointer"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" id="band_extra" onchange="window.updateBanderillaSubtotal()"> Ingrediente extra</span><span class="font-bold text-xs text-maleza-accent">+$15</span></label></div>';[cite: 15]
+          html += '<div class="mt-2.5"><label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 cursor-pointer"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" id="band_extra" onchange="window.updateBanderillaSubtotal()"> Ingrediente extra</span><span class="font-bold text-xs text-maleza-accent">+$15</span></label></div>';
           c.innerHTML = html;
           window.updateBanderillaSubtotal();
         } else if (item.type === 'bubble') {
           document.getElementById('modal-base-price').textContent = 'Precio: $' + item.price;
-          c.innerHTML = '<label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 text-xs font-semibold cursor-pointer"><span class="flex items-center gap-2"><input type="checkbox" id="bubble_extra" onchange="window.updateBubbleSubtotal()"> Tapioca / Ingrediente extra</span><span class="font-bold text-maleza-accent">+$15</span></label>';[cite: 14]
+          c.innerHTML = '<label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 text-xs font-semibold cursor-pointer"><span class="flex items-center gap-2"><input type="checkbox" id="bubble_extra" onchange="window.updateBubbleSubtotal()"> Tapioca / Ingrediente extra</span><span class="font-bold text-maleza-accent">+$15</span></label>';
           document.getElementById('modal-subtotal').textContent = '$' + item.price.toFixed(2);
         } else if (item.type === 'flavor') {
           document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
@@ -544,7 +542,7 @@
           });
           html += '</div></div>';
           if (item.allowShot) {
-            html += '<div class="mt-2.5"><label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 text-xs font-semibold cursor-pointer"><span class="flex items-center gap-2"><input type="checkbox" id="shot_extra" onchange="window.updateBubbleSubtotal()"> Shot de Espresso extra</span><span class="font-bold text-maleza-accent">+$15</span></label></div>';[cite: 13]
+            html += '<div class="mt-2.5"><label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 text-xs font-semibold cursor-pointer"><span class="flex items-center gap-2"><input type="checkbox" id="shot_extra" onchange="window.updateBubbleSubtotal()"> Shot de Espresso extra</span><span class="font-bold text-maleza-accent">+$15</span></label></div>';
           }
           c.innerHTML = html;
           document.getElementById('modal-subtotal').textContent = '$' + item.price.toFixed(2);
@@ -554,17 +552,17 @@
 
       function renderCrepaOptions(item, container) {
         document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
-        const bases = ['Crema de avellanas', 'Mermelada fresa', 'Mermelada zarzamora', 'Cajeta', 'Lechera', 'Philadelphia'];[cite: 10, 11]
-        const frutas = ['Fresa', 'Plátano', 'Durazno'];[cite: 10, 11]
+        const bases = ['Crema de avellanas', 'Mermelada fresa', 'Mermelada zarzamora', 'Cajeta', 'Lechera', 'Philadelphia'];
+        const frutas = ['Fresa', 'Plátano', 'Durazno'];
         const toppings = [
-          { name: 'Nuez', cost: 10 },[cite: 10, 11]
-          { name: 'Chispas de chocolate', cost: 10 },[cite: 10, 11]
-          { name: 'Oreo', cost: 10 },[cite: 10, 11]
-          { name: 'Fruta extra', cost: 10 },[cite: 10, 11]
-          { name: 'Ingrediente extra', cost: 10 }[cite: 10, 11]
+          { name: 'Nuez', cost: 10 },
+          { name: 'Chispas de chocolate', cost: 10 },
+          { name: 'Oreo', cost: 10 },
+          { name: 'Fruta extra', cost: 10 },
+          { name: 'Ingrediente extra', cost: 10 }
         ];
         if (item.isWaffle) {
-          toppings.push({ name: 'Bola de helado', cost: 15 });[cite: 11]
+          toppings.push({ name: 'Bola de helado', cost: 15 });
         }
 
         let html = '<div><label class="font-semibold block text-xs text-zinc-700 mb-1">Elige tus bases (Máximo ' + item.maxBases + '):</label><div class="grid grid-cols-2 gap-1.5 text-xs">';
@@ -713,7 +711,7 @@
       };
 
       window.copyBBVA = function(btn) {
-        const num = "4152314587690465";[cite: 14]
+        const num = "4152314587690465";
         function onCopied() {
           const originalText = btn.innerHTML;
           btn.innerHTML = "✓ ¡COPIADO!";
@@ -744,7 +742,7 @@
             document.execCommand('copy');
             onCopied();
           } catch (e) {
-            alert("Cuenta BBVA: " + num);[cite: 14]
+            alert("Cuenta BBVA: " + num);
           }
           document.body.removeChild(ta);
         }
@@ -1066,7 +1064,6 @@
         window.closeHistoryModal();
       };
 
-      // MODAL Y LÓGICA DE REINICIO DE CORTE A CEROS (OPCIÓN B)
       window.openResetCutModal = function() {
         const pinInput = document.getElementById('owner-pin-input');
         const err = document.getElementById('owner-pin-error');
@@ -1090,18 +1087,15 @@
           return;
         }
 
-        // 1. Filtrar ventas activas que no estén canceladas
         const activeOrders = orders.filter(function(o) { 
           return o.status !== 'canceled' && o.status !== 'returned' && o.status !== 'archived_cut'; 
         });
 
-        // 2. Si hay ventas, descargar automáticamente el respaldo CSV
         if (activeOrders.length > 0) {
           const timeNow = new Date().toTimeString().slice(0,5).replace(':', '-');
           window.exportCurrentOrdersCSV(`Respaldo_Corte_${selectedKdsDateStr}_${timeNow}.csv`);
         }
 
-        // 3. Archivar lógicamente las órdenes bajo el estatus 'archived_cut'
         if (isCloud && db) {
           try {
             const batch = db.batch();
@@ -1150,7 +1144,7 @@
         } else {
           const all = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
           all.forEach(function(o) {
-            if (o.dateStr === selectedKdsDateStr && o.status !== 'canceled' && o.status !== 'returned' && o.status !== 'archived_cut') o.status = 'archived';
+            if (o.dateStr === selectedKdsDateStr && o.status !== 'canceled' && o.status !== 'returned') o.status = 'archived';
           });
           SafeStorage.setItem('maleza_orders', JSON.stringify(all));
           startKDSListener(selectedKdsDateStr);
@@ -1188,12 +1182,10 @@
         
         const isToday = selectedKdsDateStr === getLocalDateString();
         
-        // Excluimos del KDS activo las comandas que ya fueron reiniciadas o archivadas
         const visibleOrders = isToday 
           ? orders.filter(function(o) { return o.status !== 'archived' && o.status !== 'canceled' && o.status !== 'returned' && o.status !== 'archived_cut'; }) 
           : orders;
 
-        // El corte activo solo suma lo que no ha sido reiniciado a ceros
         const activeCutOrders = orders.filter(function(o) { return o.status !== 'canceled' && o.status !== 'returned' && o.status !== 'archived_cut' && o.status !== 'archived'; });
         const totalSum = activeCutOrders.reduce(function(s, o) { return s + (o.total || 0); }, 0);
         if (totalEl) totalEl.textContent = '$' + totalSum.toFixed(2);
