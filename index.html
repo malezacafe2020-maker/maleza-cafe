@@ -48,7 +48,6 @@
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     .banner-hover:active { transform: scale(0.98); }
     
-    /* Controles segmentados para tipo de orden */
     .segmented-control input[type="radio"] { display: none; }
     .segmented-control label {
       flex: 1; text-align: center; padding: 10px; cursor: pointer;
@@ -63,7 +62,6 @@
 
   <div id="main-app-container" class="w-full max-w-md bg-[#F4F2EB] min-h-screen shadow-2xl relative flex flex-col border-x border-[#E2DDD0]">
 
-    <!-- HEADER CLIENTE LIMPIO -->
     <header id="client-header" class="sticky top-0 z-40 bg-[#F4F2EB]/95 backdrop-blur-md border-b border-[#E7E3D8] px-4 py-3">
       <div class="flex flex-col items-center justify-center text-center">
         <div class="flex items-center space-x-2">
@@ -89,7 +87,6 @@
       <div id="monitor-actions" class="flex flex-col gap-2"></div>
     </div>
 
-    <!-- VISTA CLIENTE PRINCIPAL -->
     <main id="view-client" class="p-4 flex-1 flex flex-col justify-between">
       <div>
         <div id="seasonal-promo-container" class="mb-3 hidden">
@@ -99,17 +96,17 @@
                 EDICIÓN ESPECIAL
               </span>
               <h3 id="promo-title" class="font-serif text-base font-bold text-[#faf9f5] leading-snug truncate">
-                Tizana Maracuyá-Cempasúchil ($50)
+                Pumpkin Spice
               </h3>
               <p id="promo-desc" class="text-[11px] text-zinc-300 font-medium leading-tight mb-2 line-clamp-2">
-                Notas florales y cítricas para estos días frescos de otoño.
+                Nuestra bebida de Temporada.
               </p>
               <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#f4e2c6]">
-                Probar ahora ✨
+                Elegir preparación ✨
               </span>
             </div>
             <div class="w-14 h-14 rounded-full bg-emerald-950/40 border border-white/10 flex items-center justify-center text-2xl shadow-inner shrink-0 relative">
-              🍵<span class="absolute bottom-0 right-0 text-xs">🍁</span>
+              🎃<span class="absolute bottom-0 right-0 text-xs">☕</span>
             </div>
           </div>
         </div>
@@ -151,7 +148,6 @@
       </div>
     </main>
 
-    <!-- PANTALLA KDS LOGIN -->
     <section id="kds-auth-screen" class="hidden min-h-screen flex items-center justify-center p-4">
       <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-xl border border-zinc-200">
         <span class="w-12 h-12 bg-maleza/10 text-maleza flex items-center justify-center rounded-full mx-auto text-xl mb-3">🔒</span>
@@ -164,7 +160,6 @@
       </div>
     </section>
 
-    <!-- VISTA TABLERO KDS -->
     <section id="view-tablet" class="hidden p-4 w-full">
       <div class="bg-white rounded-2xl p-4 mb-4 shadow-sm border border-zinc-200 flex flex-wrap items-center justify-between gap-3">
         <div>
@@ -204,7 +199,6 @@
     </section>
   </div>
 
-  <!-- MODAL REINICIO CORTE -->
   <div id="reset-cut-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl text-center border border-zinc-200">
       <div class="w-12 h-12 bg-rose-50 text-rose-700 flex items-center justify-center rounded-full mx-auto text-xl mb-3 font-bold">0️⃣</div>
@@ -224,7 +218,6 @@
     </div>
   </div>
 
-  <!-- MODAL HISTORIAL -->
   <div id="history-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl">
       <div class="flex justify-between items-center border-b border-zinc-100 pb-2 mb-3">
@@ -244,7 +237,6 @@
     </div>
   </div>
 
-  <!-- MODAL PERSONALIZACIÓN PRODUCTOS -->
   <div id="custom-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[88vh] overflow-y-auto p-5 shadow-2xl">
       <div class="flex justify-between items-start border-b border-zinc-100 pb-2 mb-3">
@@ -267,7 +259,6 @@
     </div>
   </div>
 
-  <!-- MODAL CARRITO -->
   <div id="cart-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[92vh] overflow-y-auto p-5 shadow-2xl">
       <div class="flex justify-between items-center border-b border-zinc-100 pb-2 mb-3">
@@ -277,7 +268,6 @@
       
       <div id="cart-items-list" class="space-y-2 mb-4"></div>
 
-      <!-- SELECTOR: PARA LLEVAR O COMER AQUÍ -->
       <div class="bg-zinc-50 p-1.5 rounded-xl border border-zinc-200 mb-3 segmented-control flex">
         <input type="radio" id="opt-here" name="order_type" value="Para comer aquí" checked>
         <label for="opt-here">🍽️ En el lugar</label>
@@ -334,15 +324,15 @@
     (function() {
       const KDS_PIN = "1234";
       const OWNER_PIN = "0000";
-      const WA_PHONE_NUMBER = "525547605797";
+      const WA_PHONE_NUMBER = "525519793606";
 
       const FEATURED_PROMO = {
         active: true,
-        productId: 'cf8',
+        productId: 'promo_pumpkin',
         badge: 'Otoño en Maleza',
-        title: 'Tizana Maracuyá-Cempasúchil ($50)',
-        desc: 'Notas florales y cítricas para estos días frescos.',
-        visualEmoji: '🍵'
+        title: 'Pumpkin Spice',
+        desc: 'Nuestra bebida de Temporada.',
+        visualEmoji: '🎃'
       };
 
       const firebaseConfig = {
@@ -391,8 +381,8 @@
         console.warn("Modo Local Activo");
       }
 
-      // DATOS LIMPIOS SIN MARCAS EXTERNAS
       const MENU_DATA = [
+        { id: 'promo_pumpkin', cat: 'cafe', name: 'Pumpkin Spice', price: 60, desc: 'Caliente, Frío o Frappé', type: 'pumpkin' },
         { id: 'c1', cat: 'crepas', name: 'Crepa Dulce Sencilla', price: 50, desc: 'Una base a elegir', type: 'crepa_dulce', maxBases: 1, hasFruit: false },
         { id: 'c2', cat: 'crepas', name: 'Crepa Dulce Doble', price: 60, desc: 'Dos bases a elegir', type: 'crepa_dulce', maxBases: 2, hasFruit: false },
         { id: 'c3', cat: 'crepas', name: 'Crepa Dulce Con Fruta', price: 70, desc: 'Bases y fruta', type: 'crepa_dulce', maxBases: 2, hasFruit: true },
@@ -506,7 +496,9 @@
         const c = document.getElementById('modal-options-container');
         c.innerHTML = '';
 
-        if (item.type === 'crepa_dulce') {
+        if (item.type === 'pumpkin') {
+          renderPumpkinOptions(item, c);
+        } else if (item.type === 'crepa_dulce') {
           renderCrepaDulceOptions(item, c);
         } else if (item.type === 'crepa_salada') {
           renderCrepaSaladaOptions(item, c);
@@ -545,6 +537,26 @@
         }
         document.getElementById('custom-modal').classList.remove('hidden');
       };
+
+      function renderPumpkinOptions(item, container) {
+        document.getElementById('modal-base-price').textContent = "Selecciona preparación:";
+        const options = [
+          { name: 'Caliente', price: 60 },
+          { name: 'Latte Frío', price: 70 },
+          { name: 'Frappé', price: 60 }
+        ];
+
+        let html = '<div class="space-y-2">';
+        options.forEach(function(opt, idx) {
+          html += '<label class="flex justify-between items-center p-3 rounded-xl border border-zinc-200 cursor-pointer hover:border-maleza">' +
+            '<span class="text-xs font-semibold flex items-center gap-2"><input type="radio" name="opt_pumpkin" value="' + opt.name + '" data-price="' + opt.price + '" ' + (idx === 0 ? 'checked' : '') + ' onchange="window.updatePriceSubtotal()"> ' + opt.name + '</span>' +
+            '<span class="font-bold text-xs text-maleza">$' + opt.price + '</span></label>';
+        });
+        html += '</div>';
+
+        container.innerHTML = html;
+        window.updatePriceSubtotal();
+      }
 
       function renderCrepaDulceOptions(item, container) {
         document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
@@ -623,7 +635,12 @@
         if (!currentCustomItem) return;
         let total = currentCustomItem.price || 0;
         
-        if (currentCustomItem.type === 'banderilla') {
+        if (currentCustomItem.type === 'pumpkin') {
+          const selected = document.querySelector('input[name="opt_pumpkin"]:checked');
+          if (selected) {
+            total = parseInt(selected.dataset.price, 10);
+          }
+        } else if (currentCustomItem.type === 'banderilla') {
           const b = document.querySelector('input[name="opt_band"]:checked');
           if (b) total = parseInt(b.dataset.p, 10);
           const ex = document.getElementById('band_extra');
@@ -645,7 +662,13 @@
         let details = [];
         let price = currentCustomItem.price || 0;
 
-        if (currentCustomItem.type.startsWith('crepa') || currentCustomItem.type.startsWith('rol')) {
+        if (currentCustomItem.type === 'pumpkin') {
+          const selected = document.querySelector('input[name="opt_pumpkin"]:checked');
+          if (selected) {
+            price = parseInt(selected.dataset.price, 10);
+            details.push('Preparación: ' + selected.value);
+          }
+        } else if (currentCustomItem.type.startsWith('crepa') || currentCustomItem.type.startsWith('rol')) {
           const bases = Array.from(document.querySelectorAll('input[name="opt_base"]:checked')).map(function(x) { return x.value; });
           if (bases.length > 0) details.push('Bases: ' + bases.join(', '));
           
