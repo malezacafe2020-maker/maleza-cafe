@@ -696,4 +696,749 @@
           const ex = document.getElementById('bubble_extra') || document.getElementById('shot_extra');
           if (ex && ex.checked) total += 15;
         } else if (currentCustomItem.type === 'mandragora') {
-          total = currentCustomItem
+          total = currentCustomItem.price || 80;
+        } else {
+          document.querySelectorAll('input[name="opt_topping"]:checked').forEach(function(cb) {
+            total += parseInt(cb.dataset.cost, 10);
+          });
+        }
+        
+        document.getElementById('modal-subtotal').textContent = '$' + total.toFixed(2);
+      };
+      
+      window.confirmAddToCart = function() {
+        if (!currentCustomItem) return;
+        let details = [];
+        let price = currentCustomItem.price || 0;
+
+        if (currentCustomItem.type === 'mandragora') {
+          const r = document.querySelector('input[name="opt_mandragora_relleno"]:checked');
+          const f = document.querySelector('input[name="opt_mandragora_fruta"]:checked');
+          if (r) details.push('Relleno pan: ' + r.value);
+          if (f) details.push('Fruta: ' + f.value);
+        } else if (currentCustomItem.type === 'pumpkin') {
+          const selected = document.querySelector('input[name="opt_pumpkin"]:checked');
+          if (selected) {
+            price = parseInt(selected.dataset.price, 10);
+            details.push('Preparación: ' + selected.value);
+          }
+        } else if (currentCustomItem.type === 'matcha_azul') {
+          const selected = document.querySelector('input[name="opt_matcha_azul"]:checked');
+          if (selected) {
+            price = parseInt(selected.dataset.price, 10);
+            details.push('Preparación: ' + selected.value);
+          }
+        } else if (currentCustomItem.type === 'frappe' || currentCustomItem.type === 'malteada') {
+          const fl = document.querySelector('input[name="opt_flavor"]:checked');
+          if (fl) details.push('Sabor: ' + fl.value);
+          const noCream = document.getElementById('item_no_cream');
+          if (noCream && noCream.checked) details.push('Sin crema batida');
+        } else if (currentCustomItem.type.startsWith('crepa') || currentCustomItem.type.startsWith('rol')) {
+          const bases = Array.from(document.querySelectorAll('input[name="opt_base"]:checked')).map(function(x) { return x.value; });
+          if (bases.length > 0) details.push('Bases: ' + bases.join(', '));
+          
+          const fruta = document.querySelector('input[name="opt_fruta"]:checked');
+          if (fruta && currentCustomItem.hasFruit) details.push('Fruta: ' + fruta.value);
+          
+          const cortesia = Array.from(document.querySelectorAll('input[name="opt_cortesia"]:checked')).map(function(x) { return x.value; });
+          if (cortesia.length > 0) details.push('Cortesía: ' + cortesia.join(', '));
+
+          const toppings = Array.from(document.querySelectorAll('input[name="opt_topping"]:checked')).map(function(cb) {
+            price += parseInt(cb.dataset.cost, 10);
+            return cb.value;
+          });
+          if (toppings.length > 0) details.push('Extras: ' + toppings.join(', '));
+          
+        } else if (currentCustomItem.type === 'banderilla') {
+          const b = document.querySelector('input[name="opt_band"]:checked');
+          if (b) { price = parseInt(b.dataset.p, 10); details.push('Relleno: ' + b.value); }
+          const ex = document.getElementById('band_extra');
+          if (ex && ex.checked) { price += 15; details.push('Con extra'); }
+        } else if (currentCustomItem.type === 'bubble') {
+          const ex = document.getElementById('bubble_extra');
+          if (ex && ex.checked) { price += 15; details.push('Con extra tapioca'); }
+        } else if (currentCustomItem.type.startsWith('flavor')) {
+          const fl = document.querySelector('input[name="opt_flavor"]:checked');
+          if (fl && fl.value !== 'Clásico' && fl.value !== 'Tradicional' && fl.value !== 'Receta Original') {
+            details.push('Sabor: ' + fl.value);
+          }
+          const sh = document.getElementById('shot_extra');
+          if (sh && sh.checked) { price += 15; details.push('Con Shot Espresso'); }
+        }
+        
+        cart.push({ id: currentCustomItem.id, name: currentCustomItem.name, price: price, total: price, qty: 1, details: details.join(' | ') });
+        window.closeCustomModal();
+        updateCartUI();
+      };
+
+      window.closeCustomModal = function() { document.getElementById('custom-modal').classList.add('hidden'); };
+      
+      window.openCartModal = function() { 
+        renderCartModalItems(); 
+        const err = document.getElementById('client-name-error');
+        const box = document.getElementById('client-name-container');
+        if (err) err.classList.add('hidden');
+        if (box) box.className = 'bg-white p-3 rounded-xl border-2 border-[#E7E3D8] shadow-sm mb-3 transition-all';
+        
+        const isBBVA = document.querySelector('input[name="payment_method"][value="Transferencia BBVA"]').checked;
+        window.toggleBBVAInfo(isBBVA);
+
+        document.getElementById('cart-modal').classList.remove('hidden'); 
+      };
+      
+      window.closeCartModal = function() { document.getElementById('cart-modal').classList.add('hidden'); };
+
+      window.removeCartItem = function(idx) {
+        cart.splice(idx, 1);
+        updateCartUI();
+        renderCartModalItems();
+      };
+
+      function updateCartUI() {
+        const count = cart.reduce(function(s, i) { return s + i.qty; }, 0);
+        const total = cart.reduce(function(s, i) { return s + i.total; }, 0);
+        document.getElementById('cart-count').textContent = count;
+        document.getElementById('cart-total').textContent = '$' + total.toFixed(2);
+        document.getElementById('cart-float').classList.toggle('hidden', count === 0);
+      }
+
+      function renderCartModalItems() {
+        const list = document.getElementById('cart-items-list');
+        const total = cart.reduce(function(s, i) { return s + i.total; }, 0);
+        document.getElementById('cart-checkout-total').textContent = '$' + total.toFixed(2);
+        list.innerHTML = cart.map(function(it, idx) {
+          return '<div class="flex justify-between items-center p-2.5 bg-[#FAF9F5] rounded-xl border border-zinc-200 text-xs">' +
+            '<div><strong>' + it.qty + 'x ' + it.name + '</strong> ($' + it.total + ') ' + (it.details ? '<p class="text-[10px] text-zinc-500">' + it.details + '</p>' : '') + '</div>' +
+            '<button type="button" onclick="window.removeCartItem(' + idx + ')" class="text-red-500 font-bold px-2 cursor-pointer">✕</button>' +
+          '</div>';
+        }).join('');
+      }
+
+      window.toggleBBVAInfo = function(show) {
+        const details = document.getElementById('bbva-details');
+        if (!details) return;
+        if (show) {
+          details.classList.remove('hidden');
+        } else {
+          details.classList.add('hidden');
+        }
+      };
+
+      window.copyBBVA = function(btn) {
+        const num = "4152314587690465";
+        function onCopied() {
+          const originalText = btn.innerHTML;
+          btn.innerHTML = "✓ ¡COPIADO!";
+          btn.classList.replace('bg-maleza/10', 'bg-emerald-100');
+          btn.classList.replace('text-maleza', 'text-emerald-700');
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.replace('bg-emerald-100', 'bg-maleza/10');
+            btn.classList.replace('text-emerald-700', 'text-maleza');
+          }, 2000);
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(num).then(onCopied).catch(fallback);
+        } else {
+          fallback();
+        }
+
+        function fallback() {
+          const ta = document.createElement("textarea");
+          ta.value = num;
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          try {
+            document.execCommand('copy');
+            onCopied();
+          } catch (e) {
+            alert("Cuenta BBVA: " + num);
+          }
+          document.body.removeChild(ta);
+        }
+      };
+
+      function checkActiveClientOrder() {
+        activeClientOrderId = SafeStorage.getItem('maleza_active_order');
+        if (activeClientOrderId) {
+          listenToActiveClientOrder(activeClientOrderId);
+        }
+      }
+
+      function listenToActiveClientOrder(orderId) {
+        if (isCloud && db) {
+          if (clientUnsubscribe) clientUnsubscribe();
+          clientUnsubscribe = db.collection("orders").doc(orderId).onSnapshot(function(doc) {
+            if (doc.exists) {
+              handleClientStatusChange(doc.id, doc.data());
+            }
+          });
+        } else {
+          const all = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
+          const o = all.find(function(x) { return x.id === orderId; });
+          if (o) handleClientStatusChange(o.id, o);
+        }
+      }
+
+      function handleClientStatusChange(id, data) {
+        activeClientOrderData = data;
+        const monitor = document.getElementById('order-monitor');
+        const badge = document.getElementById('monitor-badge');
+        const msg = document.getElementById('monitor-msg');
+        const actions = document.getElementById('monitor-actions');
+        
+        if (data.status === 'canceled' || data.status === 'archived' || data.status === 'archived_cut') {
+          monitor.classList.add('hidden');
+          SafeStorage.removeItem('maleza_active_order');
+          if (clientUnsubscribe) { clientUnsubscribe(); clientUnsubscribe = null; }
+          return;
+        }
+        
+        monitor.classList.remove('hidden');
+        
+        let waBtn = '';
+        if (data.paymentMethod === 'Transferencia BBVA') {
+          const orderTypeString = data.orderType === 'Para llevar' ? '(Para llevar)' : '(Comer aquí)';
+          const msgText = `Hola Maleza Café, soy ${data.clientName} ${orderTypeString} y les comparto mi comprobante de pago de la comanda #${id.slice(-4).toUpperCase()} por un total de $${parseFloat(data.total).toFixed(2)}.`;
+          const waUrl = `https://wa.me/${WA_PHONE_NUMBER}?text=${encodeURIComponent(msgText)}`;
+          waBtn = `<a href="${waUrl}" target="_blank" class="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-xs font-bold py-2 rounded-xl shadow-sm flex items-center justify-center gap-1.5 transition-all">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+            Enviar Comprobante WhatsApp
+          </a>`;
+        }
+
+        if (data.status === 'pending') {
+          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-amber-400 p-3.5 transition-all';
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800';
+          badge.textContent = 'PENDIENTE';
+          msg.textContent = 'Tu pedido está en fila. Aún puedes hacer cambios si te equivocaste.';
+          actions.innerHTML = `<button type="button" onclick="window.modifyActiveOrder()" class="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-semibold py-2 rounded-xl border border-zinc-300 active:scale-95 transition-transform cursor-pointer">✏️ Modificar Pedido</button>` + waBtn;
+          actions.classList.remove('hidden');
+        } else if (data.status === 'preparing') {
+          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-blue-500 p-3.5 transition-all';
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800';
+          badge.textContent = 'PREPARANDO';
+          msg.textContent = '¡Ya estamos preparando tu pedido! En un momento estará listo.';
+          actions.innerHTML = waBtn;
+          if (waBtn) { actions.classList.remove('hidden'); } else { actions.classList.add('hidden'); }
+        } else if (data.status === 'ready') {
+          if (navigator.vibrate) {
+            try { navigator.vibrate([200, 100, 200]); } catch(e){}
+          }
+          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-emerald-500 p-3.5 transition-all';
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
+          badge.textContent = 'LISTO';
+          msg.textContent = '¡Tu pedido está listo! Te lo entregaremos en breve.';
+          actions.innerHTML = `<button type="button" onclick="window.dismissMonitor()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-2 rounded-xl shadow-md cursor-pointer">Entendido</button>` + waBtn;
+          actions.classList.remove('hidden');
+        } else if (data.status === 'returned') {
+          cart = Array.isArray(data.items) ? data.items.slice() : [];
+          if (data.clientName) {
+            document.getElementById('client-name').value = data.clientName;
+          }
+          updateCartUI();
+          window.openCartModal();
+          
+          monitor.classList.add('hidden');
+          SafeStorage.removeItem('maleza_active_order');
+          if (clientUnsubscribe) { clientUnsubscribe(); clientUnsubscribe = null; }
+        }
+      }
+
+      window.modifyActiveOrder = async function() {
+        const orderId = activeClientOrderId || SafeStorage.getItem('maleza_active_order');
+        if (!orderId) return;
+
+        const confirmModify = confirm("¿Deseas editar tu comanda actual?");
+        if (!confirmModify) return;
+
+        let itemsToRestore = [];
+        let nameToRestore = '';
+        let typeToRestore = 'Para comer aquí';
+
+        if (activeClientOrderData && Array.isArray(activeClientOrderData.items)) {
+          itemsToRestore = activeClientOrderData.items.slice();
+          nameToRestore = activeClientOrderData.clientName || '';
+          typeToRestore = activeClientOrderData.orderType || 'Para comer aquí';
+        } else if (isCloud && db) {
+          try {
+            const docSnap = await db.collection("orders").doc(orderId).get();
+            if (docSnap.exists) {
+              const d = docSnap.data();
+              if (Array.isArray(d.items)) itemsToRestore = d.items.slice();
+              nameToRestore = d.clientName || '';
+              typeToRestore = d.orderType || 'Para comer aquí';
+            }
+          } catch (e) {
+            console.error("Error al recuperar pedido:", e);
+          }
+        } else {
+          const all = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
+          const o = all.find(function(x) { return x.id === orderId; });
+          if (o && Array.isArray(o.items)) {
+            itemsToRestore = o.items.slice();
+            nameToRestore = o.clientName || '';
+            typeToRestore = o.orderType || 'Para comer aquí';
+          }
+        }
+
+        if (isCloud && db) {
+          try {
+            await db.collection("orders").doc(orderId).update({ status: 'canceled' });
+          } catch (e) {
+            console.error("Error al cancelar orden previa:", e);
+          }
+        } else {
+          const all = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
+          const o = all.find(function(x) { return x.id === orderId; });
+          if (o) {
+            o.status = 'canceled';
+            SafeStorage.setItem('maleza_orders', JSON.stringify(all));
+          }
+        }
+
+        document.getElementById('order-monitor').classList.add('hidden');
+        SafeStorage.removeItem('maleza_active_order');
+        activeClientOrderId = null;
+        activeClientOrderData = null;
+        if (clientUnsubscribe) {
+          clientUnsubscribe();
+          clientUnsubscribe = null;
+        }
+
+        if (itemsToRestore.length > 0) { cart = itemsToRestore; }
+        if (nameToRestore) { document.getElementById('client-name').value = nameToRestore; }
+        
+        if (typeToRestore === 'Para llevar') {
+          document.getElementById('opt-togo').checked = true;
+        } else {
+          document.getElementById('opt-here').checked = true;
+        }
+
+        updateCartUI();
+        window.openCartModal();
+      };
+
+      window.dismissMonitor = function() {
+        document.getElementById('order-monitor').classList.add('hidden');
+        SafeStorage.removeItem('maleza_active_order');
+        if (clientUnsubscribe) { clientUnsubscribe(); clientUnsubscribe = null; }
+      };
+
+      window.sendOrder = async function() {
+        const nameInput = document.getElementById('client-name');
+        const nameContainer = document.getElementById('client-name-container');
+        const nameError = document.getElementById('client-name-error');
+        const nameVal = nameInput ? nameInput.value.trim() : '';
+
+        if (!nameVal) {
+          if (nameContainer) nameContainer.className = 'bg-red-50 p-3 rounded-xl border-2 border-maleza-accent shadow-sm mb-3 transition-all';
+          if (nameError) nameError.classList.remove('hidden');
+          if (nameInput) {
+            nameInput.focus();
+            nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          return;
+        }
+
+        if (nameContainer) nameContainer.className = 'bg-white p-3 rounded-xl border-2 border-[#E7E3D8] shadow-sm mb-3 transition-all';
+        if (nameError) nameError.classList.add('hidden');
+
+        if (cart.length === 0) return;
+
+        const total = cart.reduce(function(s, i) { return s + i.total; }, 0);
+        const paymentEl = document.querySelector('input[name="payment_method"]:checked');
+        const payment = paymentEl ? paymentEl.value : 'Efectivo';
+        
+        const typeEl = document.querySelector('input[name="order_type"]:checked');
+        const orderType = typeEl ? typeEl.value : 'Para comer aquí';
+        
+        const order = {
+          clientName: nameVal,
+          orderType: orderType,
+          items: cart,
+          total: total,
+          paymentMethod: payment,
+          status: 'pending',
+          dateStr: getLocalDateString(), 
+          timestampStr: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          createdAt: isCloud ? firebase.firestore.FieldValue.serverTimestamp() : new Date().toISOString()
+        };
+
+        const btn = document.getElementById('btn-submit-order');
+        btn.disabled = true;
+        btn.textContent = "Enviando comanda...";
+
+        try {
+          let newOrderId = null;
+          if (isCloud && db) {
+            const docRef = await db.collection("orders").add(order);
+            newOrderId = docRef.id;
+          } else {
+            newOrderId = 'ORD-' + Date.now().toString().slice(-4);
+            order.id = newOrderId;
+            const allOrders = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
+            allOrders.unshift(order);
+            SafeStorage.setItem('maleza_orders', JSON.stringify(allOrders));
+          }
+          
+          SafeStorage.setItem('maleza_active_order', newOrderId);
+          listenToActiveClientOrder(newOrderId);
+          
+          cart = [];
+          updateCartUI();
+          window.closeCartModal();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch (err) {
+          console.error("Error al enviar:", err);
+          alert("Error de conexión al enviar comanda. Intenta nuevamente.");
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Enviar Comanda a Cocina";
+        }
+      };
+
+      window.handlePromoClick = function() {
+        if (!FEATURED_PROMO.productId) return;
+        window.handleProductClick(FEATURED_PROMO.productId);
+      };
+
+      window.unlockKDS = function() {
+        const pin = document.getElementById('kds-pin-input').value;
+        if (pin === KDS_PIN) {
+          SafeStorage.setSession('maleza_kds_unlocked', 'true');
+          document.getElementById('kds-auth-screen').classList.add('hidden');
+          showKDSScreen();
+        } else {
+          alert("PIN incorrecto. Acceso denegado.");
+          document.getElementById('kds-pin-input').value = "";
+        }
+      };
+      
+      window.lockKDS = function() {
+        SafeStorage.removeSession('maleza_kds_unlocked');
+        location.reload();
+      };
+
+      function showKDSScreen() {
+        const container = document.getElementById('main-app-container');
+        if (container) {
+          container.className = 'w-full min-h-screen bg-[#F4F2EB] relative flex flex-col max-w-none border-none';
+        }
+        document.getElementById('view-tablet').classList.remove('hidden');
+        document.getElementById('history-date-picker').value = selectedKdsDateStr;
+        const b = document.getElementById('cloud-badge');
+        if (b) {
+          b.textContent = isCloud ? 'Nube Activa (Firebase)' : 'Modo Local';
+          b.className = isCloud
+            ? 'text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-medium'
+            : 'text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-medium';
+        }
+        startKDSListener(selectedKdsDateStr);
+      }
+
+      function startKDSListener(targetDateStr) {
+        if (kdsUnsubscribe) kdsUnsubscribe();
+
+        const isToday = targetDateStr === getLocalDateString();
+        document.getElementById('kds-active-date-label').textContent = isToday 
+          ? "Viendo: Hoy (" + targetDateStr + ")" 
+          : "Viendo Historial: " + targetDateStr;
+
+        let isFirstLoad = true;
+
+        if (isCloud && db) {
+          const q = db.collection("orders").where("dateStr", "==", targetDateStr);
+          kdsUnsubscribe = q.onSnapshot(function(snapshot) {
+            orders = [];
+            let hasNewOrders = false;
+            snapshot.docChanges().forEach(function(change) { if (change.type === "added") hasNewOrders = true; });
+            snapshot.forEach(function(doc) { orders.push(Object.assign({ id: doc.id }, doc.data())); });
+            orders.sort(function(a, b) { return (b.timestampStr || '').localeCompare(a.timestampStr || ''); });
+            renderKDS();
+
+            if (!isFirstLoad && hasNewOrders && isToday) playChime();
+            isFirstLoad = false;
+          });
+        } else {
+          const allOrders = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
+          orders = allOrders.filter(function(o) { return o.dateStr === targetDateStr; });
+          renderKDS();
+        }
+      }
+
+      window.openHistoryModal = function() { document.getElementById('history-modal').classList.remove('hidden'); };
+      window.closeHistoryModal = function() { document.getElementById('history-modal').classList.add('hidden'); };
+
+      window.loadHistoryDate = function() {
+        const selected = document.getElementById('history-date-picker').value;
+        if (!selected) return alert("Selecciona una fecha válida.");
+        selectedKdsDateStr = selected;
+        startKDSListener(selectedKdsDateStr);
+        window.closeHistoryModal();
+      };
+      
+      window.resetToToday = function() {
+        selectedKdsDateStr = getLocalDateString();
+        document.getElementById('history-date-picker').value = selectedKdsDateStr;
+        startKDSListener(selectedKdsDateStr);
+        window.closeHistoryModal();
+      };
+
+      window.openResetCutModal = function() {
+        const pinInput = document.getElementById('owner-pin-input');
+        const err = document.getElementById('owner-pin-error');
+        if (pinInput) pinInput.value = "";
+        if (err) err.classList.add('hidden');
+        document.getElementById('reset-cut-modal').classList.remove('hidden');
+        if (pinInput) pinInput.focus();
+      };
+
+      window.closeResetCutModal = function() {
+        document.getElementById('reset-cut-modal').classList.add('hidden');
+      };
+
+      window.confirmResetCut = async function() {
+        const pinVal = document.getElementById('owner-pin-input').value;
+        const err = document.getElementById('owner-pin-error');
+
+        if (pinVal !== OWNER_PIN) {
+          if (err) err.classList.remove('hidden');
+          document.getElementById('owner-pin-input').value = "";
+          return;
+        }
+
+        const activeOrders = orders.filter(function(o) { 
+          return o.status !== 'canceled' && o.status !== 'returned' && o.status !== 'archived_cut'; 
+        });
+
+        if (activeOrders.length > 0) {
+          const timeNow = new Date().toTimeString().slice(0,5).replace(':', '-');
+          window.exportCurrentOrdersCSV(`Respaldo_Corte_${selectedKdsDateStr}_${timeNow}.csv`);
+        }
+
+        if (isCloud && db) {
+          try {
+            const batch = db.batch();
+            activeOrders.forEach(function(o) {
+              if (o.id) {
+                batch.update(db.collection("orders").doc(o.id), { status: 'archived_cut' });
+              }
+            });
+            await batch.commit();
+          } catch(e) {
+            console.error("Error al reiniciar corte en nube:", e);
+          }
+        } else {
+          const all = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
+          all.forEach(function(o) {
+            if (o.dateStr === selectedKdsDateStr && o.status !== 'canceled' && o.status !== 'returned' && o.status !== 'archived_cut') {
+              o.status = 'archived_cut';
+            }
+          });
+          SafeStorage.setItem('maleza_orders', JSON.stringify(all));
+          startKDSListener(selectedKdsDateStr);
+        }
+
+        window.closeResetCutModal();
+        alert("Corte reiniciado a $0.00 exitosamente.");
+      };
+
+      window.handleShiftClosing = function() {
+        const validOrders = orders.filter(function(o) { return o.status !== 'canceled' && o.status !== 'returned' && o.status !== 'archived_cut'; });
+        if (validOrders.length === 0) return alert("No hay comandas activas para realizar corte.");
+
+        const totalShift = validOrders.reduce(function(s, o) { return s + (o.total || 0); }, 0);
+        const confirmClose = confirm("¿Limpiar tablero y hacer corte?\n\nTotal: $" + totalShift.toFixed(2) + "\nComandas: " + validOrders.length);
+        if (!confirmClose) return;
+
+        window.exportCurrentOrdersCSV("Corte_Caja_Maleza_" + selectedKdsDateStr + ".csv");
+
+        if (isCloud && db) {
+          const batch = db.batch();
+          orders.forEach(function(o) {
+            if (o.id && o.status !== 'archived' && o.status !== 'canceled' && o.status !== 'returned' && o.status !== 'archived_cut') {
+              batch.update(db.collection("orders").doc(o.id), { status: 'archived' });
+            }
+          });
+          batch.commit().then(function() { alert("Tablero limpio."); }).catch(console.error);
+        } else {
+          const all = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
+          all.forEach(function(o) {
+            if (o.dateStr === selectedKdsDateStr && o.status !== 'canceled' && o.status !== 'returned' && o.status !== 'archived_cut') {
+              o.status = 'archived';
+            }
+          });
+          SafeStorage.setItem('maleza_orders', JSON.stringify(all));
+          startKDSListener(selectedKdsDateStr);
+          alert("Tablero limpio.");
+        }
+      };
+
+      window.updateOrderStatus = async function(id, status) {
+        if (isCloud && db) {
+          try { await db.collection("orders").doc(id).update({ status: status }); } catch (e) { console.error(e); }
+        } else {
+          const all = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
+          const o = all.find(function(x) { return x.id === id; });
+          if (o) { o.status = status; SafeStorage.setItem('maleza_orders', JSON.stringify(all)); startKDSListener(selectedKdsDateStr); }
+        }
+      };
+
+      window.exportCurrentOrdersCSV = function(customFileName) {
+        if (orders.length === 0) return alert("No hay pedidos para exportar en esta fecha.");
+        let csv = "\uFEFFID,Fecha,Hora,Tipo,Cliente,Productos,Pago,Total,Estatus\n";
+        orders.forEach(function(o) {
+          const items = '"' + o.items.map(function(i) { return i.qty + 'x ' + i.name + ' (' + (i.details || '') + ')'; }).join(' | ').replace(/"/g, '""') + '"';
+          const tType = o.orderType || 'Para comer aquí';
+          csv += (o.id || '') + ',' + (o.dateStr || selectedKdsDateStr) + ',' + (o.timestampStr || '') + ',"' + tType + '","' + o.clientName + '",' + items + ',' + (o.paymentMethod || 'Efectivo') + ',' + o.total.toFixed(2) + ',' + o.status + '\n';
+        });
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = customFileName || ('Ventas_Maleza_' + selectedKdsDateStr + '.csv');
+        link.click();
+      };
+
+      function renderKDS() {
+        const grid = document.getElementById('kds-grid');
+        const totalEl = document.getElementById('kds-sales-total');
+        
+        const isToday = selectedKdsDateStr === getLocalDateString();
+        
+        const visibleOrders = isToday 
+          ? orders.filter(function(o) { return o.status !== 'archived' && o.status !== 'canceled' && o.status !== 'returned' && o.status !== 'archived_cut'; }) 
+          : orders;
+
+        const activeCutOrders = orders.filter(function(o) { return o.status !== 'canceled' && o.status !== 'returned' && o.status !== 'archived_cut' && o.status !== 'archived'; });
+        const totalSum = activeCutOrders.reduce(function(s, o) { return s + (o.total || 0); }, 0);
+        if (totalEl) totalEl.textContent = '$' + totalSum.toFixed(2);
+
+        if (visibleOrders.length === 0) {
+          grid.innerHTML = '<div class="col-span-full py-16 text-center text-zinc-400">Pantalla limpia. Esperando pedidos...</div>';
+          return;
+        }
+
+        grid.innerHTML = visibleOrders.map(function(o) {
+          const isPend = o.status === 'pending';
+          const isPrep = o.status === 'preparing';
+          const isArch = o.status === 'archived' || o.status === 'archived_cut';
+          const isCanc = o.status === 'canceled' || o.status === 'returned';
+          const isToGo = o.orderType === 'Para llevar';
+          
+          const border = isPend ? 'border-amber-400' : isPrep ? 'border-blue-500' : isCanc ? 'border-red-300 opacity-50 bg-red-50' : isArch ? 'border-zinc-300 opacity-50 bg-zinc-50' : 'border-emerald-500 opacity-70 bg-emerald-50';
+          const badgeTxt = isPend ? 'PENDIENTE' : isPrep ? 'PREPARANDO' : isCanc ? 'CANCELADO' : isArch ? 'CORTE CERRADO' : 'LISTO';
+          
+          const typeBadge = isToGo 
+            ? '<span class="text-[9px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800 ml-2 uppercase">🛍️ Para Llevar</span>'
+            : '<span class="text-[9px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 ml-2 uppercase">🍽️ Mesa/Barra</span>';
+
+          const itemsHtml = o.items.map(function(i) {
+            return '<div class="text-xs bg-zinc-50 p-1.5 rounded-lg border border-zinc-100">' +
+              '<strong>' + i.qty + 'x ' + i.name + '</strong> - $' + i.total +
+              (i.details ? '<p class="text-[11px] text-zinc-500">• ' + i.details + '</p>' : '') +
+            '</div>';
+          }).join('');
+
+          let buttonsHtml = '';
+          if (isPend) {
+            buttonsHtml = '<div class="grid grid-cols-2 gap-2">' +
+              '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'preparing\')" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs py-2 rounded-xl font-semibold cursor-pointer">Iniciar Prep.</button>' +
+              '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'returned\')" class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs py-2 rounded-xl font-semibold cursor-pointer">Devolver a Cliente</button>' +
+            '</div>';
+          } else if (isPrep) {
+            buttonsHtml = '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'ready\')" class="w-full bg-emerald-600 text-white text-xs py-2 rounded-xl font-semibold cursor-pointer">Marcar Listo</button>';
+          } else if (isArch || isCanc) {
+            buttonsHtml = '<span class="block w-full text-center text-zinc-400 text-[11px] py-1.5 font-semibold">Historial (No interactivo)</span>';
+          } else {
+            buttonsHtml = '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'archived\')" class="w-full text-zinc-500 border border-zinc-300 text-xs py-1.5 rounded-lg hover:bg-zinc-50 font-semibold mb-1 cursor-pointer">Archivar y Ocultar</button>' +
+              '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'preparing\')" class="w-full text-zinc-400 text-[10px] py-1 cursor-pointer">Reabrir</button>';
+          }
+
+          return '<div class="bg-white rounded-2xl border-2 ' + border + ' p-3.5 shadow-sm flex flex-col justify-between">' +
+            '<div>' +
+              '<div class="flex justify-between border-b pb-2 mb-2">' +
+                '<div>' +
+                  '<div class="flex items-center">' +
+                    '<span class="text-[10px] text-zinc-400 font-mono">' + (o.id ? o.id.slice(-5) : '') + '</span>' +
+                    typeBadge +
+                  '</div>' +
+                  '<h4 class="font-bold text-sm leading-tight mt-1">' + o.clientName + '</h4>' +
+                '</div>' +
+                '<div class="text-right">' +
+                  '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-100">' + badgeTxt + '</span>' +
+                  '<span class="block text-[11px] text-zinc-400 mt-1">' + (o.timestampStr || '') + '</span>' +
+                '</div>' +
+              '</div>' +
+              '<div class="space-y-1 mb-2.5">' + itemsHtml + '</div>' +
+            '</div>' +
+            '<div class="border-t pt-2">' +
+              '<div class="flex justify-between text-xs mb-2">' +
+                '<span>Pago: <strong>' + (o.paymentMethod || 'Efectivo') + '</strong></span>' +
+                '<span class="font-bold text-maleza-dark ' + (isCanc ? 'line-through text-red-400' : '') + '">$' + o.total.toFixed(2) + '</span>' +
+              '</div>' +
+              buttonsHtml +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
+
+      function playChime() {
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.frequency.setValueAtTime(587, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.3, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.8);
+        } catch (e) {}
+      }
+
+      function initApp() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const isKdsRequested = urlParams.has('kds');
+
+        if (isKdsRequested) {
+          document.getElementById('client-header').classList.add('hidden');
+          document.getElementById('view-client').classList.add('hidden');
+          if (SafeStorage.getSession('maleza_kds_unlocked') === 'true') {
+            showKDSScreen();
+          } else {
+            document.getElementById('kds-auth-screen').classList.remove('hidden');
+          }
+        } else {
+          if (FEATURED_PROMO && FEATURED_PROMO.active) {
+            const promoContainer = document.getElementById('seasonal-promo-container');
+            const promoBadge = document.getElementById('promo-badge');
+            const promoTitle = document.getElementById('promo-title');
+            const promoDesc = document.getElementById('promo-desc');
+            
+            if (promoBadge) promoBadge.textContent = FEATURED_PROMO.badge;
+            if (promoTitle) promoTitle.textContent = FEATURED_PROMO.title;
+            if (promoDesc) promoDesc.textContent = FEATURED_PROMO.desc;
+            if (promoContainer) promoContainer.classList.remove('hidden');
+          }
+
+          renderProducts('crepas');
+          checkActiveClientOrder();
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initApp);
+      } else {
+        initApp();
+      }
+    })();
+  </script>
+</body>
+</html>
