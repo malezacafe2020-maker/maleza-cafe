@@ -47,14 +47,24 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     .banner-hover:active { transform: scale(0.98); }
+    
+    /* Segmented Control Styles */
+    .segmented-control input[type="radio"] { display: none; }
+    .segmented-control label {
+      flex: 1; text-align: center; padding: 10px; cursor: pointer;
+      font-size: 12px; font-weight: 700; color: #71717a; transition: all 0.2s ease;
+    }
+    .segmented-control input[type="radio"]:checked + label {
+      background-color: #2F4832; color: #ffffff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
   </style>
 </head>
 <body class="text-zinc-800 antialiased pb-28 min-h-screen flex justify-center">
 
   <div id="main-app-container" class="w-full max-w-md bg-[#F4F2EB] min-h-screen shadow-2xl relative flex flex-col border-x border-[#E2DDD0]">
 
-    <!-- BARRA SUPERIOR CLIENTE -->
-    <header id="client-header" class="sticky top-0 z-40 bg-[#F4F2EB]/95 backdrop-blur-md border-b border-[#E7E3D8] px-4 py-2.5">
+    <!-- BARRA SUPERIOR CLIENTE COMPACTA -->
+    <header id="client-header" class="sticky top-0 z-40 bg-[#F4F2EB]/95 backdrop-blur-md border-b border-[#E7E3D8] px-4 py-3">
       <div class="flex flex-col items-center justify-center text-center">
         <div class="flex items-center space-x-2">
           <span class="w-6 h-6 rounded-full bg-maleza-dark flex items-center justify-center text-white text-[11px]">
@@ -65,15 +75,12 @@
           <h1 class="font-serif font-bold text-2xl text-maleza-dark tracking-tight">maleza<span class="text-maleza-accent text-lg">.cafe</span></h1>
         </div>
         <span class="block text-[8.5px] uppercase font-bold tracking-[0.2em] text-maleza-light mt-0.5">
-          Hecho a nuestro modo, porque sí
-        </span>
-        <span class="inline-block text-[8px] font-bold uppercase tracking-widest bg-maleza-badge text-maleza-badgeText px-2 py-0.5 rounded-full mt-1">
-          ★ Café de Especialidad
+          Hecho a nuestro modo, porque sí[cite: 3]
         </span>
       </div>
     </header>
 
-    <div id="order-monitor" class="hidden fixed top-[78px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-zinc-200 p-3.5 transition-all">
+    <div id="order-monitor" class="hidden fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-zinc-200 p-3.5 transition-all">
       <div class="flex items-center justify-between mb-1.5">
         <h3 class="font-serif font-bold text-maleza-dark text-base">Estado de tu pedido</h3>
         <span id="monitor-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">PENDIENTE</span>
@@ -92,7 +99,7 @@
                 EDICIÓN ESPECIAL
               </span>
               <h3 id="promo-title" class="font-serif text-base font-bold text-[#faf9f5] leading-snug truncate">
-                Tizana Maracuyá-Cempasúchil ($50)
+                Tizana Maracuyá-Cempasúchil ($50)[cite: 7]
               </h3>
               <p id="promo-desc" class="text-[11px] text-zinc-300 font-medium leading-tight mb-2 line-clamp-2">
                 Notas florales y cítricas para estos días frescos de otoño.
@@ -107,7 +114,7 @@
           </div>
         </div>
 
-        <nav class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 mb-3 -mx-4 px-4 sticky top-[68px] bg-[#F4F2EB]/95 backdrop-blur-md z-30">
+        <nav class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 mb-3 -mx-4 px-4 sticky top-[60px] bg-[#F4F2EB]/95 backdrop-blur-md z-30">
           <button type="button" onclick="window.filterCategory('crepas', this)" class="cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-maleza text-white text-xs font-semibold shadow-sm shrink-0">Crepas & Waffles</button>
           <button type="button" onclick="window.filterCategory('roles', this)" class="cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white text-zinc-600 border border-zinc-200 text-xs font-semibold shrink-0">Roles Artesanales</button>
           <button type="button" onclick="window.filterCategory('banderillas', this)" class="cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white text-zinc-600 border border-zinc-200 text-xs font-semibold shrink-0">Banderillas Coreanas</button>
@@ -127,9 +134,9 @@
           Café honesto, comida rica y una pausa que se siente bien. Pide desde tu mesa y disfruta sin prisas.
         </p>
         <div class="mt-4 flex items-center justify-center gap-1.5 text-zinc-400 text-[11px] font-medium">
-          <span>@maleza.cafe</span>
+          <span>@maleza.cafe</span>[cite: 2]
           <span>•</span>
-          <span>Hecho a nuestro modo</span>
+          <span>Hecho a nuestro modo</span>[cite: 3]
         </div>
       </footer>
 
@@ -258,8 +265,9 @@
     </div>
   </div>
 
+  <!-- MODAL CARRITO -->
   <div id="cart-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[88vh] overflow-y-auto p-5 shadow-2xl">
+    <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[92vh] overflow-y-auto p-5 shadow-2xl">
       <div class="flex justify-between items-center border-b border-zinc-100 pb-2 mb-3">
         <h3 class="font-serif font-bold text-lg text-maleza-dark">Resumen de Comanda</h3>
         <button type="button" onclick="window.closeCartModal()" class="text-zinc-400 text-2xl leading-none p-1 cursor-pointer">&times;</button>
@@ -267,34 +275,43 @@
       
       <div id="cart-items-list" class="space-y-2 mb-4"></div>
 
-      <div id="client-name-container" class="bg-white p-3 rounded-2xl border-2 border-[#E7E3D8] shadow-sm mb-3 transition-all">
+      <!-- SELECTOR: PARA LLEVAR O COMER AQUÍ -->
+      <div class="bg-zinc-50 p-1.5 rounded-xl border border-zinc-200 mb-3 segmented-control flex">
+        <input type="radio" id="opt-here" name="order_type" value="Para comer aquí" checked>
+        <label for="opt-here">🍽️ En el lugar</label>
+        
+        <input type="radio" id="opt-togo" name="order_type" value="Para llevar">
+        <label for="opt-togo">🛍️ Para llevar</label>
+      </div>
+
+      <div id="client-name-container" class="bg-white p-3 rounded-xl border-2 border-[#E7E3D8] shadow-sm mb-3 transition-all">
         <label for="client-name" class="block text-xs font-bold text-maleza-dark mb-1">
-          ¿A qué nombre o ubicación te llevamos el pedido? <span class="text-maleza-accent">*</span>
+          ¿A qué nombre o mesa lo registramos? <span class="text-maleza-accent">*</span>
         </label>
-        <input type="text" id="client-name" placeholder="Ej. Carlos - Mesa 2 o Barra der." class="w-full bg-[#FAF9F5] text-zinc-900 text-xs px-3 py-2 rounded-xl border border-zinc-200 focus:outline-none focus:border-maleza font-medium">
+        <input type="text" id="client-name" placeholder="Ej. Carlos - Mesa 2 o Barra" class="w-full bg-[#FAF9F5] text-zinc-900 text-xs px-3 py-2 rounded-lg border border-zinc-200 focus:outline-none focus:border-maleza font-medium">
         <p id="client-name-error" class="hidden text-[10px] text-maleza-accent font-semibold mt-1">
-          Por favor dinos tu nombre o mesa para llevarte tu pedido.
+          Por favor dinos tu nombre o mesa.
         </p>
       </div>
 
-      <div class="bg-zinc-50 p-3.5 rounded-2xl border border-zinc-200 mb-4">
+      <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 mb-4">
         <label class="block text-xs font-semibold text-zinc-600 mb-2">Forma de Pago:</label>
         <div class="grid grid-cols-2 gap-2 text-xs font-medium">
-          <label class="flex items-center gap-2 p-2 rounded-xl bg-white border border-zinc-200 cursor-pointer">
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-zinc-200 cursor-pointer">
             <input type="radio" name="payment_method" value="Efectivo" onchange="window.toggleBBVAInfo(false)" checked>
             <span>Efectivo</span>
           </label>
-          <label class="flex items-center gap-2 p-2 rounded-xl bg-white border border-zinc-200 cursor-pointer">
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-zinc-200 cursor-pointer">
             <input type="radio" name="payment_method" value="Transferencia BBVA" onchange="window.toggleBBVAInfo(true)">
             <span>BBVA</span>
           </label>
         </div>
         
-        <div id="bbva-details" class="hidden mt-2.5 p-2.5 bg-white rounded-xl border border-zinc-200">
-          <p class="text-[10px] text-zinc-500 mb-1">Cuenta BBVA (Daniela I. Zacatelco):</p>
-          <div class="flex items-center justify-between bg-zinc-50 p-2 rounded-lg border border-zinc-100">
-            <span class="font-mono font-bold text-xs tracking-wider text-maleza-dark">4152 3145 8769 0465</span>
-            <button type="button" onclick="window.copyBBVA(this)" class="bg-maleza/10 text-maleza px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 active:scale-95 transition-all">
+        <div id="bbva-details" class="hidden mt-2.5 p-2.5 bg-white rounded-lg border border-zinc-200">
+          <p class="text-[10px] text-zinc-500 mb-1">Cuenta BBVA (Daniela I. Zacatelco):[cite: 8]</p>
+          <div class="flex items-center justify-between bg-zinc-50 p-2 rounded-md border border-zinc-100">
+            <span class="font-mono font-bold text-xs tracking-wider text-maleza-dark">4152 3145 8769 0465</span>[cite: 8]
+            <button type="button" onclick="window.copyBBVA(this)" class="bg-maleza/10 text-maleza px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 active:scale-95 transition-all">
               📋 Copiar
             </button>
           </div>
@@ -306,7 +323,7 @@
         <span id="cart-checkout-total" class="font-serif font-bold text-xl text-maleza-accent">$0.00</span>
       </div>
 
-      <button type="button" onclick="window.sendOrder()" id="btn-submit-order" class="w-full bg-maleza-accent text-white font-bold text-sm py-3 rounded-2xl shadow-lg active:scale-95 transition-transform cursor-pointer">
+      <button type="button" onclick="window.sendOrder()" id="btn-submit-order" class="w-full bg-maleza-accent text-white font-bold text-sm py-3 rounded-xl shadow-lg active:scale-95 transition-transform cursor-pointer">
         Enviar Comanda a Cocina
       </button>
     </div>
@@ -373,67 +390,66 @@
         console.warn("Modo Local Activo:", e);
       }
 
-      // CATÁLOGO ACTUALIZADO
       const MENU_DATA = [
         // CREPAS DULCES
-        { id: 'c1', cat: 'crepas', name: 'Crepa Dulce Sencilla', price: 50, desc: '1 Base a elegir', type: 'crepa_dulce', maxBases: 1, hasFruit: false },
-        { id: 'c2', cat: 'crepas', name: 'Crepa Dulce Doble', price: 60, desc: '2 Bases a elegir', type: 'crepa_dulce', maxBases: 2, hasFruit: false },
-        { id: 'c3', cat: 'crepas', name: 'Crepa Dulce Con Fruta', price: 70, desc: '1 o 2 bases + 1 fruta', type: 'crepa_dulce', maxBases: 2, hasFruit: true },
-        // CREPAS SALADAS
-        { id: 'c4', cat: 'crepas', name: 'Crepa Salada Clásica', price: 60, desc: 'Jamón y queso manchego', type: 'crepa_salada' },
-        { id: 'c5', cat: 'crepas', name: 'Crepa Salada Peperoni', price: 60, desc: 'Peperoni y queso manchego', type: 'crepa_salada' },
-        { id: 'c6', cat: 'crepas', name: 'Crepa Salada Hawaiana', price: 70, desc: 'Jamón, queso manchego y piña', type: 'crepa_salada' },
+        { id: 'c1', cat: 'crepas', name: 'Crepa Dulce Sencilla', price: 50, desc: '1 Base a elegir', type: 'crepa_dulce', maxBases: 1, hasFruit: false },[cite: 4]
+        { id: 'c2', cat: 'crepas', name: 'Crepa Dulce Doble', price: 60, desc: '2 Bases a elegir', type: 'crepa_dulce', maxBases: 2, hasFruit: false },[cite: 4]
+        { id: 'c3', cat: 'crepas', name: 'Crepa Dulce Con Fruta', price: 70, desc: '1 o 2 bases + 1 fruta', type: 'crepa_dulce', maxBases: 2, hasFruit: true },[cite: 4]
+        // CREPAS SALADAS (Modal limpio: solo Macha)
+        { id: 'c4', cat: 'crepas', name: 'Crepa Salada Clásica', price: 60, desc: 'Jamón y queso manchego', type: 'crepa_salada' },[cite: 4]
+        { id: 'c5', cat: 'crepas', name: 'Crepa Salada Peperoni', price: 60, desc: 'Peperoni y queso manchego', type: 'crepa_salada' },[cite: 4]
+        { id: 'c6', cat: 'crepas', name: 'Crepa Salada Hawaiana', price: 70, desc: 'Jamón, queso manchego y piña', type: 'crepa_salada' },[cite: 4]
         // WAFFLES DULCES
-        { id: 'w1', cat: 'crepas', name: 'Waffle Belga Sencillo', price: 40, desc: '1 Base a elegir', type: 'crepa_dulce', maxBases: 1, hasFruit: false, isWaffle: true },
-        { id: 'w2', cat: 'crepas', name: 'Waffle Belga Doble', price: 45, desc: '2 Bases a elegir', type: 'crepa_dulce', maxBases: 2, hasFruit: false, isWaffle: true },
-        { id: 'w3', cat: 'crepas', name: 'Waffle Belga Con Fruta', price: 50, desc: '1 o 2 bases + 1 fruta', type: 'crepa_dulce', maxBases: 2, hasFruit: true, isWaffle: true },
-        // WAFFLES SALADOS
-        { id: 'w4', cat: 'crepas', name: 'Waffle Salado Clásico', price: 50, desc: 'Jamón y queso manchego', type: 'crepa_salada' },
-        { id: 'w5', cat: 'crepas', name: 'Waffle Salado Peperoni', price: 50, desc: 'Peperoni y queso manchego', type: 'crepa_salada' },
-        { id: 'w6', cat: 'crepas', name: 'Waffle Salado Hawaiano', price: 55, desc: 'Jamón, queso manchego y piña', type: 'crepa_salada' },
+        { id: 'w1', cat: 'crepas', name: 'Waffle Belga Sencillo', price: 40, desc: '1 Base a elegir', type: 'crepa_dulce', maxBases: 1, hasFruit: false, isWaffle: true },[cite: 5]
+        { id: 'w2', cat: 'crepas', name: 'Waffle Belga Doble', price: 45, desc: '2 Bases a elegir', type: 'crepa_dulce', maxBases: 2, hasFruit: false, isWaffle: true },[cite: 5]
+        { id: 'w3', cat: 'crepas', name: 'Waffle Belga Con Fruta', price: 50, desc: '1 o 2 bases + 1 fruta', type: 'crepa_dulce', maxBases: 2, hasFruit: true, isWaffle: true },[cite: 5]
+        // WAFFLES SALADOS (Modal limpio: solo Macha)
+        { id: 'w4', cat: 'crepas', name: 'Waffle Salado Clásico', price: 50, desc: 'Jamón y queso manchego', type: 'crepa_salada' },[cite: 5]
+        { id: 'w5', cat: 'crepas', name: 'Waffle Salado Peperoni', price: 50, desc: 'Peperoni y queso manchego', type: 'crepa_salada' },[cite: 5]
+        { id: 'w6', cat: 'crepas', name: 'Waffle Salado Hawaiano', price: 55, desc: 'Jamón, queso manchego y piña', type: 'crepa_salada' },[cite: 5]
         // ROLES
-        { id: 'r1', cat: 'roles', name: 'Rol de Canela', price: 60, desc: 'Artesanal con glaseado opcional', type: 'rol_dulce' },
-        { id: 'r2', cat: 'roles', name: 'Rol Salado', price: 65, desc: 'Artesanal salado', type: 'rol_salado' },
+        { id: 'r1', cat: 'roles', name: 'Rol de Canela', price: 60, desc: 'Artesanal con glaseado de cortesía', type: 'rol_dulce' },
+        { id: 'r2', cat: 'roles', name: 'Rol Salado', price: 65, desc: 'Artesanal salado (Directo al pedido)', type: 'simple' }, // Simple = 1 toque sin modal
         // BANDERILLAS
-        { id: 'b1', cat: 'banderillas', name: 'Monstera Deliciosa', desc: 'Cubierta de papa en cubos + panko', type: 'banderilla', prices: { 'Salchicha': 70, 'Queso manchego': 80, 'Combinada': 75 } },
-        { id: 'b2', cat: 'banderillas', name: 'Monstera Thai', desc: 'Cubierta con ramen crocante + panko', type: 'banderilla', prices: { 'Salchicha': 65, 'Queso manchego': 75, 'Combinada': 70 } },
-        { id: 'b3', cat: 'banderillas', name: 'Monstera Fuego', desc: 'Empanizado especial flaming crunch', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },
-        { id: 'b4', cat: 'banderillas', name: 'Monstera Clásica', desc: 'Rebozado dorado tradicional con panko', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },
-        { id: 'b5', cat: 'banderillas', name: 'Monstera Mexicheese', desc: 'Empanizado con queso jalapeño', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },
-        // LATTES ESPECIALES
-        { id: 'e1', cat: 'especiales', name: 'Areca (Coconut Latte)', price: 70, desc: 'Fría, espresso, leche cremosa y coco', type: 'flavor_noshot', flavors: ['Receta Original'] },
-        { id: 'e2', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 80, desc: 'Fría, matcha, leche cremosa y fresa', type: 'flavor_noshot', flavors: ['Receta Original'] },
-        { id: 'e3', cat: 'especiales', name: 'Magnolia (Chocolate Latte)', price: 80, desc: 'Fría, espresso, leche y cold foam de chocolate', type: 'flavor_noshot', flavors: ['Receta Original'] },
-        { id: 'e4', cat: 'especiales', name: 'Latte de Sabor Caliente', price: 65, desc: 'Elige tu sabor favorito', type: 'flavor_noshot', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'] },
-        { id: 'e5', cat: 'especiales', name: 'Latte de Sabor Frío', price: 70, desc: 'Elige tu sabor favorito', type: 'flavor_noshot', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'] },
+        { id: 'b1', cat: 'banderillas', name: 'Monstera Deliciosa', desc: 'Cubierta de papa en cubos + panko', type: 'banderilla', prices: { 'Salchicha': 70, 'Queso manchego': 80, 'Combinada': 75 } },[cite: 9]
+        { id: 'b2', cat: 'banderillas', name: 'Monstera Thai', desc: 'Cubierta con ramen crocante + panko', type: 'banderilla', prices: { 'Salchicha': 65, 'Queso manchego': 75, 'Combinada': 70 } },[cite: 9]
+        { id: 'b3', cat: 'banderillas', name: 'Monstera Fuego', desc: 'Empanizado especial flaming crunch', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },[cite: 9]
+        { id: 'b4', cat: 'banderillas', name: 'Monstera Clásica', desc: 'Rebozado dorado tradicional con panko', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },[cite: 9]
+        { id: 'b5', cat: 'banderillas', name: 'Monstera Mexicheese', desc: 'Empanizado con queso jalapeño', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },[cite: 9]
+        // LATTES ESPECIALES (Sin Shot de Espresso)
+        { id: 'e1', cat: 'especiales', name: 'Areca (Coconut Latte)', price: 70, desc: 'Fría, espresso, leche cremosa y coco', type: 'flavor_noshot', flavors: ['Receta Original'] },[cite: 7]
+        { id: 'e2', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 80, desc: 'Fría, matcha, leche cremosa y fresa', type: 'flavor_noshot', flavors: ['Receta Original'] },[cite: 7]
+        { id: 'e3', cat: 'especiales', name: 'Magnolia (Chocolate Latte)', price: 80, desc: 'Fría, espresso, leche y cold foam de chocolate', type: 'flavor_noshot', flavors: ['Receta Original'] },[cite: 7]
+        { id: 'e4', cat: 'especiales', name: 'Latte de Sabor Caliente', price: 65, desc: 'Elige tu sabor favorito', type: 'flavor_noshot', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'] },[cite: 7]
+        { id: 'e5', cat: 'especiales', name: 'Latte de Sabor Frío', price: 70, desc: 'Elige tu sabor favorito', type: 'flavor_noshot', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'] },[cite: 7]
         // BUBBLE TEA
-        { id: 'bt1', cat: 'bubble', name: 'Jacaranda (Taro Milk Tea)', price: 60, desc: 'Sabor taro, leche, té negro y tapioca', type: 'bubble' },
-        { id: 'bt2', cat: 'bubble', name: 'Helecho (Matcha Milk Tea)', price: 60, desc: 'Sabor matcha, leche, té negro y tapioca', type: 'bubble' },
-        { id: 'bt3', cat: 'bubble', name: 'Canela (Chai Milk Tea)', price: 60, desc: 'Sabor chai, leche, té negro y tapioca', type: 'bubble' },
-        { id: 'bt4', cat: 'bubble', name: 'Palmera (Coco Milk Tea)', price: 70, desc: 'Sabor coco, leche, té negro y tapioca', type: 'bubble' },
-        { id: 'bt5', cat: 'bubble', name: 'Alocasia (Cookies & Cream)', price: 70, desc: 'Cookies and cream, leche, té negro y tapioca', type: 'bubble' },
-        { id: 'bt6', cat: 'bubble', name: 'Dalia (Moka Milk Tea)', price: 70, desc: 'Sabor moka, leche, té negro y tapioca', type: 'bubble' },
-        { id: 'bt7', cat: 'bubble', name: 'Girasol (Mango Tea)', price: 70, desc: 'Sabor mango, té negro y tapioca', type: 'bubble' },
-        { id: 'bt8', cat: 'bubble', name: 'Diente de León (Maracuyá)', price: 70, desc: 'Sabor maracuyá, té negro y tapioca', type: 'bubble' },
-        { id: 'bt9', cat: 'bubble', name: 'Malus (Manzana Verde)', price: 70, desc: 'Sabor manzana verde, té negro y tapioca', type: 'bubble' },
+        { id: 'bt1', cat: 'bubble', name: 'Jacaranda (Taro Milk Tea)', price: 60, desc: 'Sabor taro, leche, té negro y tapioca', type: 'bubble' },[cite: 8]
+        { id: 'bt2', cat: 'bubble', name: 'Helecho (Matcha Milk Tea)', price: 60, desc: 'Sabor matcha, leche, té negro y tapioca', type: 'bubble' },[cite: 8]
+        { id: 'bt3', cat: 'bubble', name: 'Canela (Chai Milk Tea)', price: 60, desc: 'Sabor chai, leche, té negro y tapioca', type: 'bubble' },[cite: 8]
+        { id: 'bt4', cat: 'bubble', name: 'Palmera (Coco Milk Tea)', price: 70, desc: 'Sabor coco, leche, té negro y tapioca', type: 'bubble' },[cite: 8]
+        { id: 'bt5', cat: 'bubble', name: 'Alocasia (Cookies & Cream)', price: 70, desc: 'Cookies and cream, leche, té negro y tapioca', type: 'bubble' },[cite: 8]
+        { id: 'bt6', cat: 'bubble', name: 'Dalia (Moka Milk Tea)', price: 70, desc: 'Sabor moka, leche, té negro y tapioca', type: 'bubble' },[cite: 8]
+        { id: 'bt7', cat: 'bubble', name: 'Girasol (Mango Tea)', price: 70, desc: 'Sabor mango, té negro y tapioca', type: 'bubble' },[cite: 8]
+        { id: 'bt8', cat: 'bubble', name: 'Diente de León (Maracuyá)', price: 70, desc: 'Sabor maracuyá, té negro y tapioca', type: 'bubble' },[cite: 8]
+        { id: 'bt9', cat: 'bubble', name: 'Malus (Manzana Verde)', price: 70, desc: 'Sabor manzana verde, té negro y tapioca', type: 'bubble' },[cite: 8]
         // CAFETERIA
-        { id: 'cf1', cat: 'cafe', name: 'Capuchino Clásico', price: 50, desc: 'Espresso con espuma de leche', type: 'flavor', flavors: ['Clásico'], allowShot: true },
-        { id: 'cf2', cat: 'cafe', name: 'Café Americano', price: 45, desc: 'Extracción fresca de grano americano', type: 'flavor', flavors: ['Tradicional'], allowShot: true },
-        { id: 'cf3', cat: 'cafe', name: 'Café Lechero', price: 55, desc: 'Café tradicional con leche', type: 'flavor', flavors: ['Tradicional'], allowShot: true },
-        { id: 'cf4', cat: 'cafe', name: 'Latte Clásico', price: 50, desc: 'Espresso con leche vaporizada', type: 'flavor', flavors: ['Clásico'], allowShot: true },
-        { id: 'cf5', cat: 'cafe', name: 'Mocha Caliente', price: 55, desc: 'Espresso, chocolate y leche', type: 'flavor', flavors: ['Clásico'], allowShot: true },
-        { id: 'cf6', cat: 'cafe', name: 'Capuchino de Sabor', price: 60, desc: 'Caliente con toque de sabor', type: 'flavor', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], allowShot: true },
-        { id: 'cf7', cat: 'cafe', name: 'Bebida Caliente Sin Café', price: 60, desc: 'Chocolate, Chai o Matcha caliente', type: 'flavor', flavors: ['Chocolate', 'Chai', 'Matcha'] },
-        { id: 'cf8', cat: 'cafe', name: 'Tizana Frutal Caliente', price: 50, desc: 'Infusión frutal a elegir', type: 'flavor', flavors: ['Frutos rojos', 'Maracuyá-cempasúchil'] },
-        { id: 'cf9', cat: 'cafe', name: 'Frappé Clásico', price: 60, desc: 'Oreo, Chocolate Abuelita, Moka o Chai', type: 'flavor', flavors: ['Oreo', 'Chocolate abuelita', 'Moka', 'Chai'] },
-        { id: 'cf10', cat: 'cafe', name: 'Frappé Especial', price: 70, desc: 'Café, Matcha o Con Alcohol', type: 'flavor', flavors: ['Café', 'Matcha', 'Con Alcohol: Rompope', 'Con Alcohol: Piña colada', 'Con Alcohol: Baileys'] },
-        { id: 'cf11', cat: 'cafe', name: 'Frappé Gourmet', price: 75, desc: 'Caramelo o Crema Irlandesa', type: 'flavor', flavors: ['Caramelo', 'Crema irlandesa'] },
-        { id: 'cf12', cat: 'cafe', name: 'Soda Italiana', price: 60, desc: 'Burbujeante y refrescante', type: 'flavor', flavors: ['Mora azul', 'Mora azul y lavanda', 'Manzana verde', 'Frutos Rojos'] },
-        { id: 'cf13', cat: 'cafe', name: 'Refresh Frutal', price: 60, desc: 'Bebida fría refrescante', type: 'flavor', flavors: ['Maracuyá', 'Dragón Fruit'] },
-        { id: 'cf14', cat: 'cafe', name: 'Smoothie Frutal', price: 60, desc: 'Cremoso de fruta natural', type: 'flavor', flavors: ['Coco', 'Mango'] },
-        { id: 'cf15', cat: 'cafe', name: 'Malteada Clásica', price: 60, desc: 'Fresa, Vainilla o Chocolate', type: 'flavor', flavors: ['Fresa', 'Vainilla', 'Chocolate'] },
-        { id: 'cf16', cat: 'cafe', name: 'Malteada con Alcohol', price: 75, desc: 'Rompope, Piña Colada o Baileys', type: 'flavor', flavors: ['Rompope', 'Piña Colada', 'Baileys'] },
-        { id: 'cf17', cat: 'cafe', name: 'Esquimo Tradicional', price: 40, desc: 'Espumoso batido al momento', type: 'flavor', flavors: ['Café', 'Chocolate', 'Vainilla', 'Fresa', 'Chocolate abuelita', 'Caramelo', 'Moka', 'Chai', 'Matcha', 'Taro'] }
+        { id: 'cf1', cat: 'cafe', name: 'Capuchino Clásico', price: 50, desc: 'Espresso con espuma de leche', type: 'flavor', flavors: ['Clásico'], allowShot: true },[cite: 7]
+        { id: 'cf2', cat: 'cafe', name: 'Café Americano', price: 45, desc: 'Extracción fresca de grano americano', type: 'flavor', flavors: ['Tradicional'], allowShot: true },[cite: 7]
+        { id: 'cf3', cat: 'cafe', name: 'Café Lechero', price: 55, desc: 'Café tradicional con leche', type: 'flavor', flavors: ['Tradicional'], allowShot: true },[cite: 7]
+        { id: 'cf4', cat: 'cafe', name: 'Latte Clásico', price: 50, desc: 'Espresso con leche vaporizada', type: 'flavor', flavors: ['Clásico'], allowShot: true },[cite: 7]
+        { id: 'cf5', cat: 'cafe', name: 'Mocha Caliente', price: 55, desc: 'Espresso, chocolate y leche', type: 'flavor', flavors: ['Clásico'], allowShot: true },[cite: 7]
+        { id: 'cf6', cat: 'cafe', name: 'Capuchino de Sabor', price: 60, desc: 'Caliente con toque de sabor', type: 'flavor', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], allowShot: true },[cite: 7]
+        { id: 'cf7', cat: 'cafe', name: 'Bebida Caliente Sin Café', price: 60, desc: 'Chocolate, Chai o Matcha caliente', type: 'flavor', flavors: ['Chocolate', 'Chai', 'Matcha'] },[cite: 7]
+        { id: 'cf8', cat: 'cafe', name: 'Tizana Frutal Caliente', price: 50, desc: 'Infusión frutal a elegir', type: 'flavor', flavors: ['Frutos rojos', 'Maracuyá-cempasúchil'] },[cite: 7]
+        { id: 'cf9', cat: 'cafe', name: 'Frappé Clásico', price: 60, desc: 'Oreo, Chocolate Abuelita, Moka o Chai', type: 'flavor', flavors: ['Oreo', 'Chocolate abuelita', 'Moka', 'Chai'] },[cite: 6]
+        { id: 'cf10', cat: 'cafe', name: 'Frappé Especial', price: 70, desc: 'Café, Matcha o Con Alcohol', type: 'flavor', flavors: ['Café', 'Matcha', 'Con Alcohol: Rompope', 'Con Alcohol: Piña colada', 'Con Alcohol: Baileys'] },[cite: 6]
+        { id: 'cf11', cat: 'cafe', name: 'Frappé Gourmet', price: 75, desc: 'Caramelo o Crema Irlandesa', type: 'flavor', flavors: ['Caramelo', 'Crema irlandesa'] },[cite: 6]
+        { id: 'cf12', cat: 'cafe', name: 'Soda Italiana', price: 60, desc: 'Burbujeante y refrescante', type: 'flavor', flavors: ['Mora azul', 'Mora azul y lavanda', 'Manzana verde', 'Frutos Rojos'] },[cite: 6]
+        { id: 'cf13', cat: 'cafe', name: 'Refresh Frutal', price: 60, desc: 'Bebida fría refrescante', type: 'flavor', flavors: ['Maracuyá', 'Dragón Fruit'] },[cite: 6]
+        { id: 'cf14', cat: 'cafe', name: 'Smoothie Frutal', price: 60, desc: 'Cremoso de fruta natural', type: 'flavor', flavors: ['Coco', 'Mango'] },[cite: 6]
+        { id: 'cf15', cat: 'cafe', name: 'Malteada Clásica', price: 60, desc: 'Fresa, Vainilla o Chocolate', type: 'flavor', flavors: ['Fresa', 'Vainilla', 'Chocolate'] },[cite: 6]
+        { id: 'cf16', cat: 'cafe', name: 'Malteada con Alcohol', price: 75, desc: 'Rompope, Piña Colada o Baileys', type: 'flavor', flavors: ['Rompope', 'Piña Colada', 'Baileys'] },[cite: 6]
+        { id: 'cf17', cat: 'cafe', name: 'Esquimo Tradicional', price: 40, desc: 'Espumoso batido al momento', type: 'flavor', flavors: ['Café', 'Chocolate', 'Vainilla', 'Fresa', 'Chocolate abuelita', 'Caramelo', 'Moka', 'Chai', 'Matcha', 'Taro'] }[cite: 6]
       ];
 
       let cart = [];
@@ -503,8 +519,6 @@
           renderCrepaSaladaOptions(item, c);
         } else if (item.type === 'rol_dulce') {
           renderRolDulceOptions(item, c);
-        } else if (item.type === 'rol_salado') {
-          renderRolSaladoOptions(item, c);
         } else if (item.type === 'banderilla') {
           document.getElementById('modal-base-price').textContent = "Selecciona relleno:";
           let html = '<div class="space-y-1.5">';
@@ -516,12 +530,12 @@
               '<span class="font-bold text-xs text-maleza">$' + p + '</span></label>';
           });
           html += '</div>';
-          html += '<div class="mt-2.5"><label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 cursor-pointer"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" id="band_extra" onchange="window.updatePriceSubtotal()"> Ingrediente extra</span><span class="font-bold text-xs text-maleza-accent">+$15</span></label></div>';
+          html += '<div class="mt-2.5"><label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 cursor-pointer"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" id="band_extra" onchange="window.updatePriceSubtotal()"> Ingrediente extra</span><span class="font-bold text-xs text-maleza-accent">+$15</span></label></div>';[cite: 9]
           c.innerHTML = html;
           window.updatePriceSubtotal();
         } else if (item.type === 'bubble') {
           document.getElementById('modal-base-price').textContent = 'Precio: $' + item.price;
-          c.innerHTML = '<label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 text-xs font-semibold cursor-pointer"><span class="flex items-center gap-2"><input type="checkbox" id="bubble_extra" onchange="window.updatePriceSubtotal()"> Tapioca / Ingrediente extra</span><span class="font-bold text-maleza-accent">+$15</span></label>';
+          c.innerHTML = '<label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 text-xs font-semibold cursor-pointer"><span class="flex items-center gap-2"><input type="checkbox" id="bubble_extra" onchange="window.updatePriceSubtotal()"> Tapioca / Ingrediente extra</span><span class="font-bold text-maleza-accent">+$15</span></label>';[cite: 8]
           document.getElementById('modal-subtotal').textContent = '$' + item.price.toFixed(2);
         } else if (item.type === 'flavor' || item.type === 'flavor_noshot') {
           document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
@@ -531,7 +545,7 @@
           });
           html += '</div></div>';
           if (item.type === 'flavor' && item.allowShot) {
-            html += '<div class="mt-2.5"><label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 text-xs font-semibold cursor-pointer"><span class="flex items-center gap-2"><input type="checkbox" id="shot_extra" onchange="window.updatePriceSubtotal()"> Shot de Espresso extra</span><span class="font-bold text-maleza-accent">+$15</span></label></div>';
+            html += '<div class="mt-2.5"><label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 text-xs font-semibold cursor-pointer"><span class="flex items-center gap-2"><input type="checkbox" id="shot_extra" onchange="window.updatePriceSubtotal()"> Shot de Espresso extra</span><span class="font-bold text-maleza-accent">+$15</span></label></div>';[cite: 7]
           }
           c.innerHTML = html;
           document.getElementById('modal-subtotal').textContent = '$' + item.price.toFixed(2);
@@ -541,17 +555,17 @@
 
       function renderCrepaDulceOptions(item, container) {
         document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
-        const bases = ['Crema de avellanas', 'Mermelada fresa', 'Mermelada zarzamora', 'Cajeta', 'Lechera', 'Philadelphia'];
-        const frutas = ['Fresa', 'Plátano', 'Durazno'];
+        const bases = ['Crema de avellanas', 'Mermelada fresa', 'Mermelada zarzamora', 'Cajeta', 'Lechera', 'Philadelphia'];[cite: 4, 5]
+        const frutas = ['Fresa', 'Plátano', 'Durazno'];[cite: 4, 5]
         const cortesia = ['Jarabe Hershey', 'Lechera', 'Azúcar Glass'];
         const toppings = [
-          { name: 'Nuez', cost: 10 },
-          { name: 'Chispas de chocolate', cost: 10 },
-          { name: 'Oreo', cost: 10 },
-          { name: 'Fruta extra', cost: 10 },
-          { name: 'Ingrediente extra', cost: 10 }
+          { name: 'Nuez', cost: 10 },[cite: 4, 5]
+          { name: 'Chispas de chocolate', cost: 10 },[cite: 4, 5]
+          { name: 'Oreo', cost: 10 },[cite: 4, 5]
+          { name: 'Fruta extra', cost: 10 },[cite: 4, 5]
+          { name: 'Ingrediente extra', cost: 10 }[cite: 4, 5]
         ];
-        if (item.isWaffle) { toppings.push({ name: 'Bola de helado', cost: 15 }); }
+        if (item.isWaffle) { toppings.push({ name: 'Bola de helado', cost: 15 }); }[cite: 5]
 
         let html = '<div><label class="font-semibold block text-xs text-zinc-700 mb-1">Elige tus bases (Máximo ' + item.maxBases + '):</label><div class="grid grid-cols-2 gap-1.5 text-xs">';
         bases.forEach(function(b) {
@@ -587,9 +601,8 @@
         document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
         let html = '<div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200 mb-3"><p class="text-xs text-zinc-600 font-medium">Contiene: ' + item.desc + '</p></div>';
         
+        // SWITCH DE SALSA MACHA CORTESÍA (Sin ingrediente extra con costo)
         html += '<div><label class="flex items-center justify-between p-3 rounded-xl border border-emerald-200 bg-emerald-50 cursor-pointer text-emerald-800"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" name="opt_cortesia" value="Salsa Macha"> ¿Agregar Salsa Macha artesanal?</span><span class="font-bold text-xs uppercase text-emerald-600">Cortesía</span></label></div>';
-        
-        html += '<div class="mt-2.5"><label class="flex items-center justify-between p-3 rounded-xl border border-zinc-200 cursor-pointer"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" name="opt_topping" value="Ingrediente Extra" data-cost="10" onchange="window.updatePriceSubtotal()"> Ingrediente extra</span><span class="font-bold text-xs text-maleza-accent">+$10</span></label></div>';
         
         container.innerHTML = html;
         window.updatePriceSubtotal();
@@ -600,7 +613,7 @@
         const frutas = ['Fresa', 'Plátano', 'Durazno'];
         let html = '<div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200 mb-3"><p class="text-xs text-zinc-600 font-medium">Contiene: ' + item.desc + '</p></div>';
         
-        html += '<div><label class="flex items-center justify-between p-3 rounded-xl border border-emerald-200 bg-emerald-50 cursor-pointer text-emerald-800"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" name="opt_cortesia" value="Azúcar Glass" checked> ¿Agregar Azúcar Glass?</span><span class="font-bold text-xs uppercase text-emerald-600">Cortesía</span></label></div>';
+        html += '<div><label class="flex items-center justify-between p-3 rounded-xl border border-emerald-200 bg-emerald-50 cursor-pointer text-emerald-800"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" name="opt_cortesia" value="Glaseado Glass" checked> ¿Agregar Glaseado Glass?</span><span class="font-bold text-xs uppercase text-emerald-600">Cortesía</span></label></div>';
         
         html += '<div class="mt-2.5"><label class="font-semibold block text-xs text-zinc-700 mb-1">Opcional: Agregar fruta (+$10)</label><div class="grid grid-cols-3 gap-1.5 text-xs">';
         frutas.forEach(function(f) {
@@ -608,14 +621,6 @@
         });
         html += '</div></div>';
         
-        container.innerHTML = html;
-        window.updatePriceSubtotal();
-      }
-
-      function renderRolSaladoOptions(item, container) {
-        document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
-        let html = '<div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200 mb-3"><p class="text-xs text-zinc-600 font-medium">Contiene: ' + item.desc + '</p></div>';
-        html += '<div><label class="flex items-center justify-between p-3 rounded-xl border border-emerald-200 bg-emerald-50 cursor-pointer text-emerald-800"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" name="opt_cortesia" value="Salsa Macha"> ¿Agregar Salsa Macha artesanal?</span><span class="font-bold text-xs uppercase text-emerald-600">Cortesía</span></label></div>';
         container.innerHTML = html;
         window.updatePriceSubtotal();
       }
@@ -698,7 +703,7 @@
         const err = document.getElementById('client-name-error');
         const box = document.getElementById('client-name-container');
         if (err) err.classList.add('hidden');
-        if (box) box.className = 'bg-white p-3 rounded-2xl border-2 border-[#E7E3D8] shadow-sm mb-3 transition-all';
+        if (box) box.className = 'bg-white p-3 rounded-xl border-2 border-[#E7E3D8] shadow-sm mb-3 transition-all';
         
         const isBBVA = document.querySelector('input[name="payment_method"][value="Transferencia BBVA"]').checked;
         window.toggleBBVAInfo(isBBVA);
@@ -745,7 +750,7 @@
       };
 
       window.copyBBVA = function(btn) {
-        const num = "4152314587690465";
+        const num = "4152314587690465";[cite: 8]
         function onCopied() {
           const originalText = btn.innerHTML;
           btn.innerHTML = "✓ ¡COPIADO!";
@@ -776,7 +781,7 @@
             document.execCommand('copy');
             onCopied();
           } catch (e) {
-            alert("Cuenta BBVA: " + num);
+            alert("Cuenta BBVA: " + num);[cite: 8]
           }
           document.body.removeChild(ta);
         }
@@ -822,7 +827,8 @@
         
         let waBtn = '';
         if (data.paymentMethod === 'Transferencia BBVA') {
-          const msgText = `Hola Maleza Café, soy ${data.clientName} y les comparto mi comprobante de pago de la comanda #${id.slice(-4).toUpperCase()} por un total de $${parseFloat(data.total).toFixed(2)}.`;
+          const orderTypeString = data.orderType === 'Para llevar' ? '(Para llevar)' : '(Comer aquí)';
+          const msgText = `Hola Maleza Café, soy ${data.clientName} ${orderTypeString} y les comparto mi comprobante de pago de la comanda #${id.slice(-4).toUpperCase()} por un total de $${parseFloat(data.total).toFixed(2)}.`;
           const waUrl = `https://wa.me/${WA_PHONE_NUMBER}?text=${encodeURIComponent(msgText)}`;
           waBtn = `<a href="${waUrl}" target="_blank" class="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-xs font-bold py-2 rounded-xl shadow-sm flex items-center justify-center gap-1.5 transition-all">
             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
@@ -831,14 +837,14 @@
         }
 
         if (data.status === 'pending') {
-          monitor.className = 'fixed top-[78px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-amber-400 p-3.5 transition-all';
+          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-amber-400 p-3.5 transition-all';
           badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800';
           badge.textContent = 'PENDIENTE';
           msg.textContent = 'Tu pedido está en fila. Aún puedes hacer cambios si te equivocaste.';
           actions.innerHTML = `<button type="button" onclick="window.modifyActiveOrder()" class="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-semibold py-2 rounded-xl border border-zinc-300 active:scale-95 transition-transform cursor-pointer">✏️ Modificar Pedido</button>` + waBtn;
           actions.classList.remove('hidden');
         } else if (data.status === 'preparing') {
-          monitor.className = 'fixed top-[78px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-blue-500 p-3.5 transition-all';
+          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-blue-500 p-3.5 transition-all';
           badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800';
           badge.textContent = 'PREPARANDO';
           msg.textContent = '¡Ya estamos preparando tu pedido! En un momento estará listo.';
@@ -848,7 +854,7 @@
           if (navigator.vibrate) {
             try { navigator.vibrate([200, 100, 200]); } catch(e){}
           }
-          monitor.className = 'fixed top-[78px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-emerald-500 p-3.5 transition-all';
+          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-emerald-500 p-3.5 transition-all';
           badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
           badge.textContent = 'LISTO';
           msg.textContent = '¡Tu pedido está listo! Te lo entregaremos en breve.';
@@ -877,10 +883,12 @@
 
         let itemsToRestore = [];
         let nameToRestore = '';
+        let typeToRestore = 'Para comer aquí';
 
         if (activeClientOrderData && Array.isArray(activeClientOrderData.items)) {
           itemsToRestore = activeClientOrderData.items.slice();
           nameToRestore = activeClientOrderData.clientName || '';
+          typeToRestore = activeClientOrderData.orderType || 'Para comer aquí';
         } else if (isCloud && db) {
           try {
             const docSnap = await db.collection("orders").doc(orderId).get();
@@ -888,6 +896,7 @@
               const d = docSnap.data();
               if (Array.isArray(d.items)) itemsToRestore = d.items.slice();
               nameToRestore = d.clientName || '';
+              typeToRestore = d.orderType || 'Para comer aquí';
             }
           } catch (e) {
             console.error("Error al recuperar pedido:", e);
@@ -898,6 +907,7 @@
           if (o && Array.isArray(o.items)) {
             itemsToRestore = o.items.slice();
             nameToRestore = o.clientName || '';
+            typeToRestore = o.orderType || 'Para comer aquí';
           }
         }
 
@@ -925,11 +935,13 @@
           clientUnsubscribe = null;
         }
 
-        if (itemsToRestore.length > 0) {
-          cart = itemsToRestore;
-        }
-        if (nameToRestore) {
-          document.getElementById('client-name').value = nameToRestore;
+        if (itemsToRestore.length > 0) { cart = itemsToRestore; }
+        if (nameToRestore) { document.getElementById('client-name').value = nameToRestore; }
+        
+        if (typeToRestore === 'Para llevar') {
+          document.getElementById('opt-togo').checked = true;
+        } else {
+          document.getElementById('opt-here').checked = true;
         }
 
         updateCartUI();
@@ -949,7 +961,7 @@
         const nameVal = nameInput ? nameInput.value.trim() : '';
 
         if (!nameVal) {
-          if (nameContainer) nameContainer.className = 'bg-red-50 p-3 rounded-2xl border-2 border-maleza-accent shadow-sm mb-3 transition-all';
+          if (nameContainer) nameContainer.className = 'bg-red-50 p-3 rounded-xl border-2 border-maleza-accent shadow-sm mb-3 transition-all';
           if (nameError) nameError.classList.remove('hidden');
           if (nameInput) {
             nameInput.focus();
@@ -958,7 +970,7 @@
           return;
         }
 
-        if (nameContainer) nameContainer.className = 'bg-white p-3 rounded-2xl border-2 border-[#E7E3D8] shadow-sm mb-3 transition-all';
+        if (nameContainer) nameContainer.className = 'bg-white p-3 rounded-xl border-2 border-[#E7E3D8] shadow-sm mb-3 transition-all';
         if (nameError) nameError.classList.add('hidden');
 
         if (cart.length === 0) return;
@@ -967,8 +979,12 @@
         const paymentEl = document.querySelector('input[name="payment_method"]:checked');
         const payment = paymentEl ? paymentEl.value : 'Efectivo';
         
+        const typeEl = document.querySelector('input[name="order_type"]:checked');
+        const orderType = typeEl ? typeEl.value : 'Para comer aquí';
+        
         const order = {
           clientName: nameVal,
+          orderType: orderType,
           items: cart,
           total: total,
           paymentMethod: payment,
@@ -1198,10 +1214,11 @@
 
       window.exportCurrentOrdersCSV = function(customFileName) {
         if (orders.length === 0) return alert("No hay pedidos para exportar en esta fecha.");
-        let csv = "\uFEFFID,Fecha,Hora,Cliente,Productos,Pago,Total,Estatus\n";
+        let csv = "\uFEFFID,Fecha,Hora,Tipo,Cliente,Productos,Pago,Total,Estatus\n";
         orders.forEach(function(o) {
           const items = '"' + o.items.map(function(i) { return i.qty + 'x ' + i.name + ' (' + (i.details || '') + ')'; }).join(' | ').replace(/"/g, '""') + '"';
-          csv += (o.id || '') + ',' + (o.dateStr || selectedKdsDateStr) + ',' + (o.timestampStr || '') + ',"' + o.clientName + '",' + items + ',' + (o.paymentMethod || 'Efectivo') + ',' + o.total.toFixed(2) + ',' + o.status + '\n';
+          const tType = o.orderType || 'Para comer aquí';
+          csv += (o.id || '') + ',' + (o.dateStr || selectedKdsDateStr) + ',' + (o.timestampStr || '') + ',"' + tType + '","' + o.clientName + '",' + items + ',' + (o.paymentMethod || 'Efectivo') + ',' + o.total.toFixed(2) + ',' + o.status + '\n';
         });
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
@@ -1234,9 +1251,14 @@
           const isPrep = o.status === 'preparing';
           const isArch = o.status === 'archived' || o.status === 'archived_cut';
           const isCanc = o.status === 'canceled' || o.status === 'returned';
+          const isToGo = o.orderType === 'Para llevar';
           
           const border = isPend ? 'border-amber-400' : isPrep ? 'border-blue-500' : isCanc ? 'border-red-300 opacity-50 bg-red-50' : isArch ? 'border-zinc-300 opacity-50 bg-zinc-50' : 'border-emerald-500 opacity-70 bg-emerald-50';
           const badgeTxt = isPend ? 'PENDIENTE' : isPrep ? 'PREPARANDO' : isCanc ? 'CANCELADO' : isArch ? 'CORTE CERRADO' : 'LISTO';
+          
+          const typeBadge = isToGo 
+            ? '<span class="text-[9px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800 ml-2 uppercase">🛍️ Para Llevar</span>'
+            : '<span class="text-[9px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 ml-2 uppercase">🍽️ Mesa/Barra</span>';
 
           const itemsHtml = o.items.map(function(i) {
             return '<div class="text-xs bg-zinc-50 p-1.5 rounded-lg border border-zinc-100">' +
@@ -1264,8 +1286,11 @@
             '<div>' +
               '<div class="flex justify-between border-b pb-2 mb-2">' +
                 '<div>' +
-                  '<span class="text-[10px] text-zinc-400 font-mono">' + (o.id ? o.id.slice(-5) : '') + '</span>' +
-                  '<h4 class="font-bold text-sm leading-tight">' + o.clientName + '</h4>' +
+                  '<div class="flex items-center">' +
+                    '<span class="text-[10px] text-zinc-400 font-mono">' + (o.id ? o.id.slice(-5) : '') + '</span>' +
+                    typeBadge +
+                  '</div>' +
+                  '<h4 class="font-bold text-sm leading-tight mt-1">' + o.clientName + '</h4>' +
                 '</div>' +
                 '<div class="text-right">' +
                   '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-100">' + badgeTxt + '</span>' +
