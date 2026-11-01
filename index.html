@@ -427,10 +427,10 @@
         { id: 'b3', cat: 'banderillas', name: 'Monstera Fuego', desc: 'Empanizado especial flaming crunch', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },
         { id: 'b4', cat: 'banderillas', name: 'Monstera Clásica', desc: 'Rebozado dorado tradicional con panko', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },
         { id: 'b5', cat: 'banderillas', name: 'Monstera Mexicheese', desc: 'Empanizado con queso jalapeño', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 } },
-        { id: 'e1', cat: 'especiales', name: 'Areca (Coconut Latte)', price: 70, desc: 'Fría, espresso, leche cremosa y coco', type: 'simple' },
-        { id: 'e2', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 80, desc: 'Fría, matcha, leche cremosa y fresa', type: 'simple' },
-        { id: 'e3', cat: 'especiales', name: 'Magnolia (Chocolate Latte)', price: 80, desc: 'Fría, espresso, leche y cold foam de chocolate', type: 'simple' },
-        { id: 'e_crisantemo', cat: 'especiales', name: 'Crisantemo (Mango Matcha)', price: 80, desc: 'Fría, matcha, leche cremosa y mango', type: 'simple' },
+        { id: 'e1', cat: 'especiales', name: 'Areca (Coconut Latte)', price: 70, desc: 'Fría, espresso, leche cremosa y coco', type: 'special_custom' },
+        { id: 'e2', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 80, desc: 'Fría, matcha, leche cremosa y fresa', type: 'special_custom' },
+        { id: 'e3', cat: 'especiales', name: 'Magnolia (Chocolate Latte)', price: 80, desc: 'Fría, espresso, leche y cold foam de chocolate', type: 'special_custom' },
+        { id: 'e_crisantemo', cat: 'especiales', name: 'Crisantemo (Mango Matcha)', price: 80, desc: 'Fría, matcha, leche cremosa y mango', type: 'special_custom' },
         { id: 'e_mandragora', cat: 'especiales', name: 'Mandrágora', price: 120, desc: 'Frappé chocolate abuelita + pan de muerto relleno', type: 'mandragora' },
         { id: 'e4', cat: 'especiales', name: 'Latte de Sabor Caliente', price: 65, desc: 'Elige tu sabor favorito', type: 'flavor_noshot', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'] },
         { id: 'e5', cat: 'especiales', name: 'Latte de Sabor Frío', price: 70, desc: 'Elige tu sabor favorito', type: 'flavor_noshot', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], hasBobaToppings: true },
@@ -604,6 +604,24 @@
         if (cardBox) cardBox.classList.toggle('hidden', method !== 'Tarjeta');
       };
 
+      function renderCustomModifierBlock() {
+        return '<div class="mt-3 p-3 bg-amber-50/70 rounded-xl border border-amber-200/80">' +
+          '<label class="block font-bold text-xs text-amber-950 mb-1">📝 Extra o Petición Especial Libre (Barra):</label>' +
+          '<p class="text-[10px] text-amber-800 mb-2">Escribe el insumo solicitado y el costo adicional a sumar a esta orden.</p>' +
+          '<div class="grid grid-cols-3 gap-2">' +
+            '<div class="col-span-2">' +
+              '<input type="text" id="custom_mod_desc" placeholder="Ej. Extra jamón y manchego" class="w-full bg-white text-zinc-900 text-xs px-2.5 py-1.5 rounded-lg border border-amber-300 focus:outline-none focus:border-maleza font-medium">' +
+            '</div>' +
+            '<div class="col-span-1">' +
+              '<div class="relative">' +
+                '<span class="absolute inset-y-0 left-0 pl-2 flex items-center text-zinc-400 font-bold text-xs">$</span>' +
+                '<input type="number" id="custom_mod_price" min="0" step="1" placeholder="0" oninput="window.updatePriceSubtotal()" class="w-full bg-white text-zinc-900 text-xs pl-5 pr-2 py-1.5 rounded-lg border border-amber-300 focus:outline-none focus:border-maleza font-bold">' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }
+
       window.handleProductClick = function(id) {
         const item = MENU_DATA.find(function(p) { return p.id === id; });
         if (!item) return;
@@ -619,7 +637,9 @@
         const c = document.getElementById('modal-options-container');
         c.innerHTML = '';
 
-        if (item.type === 'mandragora') {
+        if (item.type === 'special_custom') {
+          renderSpecialCustomOptions(item, c);
+        } else if (item.type === 'mandragora') {
           renderMandragoraOptions(item, c);
         } else if (item.type === 'pumpkin') {
           renderDynamicTrioOptions(item, c, 'opt_pumpkin');
@@ -645,12 +665,14 @@
           });
           html += '</div>';
           html += '<div class="mt-2.5"><label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 cursor-pointer"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" id="band_extra" onchange="window.updatePriceSubtotal()"> Ingrediente extra</span><span class="font-bold text-xs text-maleza-accent">+$15</span></label></div>';
+          html += renderCustomModifierBlock();
           c.innerHTML = html;
           window.updatePriceSubtotal();
         } else if (item.type === 'bubble') {
           document.getElementById('modal-base-price').textContent = 'Precio: $' + item.price;
           let html = '<div class="bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 mb-2"><p class="text-[11px] text-zinc-500 font-medium">✨ Incluye perlas de tapioca tradicional de la casa.</p></div>';
           html += renderBobaToppingsCheckboxes('Extras o perlas adicionales (+ $15 c/u):');
+          html += renderCustomModifierBlock();
           c.innerHTML = html;
           document.getElementById('modal-subtotal').textContent = '$' + item.price.toFixed(2);
         } else if (item.type === 'flavor' || item.type === 'flavor_noshot') {
@@ -666,11 +688,21 @@
           if (item.hasBobaToppings) {
             html += '<div class="mt-3">' + renderBobaToppingsCheckboxes() + '</div>';
           }
+          html += renderCustomModifierBlock();
           c.innerHTML = html;
           document.getElementById('modal-subtotal').textContent = '$' + item.price.toFixed(2);
         }
         document.getElementById('custom-modal').classList.remove('hidden');
       };
+
+      function renderSpecialCustomOptions(item, container) {
+        document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
+        let html = '<div class="bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 mb-2"><p class="text-xs text-zinc-600 font-medium">Receta de autor: ' + item.desc + '</p></div>';
+        html += renderBobaToppingsCheckboxes('Toppings masticables opcionales (+ $15 c/u):');
+        html += renderCustomModifierBlock();
+        container.innerHTML = html;
+        window.updatePriceSubtotal();
+      }
 
       function renderBobaToppingsCheckboxes(customTitle) {
         const title = customTitle || 'Toppings masticables / perlas (+ $15 c/u):';
@@ -709,9 +741,10 @@
         });
         html += '</div></div>';
         html += '</div>';
+        html += renderCustomModifierBlock();
 
         container.innerHTML = html;
-        document.getElementById('modal-subtotal').textContent = '$' + item.price.toFixed(2);
+        window.updatePriceSubtotal();
       }
 
       function renderDynamicTrioOptions(item, container, groupName) {
@@ -731,6 +764,7 @@
         html += '</div>';
 
         html += '<div class="mt-3">' + renderBobaToppingsCheckboxes() + '</div>';
+        html += renderCustomModifierBlock();
 
         container.innerHTML = html;
         window.updatePriceSubtotal();
@@ -747,9 +781,10 @@
         html += '<div class="mt-3"><label class="flex items-center justify-between p-3 rounded-xl border border-zinc-200 bg-zinc-50 cursor-pointer text-zinc-800"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" id="item_no_cream"> ¿Sin crema batida?</span><span class="font-bold text-xs uppercase text-zinc-500">Cortesía</span></label></div>';
         
         html += '<div class="mt-3">' + renderBobaToppingsCheckboxes() + '</div>';
+        html += renderCustomModifierBlock();
 
         container.innerHTML = html;
-        document.getElementById('modal-subtotal').textContent = '$' + item.price.toFixed(2);
+        window.updatePriceSubtotal();
       }
 
       function renderCrepaDulceOptions(item, container) {
@@ -791,6 +826,7 @@
           html += '<label class="flex items-center justify-between p-2 rounded-lg bg-zinc-50 border border-zinc-200 cursor-pointer"><div class="flex items-center gap-2"><input type="checkbox" name="opt_topping" value="' + t.name + '" data-cost="' + t.cost + '" onchange="window.updatePriceSubtotal()"><span>' + t.name + '</span></div><span class="font-bold text-maleza-accent text-[11px]">+$' + t.cost + '</span></label>';
         });
         html += '</div></div>';
+        html += renderCustomModifierBlock();
 
         container.innerHTML = html;
         window.updatePriceSubtotal();
@@ -800,6 +836,7 @@
         document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
         let html = '<div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200 mb-3"><p class="text-xs text-zinc-600 font-medium">Contiene: ' + item.desc + '</p></div>';
         html += '<div><label class="flex items-center justify-between p-3 rounded-xl border border-emerald-200 bg-emerald-50 cursor-pointer text-emerald-800"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" name="opt_cortesia" value="Salsa Macha"> ¿Agregar Salsa Macha artesanal?</span><span class="font-bold text-xs uppercase text-emerald-600">Cortesía</span></label></div>';
+        html += renderCustomModifierBlock();
         container.innerHTML = html;
         window.updatePriceSubtotal();
       }
@@ -814,6 +851,7 @@
           html += '<label class="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-zinc-50 border border-zinc-200 cursor-pointer"><input type="checkbox" name="opt_topping" value="Fruta: ' + f + '" data-cost="10" onchange="window.updatePriceSubtotal()"><span>' + f + '</span></label>';
         });
         html += '</div></div>';
+        html += renderCustomModifierBlock();
         container.innerHTML = html;
         window.updatePriceSubtotal();
       }
@@ -841,7 +879,7 @@
           const ex = document.getElementById('band_extra');
           if (ex && ex.checked) total += 15;
         } else if (currentCustomItem.type === 'mandragora') {
-          total = currentCustomItem.price || 80;
+          total = currentCustomItem.price || 120;
         }
 
         const sh = document.getElementById('shot_extra');
@@ -854,6 +892,12 @@
         document.querySelectorAll('input[name="opt_boba"]:checked').forEach(function(cb) {
           total += parseInt(cb.dataset.cost, 10);
         });
+
+        const customPriceInput = document.getElementById('custom_mod_price');
+        if (customPriceInput) {
+          const customCost = parseFloat(customPriceInput.value) || 0;
+          if (customCost > 0) total += customCost;
+        }
         
         document.getElementById('modal-subtotal').textContent = '$' + total.toFixed(2);
       };
@@ -920,6 +964,20 @@
           return '+ ' + cb.value;
         });
         if (bobas.length > 0) details.push(bobas.join(', '));
+
+        const customDescInput = document.getElementById('custom_mod_desc');
+        const customPriceInput = document.getElementById('custom_mod_price');
+        if (customDescInput && customPriceInput) {
+          const customDesc = customDescInput.value.trim();
+          const customCost = parseFloat(customPriceInput.value) || 0;
+          if (customDesc) {
+            price += customCost;
+            details.push('Extra Barra: ' + customDesc + (customCost > 0 ? ' (+$' + customCost.toFixed(2) + ')' : ''));
+          } else if (customCost > 0) {
+            price += customCost;
+            details.push('Extra Barra (+$' + customCost.toFixed(2) + ')');
+          }
+        }
         
         cart.push({ id: currentCustomItem.id, name: currentCustomItem.name, price: price, total: price, qty: 1, details: details.join(' | ') });
         window.closeCustomModal();
