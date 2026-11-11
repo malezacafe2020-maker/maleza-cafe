@@ -16,7 +16,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
 
-  <!-- Vinculación del catálogo modular -->
+  <!-- Catálogo modular -->
   <script src="menu.data.js"></script>
 
   <script>
@@ -76,7 +76,7 @@
           <h1 class="font-serif font-bold text-2xl text-maleza-dark tracking-tight">maleza<span class="text-maleza-accent text-lg">.cafe</span></h1>
         </div>
         <span class="block text-[8.5px] uppercase font-bold tracking-[0.2em] text-maleza-light mt-0.5">
-          Hecho a nuestro modo, porque sí
+          Hecho a nuestro modo, porque sí[cite: 4]
         </span>
       </div>
     </header>
@@ -146,9 +146,9 @@
           Café honesto, comida rica y una pausa que se siente bien. Pide desde tu mesa y disfruta sin prisas.
         </p>
         <div class="mt-4 flex items-center justify-center gap-1.5 text-zinc-400 text-[11px] font-medium">
-          <span>@maleza.cafe</span>
+          <span>@maleza.cafe</span>[cite: 3, 10]
           <span>•</span>
-          <span>Hecho a nuestro modo</span>
+          <span>Hecho a nuestro modo</span>[cite: 4]
         </div>
       </footer>
 
@@ -231,9 +231,9 @@
         </div>
         
         <div id="bbva-details" class="hidden mt-2.5 p-2.5 bg-white rounded-lg border border-zinc-200">
-          <p class="text-[10px] text-zinc-500 mb-1">Cuenta BBVA (Daniela I. Zacatelco):</p>
+          <p class="text-[10px] text-zinc-500 mb-1">Cuenta BBVA (Daniela I. Zacatelco):</p>[cite: 8]
           <div class="flex items-center justify-between bg-zinc-50 p-2 rounded-md border border-zinc-100">
-            <span class="font-mono font-bold text-xs tracking-wider text-maleza-dark">4152 3145 8769 0465</span>
+            <span class="font-mono font-bold text-xs tracking-wider text-maleza-dark">4152 3145 8769 0465</span>[cite: 8]
             <button type="button" onclick="window.copyBBVA(this)" class="bg-maleza/10 text-maleza px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 active:scale-95 transition-all">
               📋 Copiar
             </button>
@@ -311,7 +311,6 @@
         console.warn("Modo Local Activo");
       }
 
-      // La variable MENU_DATA ahora viene del archivo menu.data.js
       const MENU_DATA = window.MENU_DATA || [];
 
       let cart = [];
@@ -475,22 +474,8 @@
               '</div>' +
             '</div>' +
           '</div>' +
-          '<div class="flex items-center gap-1.5 text-[11px] font-bold text-amber-900">' +
-            '<span class="text-[10px] text-zinc-500 mr-1">Rápidos:</span>' +
-            '<button type="button" onclick="window.setQuickExtraCost(10)" class="px-2.5 py-1 bg-white border border-amber-300 rounded-lg hover:bg-amber-100 active:scale-95 transition-all">+$10</button>' +
-            '<button type="button" onclick="window.setQuickExtraCost(15)" class="px-2.5 py-1 bg-white border border-amber-300 rounded-lg hover:bg-amber-100 active:scale-95 transition-all">+$15</button>' +
-            '<button type="button" onclick="window.setQuickExtraCost(20)" class="px-2.5 py-1 bg-white border border-amber-300 rounded-lg hover:bg-amber-100 active:scale-95 transition-all">+$20</button>' +
-            '<button type="button" onclick="window.setQuickExtraCost(0)" class="px-2 py-1 bg-zinc-100 text-zinc-500 rounded-lg hover:bg-zinc-200 active:scale-95 transition-all text-[10px]">Borrar</button>' +
-          '</div>' +
         '</div>';
       }
-
-      window.setQuickExtraCost = function(val) {
-        const priceInput = document.getElementById('custom_mod_price');
-        if (!priceInput) return;
-        priceInput.value = val > 0 ? val : '';
-        window.updatePriceSubtotal();
-      };
 
       window.handleProductClick = function(id) {
         const item = MENU_DATA.find(function(p) { return p.id === id; });
@@ -534,13 +519,13 @@
               '<span class="font-bold text-xs text-maleza">$' + p + '</span></label>';
           });
           html += '</div>';
-          html += '<div class="mt-2.5"><label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 cursor-pointer"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" id="band_extra" onchange="window.updatePriceSubtotal()"> Ingrediente extra</span><span class="font-bold text-xs text-maleza-accent">+$15</span></label></div>';
+          html += '<div class="mt-2.5"><label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 cursor-pointer"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" id="band_extra" onchange="window.updatePriceSubtotal()"> Ingrediente extra</span><span class="font-bold text-xs text-maleza-accent">+$15</span></label></div>';[cite: 9]
           html += renderCustomModifierBlock();
           c.innerHTML = html;
           window.updatePriceSubtotal();
         } else if (item.type === 'bubble') {
           document.getElementById('modal-base-price').textContent = 'Precio: $' + item.price;
-          let html = '<div class="bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 mb-2"><p class="text-[11px] text-zinc-500 font-medium">✨ Incluye perlas de tapioca tradicional de la casa.</p></div>';
+          let html = '<div class="bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 mb-2"><p class="text-[11px] text-zinc-500 font-medium">✨ Incluye perlas de tapioca tradicional de la casa.</p></div>';[cite: 8]
           html += renderBobaToppingsCheckboxes('Extras o perlas adicionales (+ $15 c/u):');
           html += renderCustomModifierBlock();
           c.innerHTML = html;
@@ -553,7 +538,7 @@
           });
           html += '</div></div>';
           if (item.type === 'flavor' && item.allowShot) {
-            html += '<div class="mt-2.5"><label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 text-xs font-semibold cursor-pointer"><span class="flex items-center gap-2"><input type="checkbox" id="shot_extra" onchange="window.updatePriceSubtotal()"> Shot de Espresso extra</span><span class="font-bold text-maleza-accent">+$15</span></label></div>';
+            html += '<div class="mt-2.5"><label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 text-xs font-semibold cursor-pointer"><span class="flex items-center gap-2"><input type="checkbox" id="shot_extra" onchange="window.updatePriceSubtotal()"> Shot de Espresso extra</span><span class="font-bold text-maleza-accent">+$15</span></label></div>';[cite: 7]
           }
           if (item.hasBobaToppings) {
             html += '<div class="mt-3">' + renderBobaToppingsCheckboxes() + '</div>';
@@ -671,19 +656,24 @@
 
       function renderCrepaDulceOptions(item, container) {
         document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
-        const bases = ['Crema de avellanas', 'Mermelada fresa', 'Mermelada zarzamora', 'Cajeta', 'Lechera', 'Philadelphia'];
-        const frutas = ['Fresa', 'Plátano', 'Durazno'];
+        const bases = ['Crema de avellanas', 'Mermelada fresa', 'Mermelada zarzamora', 'Cajeta', 'Lechera', 'Philadelphia'];[cite: 4]
+        const frutas = ['Fresa', 'Plátano', 'Durazno'];[cite: 4]
         const cortesia = ['Jarabe Hershey', 'Lechera', 'Azúcar Glass'];
         const toppings = [
-          { name: 'Nuez', cost: 10 },
-          { name: 'Chispas de chocolate', cost: 10 },
-          { name: 'Oreo', cost: 10 },
-          { name: 'Fruta extra', cost: 10 },
-          { name: 'Ingrediente extra', cost: 10 }
+          { name: 'Nuez', cost: 10 },[cite: 4]
+          { name: 'Chispas de chocolate', cost: 10 },[cite: 4]
+          { name: 'Oreo', cost: 10 },[cite: 4]
+          { name: 'Fruta extra', cost: 10 },[cite: 4]
+          { name: 'Ingrediente extra', cost: 10 }[cite: 4]
         ];
-        if (item.isWaffle) { toppings.push({ name: 'Bola de helado', cost: 15 }); }
+        if (item.isWaffle) { toppings.push({ name: 'Bola de helado', cost: 15 }); }[cite: 5]
 
-        let html = '<div><label class="font-semibold block text-xs text-zinc-700 mb-1">Elige tus bases (Máximo ' + item.maxBases + '):</label><div class="grid grid-cols-2 gap-1.5 text-xs">';
+        let html = '<div>' +
+          '<div class="flex items-center justify-between mb-1">' +
+            '<label class="font-semibold block text-xs text-zinc-700">Elige tus bases (Máximo ' + item.maxBases + '):</label>' +
+          '</div>' +
+          '<div id="base-limit-msg" class="hidden mb-2 p-2 bg-rose-50 border border-rose-200 text-rose-700 text-[11px] font-semibold rounded-lg text-center transition-all animate-pulse"></div>' +
+          '<div class="grid grid-cols-2 gap-1.5 text-xs">';
         bases.forEach(function(b) {
           html += '<label class="flex items-center gap-2 p-2 rounded-lg bg-zinc-50 border border-zinc-200 cursor-pointer"><input type="checkbox" name="opt_base" value="' + b + '" onchange="window.checkMaxBases(' + item.maxBases + ', this)"><span>' + b + '</span></label>';
         });
@@ -739,9 +729,26 @@
       }
 
       window.checkMaxBases = function(max, currentCheckbox) {
-        if (document.querySelectorAll('input[name="opt_base"]:checked').length > max) {
-          alert('Solo puedes elegir máximo ' + max + ' base(s).');
+        const checked = document.querySelectorAll('input[name="opt_base"]:checked');
+        const alertBox = document.getElementById('base-limit-msg');
+
+        if (checked.length > max) {
           if (currentCheckbox) currentCheckbox.checked = false;
+
+          if (navigator.vibrate) {
+            try { navigator.vibrate(50); } catch (e) {}
+          }
+
+          if (alertBox) {
+            alertBox.textContent = '⚠️ Este producto solo incluye ' + max + ' base(s).';[cite: 4, 5]
+            alertBox.classList.remove('hidden');
+            clearTimeout(window._baseToastTimer);
+            window._baseToastTimer = setTimeout(function() {
+              alertBox.classList.add('hidden');
+            }, 2500);
+          }
+        } else if (alertBox) {
+          alertBox.classList.add('hidden');
         }
       };
       
@@ -910,7 +917,7 @@
       }
 
       window.copyBBVA = function(btn) {
-        const num = "4152314587690465";
+        const num = "4152314587690465";[cite: 8]
         function onCopied() {
           const originalText = btn.innerHTML;
           btn.innerHTML = "✓ ¡COPIADO!";
@@ -941,7 +948,7 @@
             document.execCommand('copy');
             onCopied();
           } catch (e) {
-            alert("Cuenta BBVA: " + num);
+            alert("Cuenta BBVA: " + num);[cite: 8]
           }
           document.body.removeChild(ta);
         }
