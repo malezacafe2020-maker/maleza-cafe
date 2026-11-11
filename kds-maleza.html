@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Maleza Café | Tablero KDS Barra</title>
+  <title>Maleza Café | Menú Digital</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,6 +15,9 @@
   
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+
+  <!-- Catálogo modular -->
+  <script src="menu.data.js"></script>
 
   <script>
     tailwind.config = {
@@ -44,113 +47,232 @@
       background-color: #ECE9DF; 
       font-family: 'Plus Jakarta Sans', sans-serif; 
     }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .banner-hover:active { transform: scale(0.98); }
+    
+    .segmented-control input[type="radio"] { display: none; }
+    .segmented-control label {
+      flex: 1; text-align: center; padding: 10px; cursor: pointer;
+      font-size: 12px; font-weight: 700; color: #71717a; transition: all 0.2s ease;
+    }
+    .segmented-control input[type="radio"]:checked + label {
+      background-color: #2F4832; color: #ffffff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
   </style>
 </head>
-<body class="text-zinc-800 antialiased min-h-screen flex flex-col items-center">
+<body class="text-zinc-800 antialiased pb-28 min-h-screen flex justify-center">
 
-  <section id="kds-auth-screen" class="min-h-screen w-full flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-xl border border-zinc-200">
-      <span class="w-12 h-12 bg-maleza/10 text-maleza flex items-center justify-center rounded-full mx-auto text-xl mb-3">🔒</span>
-      <h3 class="font-serif font-bold text-xl text-maleza-dark">Acceso a Barra / Cocina</h3>
-      <p class="text-xs text-zinc-500 mb-5">Ingresa el PIN de seguridad del KDS</p>
-      <input type="password" id="kds-pin-input" maxlength="4" placeholder="••••" class="text-center tracking-widest text-2xl font-mono font-bold w-36 mx-auto bg-zinc-100 border border-zinc-300 rounded-xl py-2 mb-4 focus:outline-none focus:border-maleza">
-      <button type="button" onclick="window.unlockKDS()" class="w-full bg-maleza hover:bg-maleza-dark text-white font-semibold text-sm py-3 rounded-xl shadow-md transition-all cursor-pointer">
-        Ingresar al Tablero
-      </button>
-    </div>
-  </section>
+  <div id="main-app-container" class="w-full max-w-md bg-[#F4F2EB] min-h-screen shadow-2xl relative flex flex-col border-x border-[#E2DDD0]">
 
-  <main id="view-tablet" class="hidden p-4 w-full max-w-7xl">
-    <div class="bg-white rounded-2xl p-4 mb-4 shadow-sm border border-zinc-200 flex flex-wrap items-center justify-between gap-3">
-      <div>
-        <div class="flex items-center gap-2">
-          <span class="w-5 h-5 rounded-full bg-maleza-dark flex items-center justify-center text-white text-[9px]">🌿</span>
-          <h2 class="font-serif text-xl font-bold text-maleza-dark">Pantalla de Comandas (KDS)</h2>
-          <span id="cloud-badge" class="text-[10px] bg-zinc-200 text-zinc-700 px-2 py-0.5 rounded-full font-medium">Iniciando...</span>
+    <header id="client-header" class="sticky top-0 z-40 bg-[#F4F2EB]/95 backdrop-blur-md border-b border-[#E7E3D8] px-4 py-3">
+      <div class="flex flex-col items-center justify-center text-center">
+        <div class="flex items-center space-x-2">
+          <span class="w-6 h-6 rounded-full bg-maleza-dark flex items-center justify-center text-white text-[11px]">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+              <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-12 5 4-2 9-1 11-1-1 4-5 7-9 8 3-1 6-3 8-6-3 2-6 3-9 3-2 0-3.5-1-4-2 3-1 6-4 8-7z"/>
+            </svg>
+          </span>
+          <h1 class="font-serif font-bold text-2xl text-maleza-dark tracking-tight">maleza<span class="text-maleza-accent text-lg">.cafe</span></h1>
         </div>
-        <div class="flex items-center gap-2 mt-0.5">
-          <span id="kds-active-date-label" class="text-xs font-semibold text-maleza-dark">Viendo: Hoy</span>
-          <span class="text-zinc-300">|</span>
-          <button type="button" onclick="window.openHistoryModal()" class="text-xs text-maleza-accent hover:underline font-semibold cursor-pointer">
-            Historial de Fechas
+        <span class="block text-[8.5px] uppercase font-bold tracking-[0.2em] text-maleza-light mt-0.5">
+          Hecho a nuestro modo, porque sí[cite: 4]
+        </span>
+      </div>
+    </header>
+
+    <div id="order-monitor" class="hidden fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-zinc-200 p-3.5 transition-all">
+      <div class="flex items-center justify-between mb-1.5">
+        <h3 class="font-serif font-bold text-maleza-dark text-base">Estado de tu pedido</h3>
+        <span id="monitor-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">PENDIENTE</span>
+      </div>
+      <p id="monitor-msg" class="text-xs text-zinc-600 mb-3 leading-snug">Tu pedido está en fila. Aún puedes hacer cambios si te equivocaste.</p>
+      <div id="monitor-actions" class="flex flex-col gap-2"></div>
+    </div>
+
+    <main id="view-client" class="p-4 flex-1 flex flex-col justify-between">
+      <div>
+        <div id="seasonal-promo-container" class="mb-3 hidden">
+          <div onclick="window.handlePromoClick()" class="banner-hover bg-gradient-to-r from-[#1b281c] via-[#2a3f2d] to-[#3a443a] text-white rounded-2xl p-3.5 shadow-md border border-[#2f4832]/30 flex items-center justify-between gap-3 cursor-pointer relative overflow-hidden transition-all">
+            <div class="flex-1 min-w-0 z-10">
+              <span id="promo-badge" class="inline-block text-[9px] font-bold tracking-wider uppercase bg-[#b86543] text-white px-2 py-0.5 rounded-full mb-1">
+                EDICIÓN ESPECIAL
+              </span>
+              <h3 id="promo-title" class="font-serif text-base font-bold text-[#faf9f5] leading-snug truncate">
+                Pumpkin Spice
+              </h3>
+              <p id="promo-desc" class="text-[11px] text-zinc-300 font-medium leading-tight mb-2 line-clamp-2">
+                Nuestra bebida de Temporada.
+              </p>
+              <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#f4e2c6]">
+                Elegir preparación ✨
+              </span>
+            </div>
+            <div class="w-14 h-14 rounded-full bg-emerald-950/40 border border-white/10 flex items-center justify-center text-2xl shadow-inner shrink-0 relative">
+              🎃<span class="absolute bottom-0 right-0 text-xs">☕</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative mb-2">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </span>
+          <input type="text" id="menu-search-input" oninput="window.handleSearchInput(this.value)" placeholder="Buscar por nombre, sabor o ingrediente..." class="w-full pl-9 pr-8 py-2 bg-white rounded-xl border border-zinc-200 text-xs font-medium text-zinc-800 placeholder-zinc-400 focus:outline-none focus:border-maleza transition-all shadow-sm">
+          <button type="button" id="menu-search-clear" onclick="window.clearMenuSearch()" class="hidden absolute inset-y-0 right-0 pr-2.5 flex items-center text-zinc-400 hover:text-zinc-700 text-sm font-bold cursor-pointer">
+            ✕
           </button>
         </div>
+
+        <nav id="category-nav" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 mb-3 -mx-4 px-4 sticky top-[60px] bg-[#F4F2EB]/95 backdrop-blur-md z-30 transition-opacity">
+          <button type="button" onclick="window.filterCategory('crepas', this)" class="cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-maleza text-white text-xs font-semibold shadow-sm shrink-0">Crepas & Waffles</button>
+          <button type="button" onclick="window.filterCategory('roles', this)" class="cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white text-zinc-600 border border-zinc-200 text-xs font-semibold shrink-0">Roles Artesanales</button>
+          <button type="button" onclick="window.filterCategory('banderillas', this)" class="cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white text-zinc-600 border border-zinc-200 text-xs font-semibold shrink-0">Banderillas Coreanas</button>
+          <button type="button" onclick="window.filterCategory('especiales', this)" class="cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white text-zinc-600 border border-zinc-200 text-xs font-semibold shrink-0">Lattes Especiales</button>
+          <button type="button" onclick="window.filterCategory('bubble', this)" class="cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white text-zinc-600 border border-zinc-200 text-xs font-semibold shrink-0">Bubble Tea</button>
+          <button type="button" onclick="window.filterCategory('cafe', this)" class="cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white text-zinc-600 border border-zinc-200 text-xs font-semibold shrink-0">Cafetería & Bebidas</button>
+        </nav>
+
+        <div id="products-grid" class="flex flex-col gap-2.5"></div>
       </div>
 
-      <div class="flex items-center flex-wrap gap-2">
-        <button type="button" onclick="window.exportCurrentOrdersCSV()" class="bg-[#2f4832] hover:bg-maleza-dark text-white text-xs font-semibold px-3 py-2 rounded-xl shadow-sm cursor-pointer">
-          Exportar CSV
-        </button>
-        <button type="button" onclick="window.openResetCutModal()" class="bg-rose-700 hover:bg-rose-800 text-white text-xs font-semibold px-3 py-2 rounded-xl shadow-sm cursor-pointer flex items-center gap-1">
-          🔒 Reiniciar Corte a $0
-        </button>
-        <button type="button" onclick="window.handleShiftClosing()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3 py-2 rounded-xl shadow-sm cursor-pointer">
-          Cerrar Turno
-        </button>
-        <div class="bg-[#FAF9F5] border border-maleza/20 px-3 py-1.5 rounded-xl text-right">
-          <span class="block text-[9px] text-zinc-500 font-bold uppercase">Corte Activo</span>
-          <span id="kds-sales-total" class="font-serif font-bold text-base text-maleza-dark">$0.00</span>
+      <footer class="mt-8 pt-6 pb-2 text-center border-t border-[#E7E3D8]">
+        <h2 class="font-serif text-2xl font-bold text-maleza-dark leading-tight tracking-tight">
+          Un lugar para <span class="italic font-normal text-maleza-accent">quedarte</span> un ratito.
+        </h2>
+        <p class="text-xs text-zinc-600 font-medium mt-2 leading-relaxed max-w-xs mx-auto">
+          Café honesto, comida rica y una pausa que se siente bien. Pide desde tu mesa y disfruta sin prisas.
+        </p>
+        <div class="mt-4 flex items-center justify-center gap-1.5 text-zinc-400 text-[11px] font-medium">
+          <span>@maleza.cafe</span>[cite: 3, 10]
+          <span>•</span>
+          <span>Hecho a nuestro modo</span>[cite: 4]
         </div>
-        <button type="button" onclick="window.lockKDS()" title="Bloquear pantalla" class="bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-xs p-2 rounded-xl cursor-pointer">
-          Salir
+      </footer>
+
+      <div id="cart-float" class="hidden fixed bottom-4 inset-x-4 max-w-md mx-auto z-40">
+        <button type="button" onclick="window.openCartModal()" class="w-full bg-maleza-dark text-white p-3.5 rounded-2xl shadow-xl flex items-center justify-between border border-emerald-950/40 active:scale-95 transition-transform cursor-pointer">
+          <div class="flex items-center space-x-2.5">
+            <span id="cart-count" class="bg-maleza-accent text-white font-bold text-xs px-2.5 py-0.5 rounded-full">0</span>
+            <span class="font-semibold text-sm">Ver Mi Comanda</span>
+          </div>
+          <span id="cart-total" class="font-serif font-bold text-base">$0.00</span>
         </button>
       </div>
-    </div>
+    </main>
 
-    <div id="kds-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-  </main>
+  </div>
 
-  <div id="reset-cut-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl text-center border border-zinc-200">
-      <div class="w-12 h-12 bg-rose-50 text-rose-700 flex items-center justify-center rounded-full mx-auto text-xl mb-3 font-bold">0️⃣</div>
-      <h3 class="font-serif font-bold text-xl text-maleza-dark mb-1">Reiniciar Corte a $0.00</h3>
-      <p class="text-xs text-zinc-500 mb-4 leading-relaxed">
-        Se descargará un respaldo en Excel y el corte volverá a ceros.
-      </p>
-      <div class="mb-4">
-        <label class="block text-xs font-bold text-zinc-700 mb-1">Ingresa PIN de Dueño:</label>
-        <input type="password" id="owner-pin-input" maxlength="4" placeholder="••••" class="text-center tracking-widest text-2xl font-mono font-bold w-36 mx-auto bg-zinc-100 border border-zinc-300 rounded-xl py-2 focus:outline-none focus:border-rose-600">
-        <p id="owner-pin-error" class="hidden text-[11px] text-rose-600 font-semibold mt-1.5">PIN incorrecto.</p>
+  <div id="custom-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[88vh] overflow-y-auto p-5 shadow-2xl">
+      <div class="flex justify-between items-start border-b border-zinc-100 pb-2 mb-3">
+        <div>
+          <h3 id="modal-title" class="font-serif font-bold text-lg text-maleza-dark leading-tight"></h3>
+          <p id="modal-base-price" class="text-xs font-semibold text-maleza-accent"></p>
+        </div>
+        <button type="button" onclick="window.closeCustomModal()" class="text-zinc-400 text-2xl leading-none p-1 cursor-pointer">&times;</button>
       </div>
-      <div class="grid grid-cols-2 gap-2">
-        <button type="button" onclick="window.confirmResetCut()" class="w-full bg-rose-700 hover:bg-rose-800 text-white font-semibold text-xs py-2.5 rounded-xl transition-all cursor-pointer shadow-sm">Confirmar</button>
-        <button type="button" onclick="window.closeResetCutModal()" class="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold text-xs py-2.5 rounded-xl transition-all cursor-pointer">Cancelar</button>
+      <div id="modal-options-container" class="space-y-3 mb-5 text-xs"></div>
+      <div class="border-t border-zinc-100 pt-3 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] text-zinc-400 block uppercase">Subtotal</span>
+          <span id="modal-subtotal" class="font-serif font-bold text-lg text-maleza-dark">$0.00</span>
+        </div>
+        <button type="button" onclick="window.confirmAddToCart()" class="bg-maleza hover:bg-maleza-dark text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-md active:scale-95 transition-transform cursor-pointer">
+          Agregar al Pedido
+        </button>
       </div>
     </div>
   </div>
 
-  <div id="history-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl">
+  <div id="cart-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[92vh] overflow-y-auto p-5 shadow-2xl">
       <div class="flex justify-between items-center border-b border-zinc-100 pb-2 mb-3">
-        <h3 class="font-serif font-bold text-lg text-maleza-dark">Historial de Comandas</h3>
-        <button type="button" onclick="window.closeHistoryModal()" class="text-zinc-400 hover:text-zinc-700 text-xl cursor-pointer">&times;</button>
+        <h3 class="font-serif font-bold text-lg text-maleza-dark">Resumen de Comanda</h3>
+        <button type="button" onclick="window.closeCartModal()" class="text-zinc-400 text-2xl leading-none p-1 cursor-pointer">&times;</button>
       </div>
-      <div class="space-y-3 mb-4">
-        <div>
-          <label class="block text-xs font-semibold text-zinc-600 mb-1">Fecha:</label>
-          <input type="date" id="history-date-picker" class="w-full bg-zinc-50 text-zinc-800 text-sm px-3 py-2 rounded-xl border border-zinc-200 focus:outline-none focus:border-maleza">
+      
+      <div id="cart-items-list" class="space-y-2 mb-4"></div>
+
+      <div class="bg-zinc-50 p-1.5 rounded-xl border border-zinc-200 mb-3 segmented-control flex">
+        <input type="radio" id="opt-here" name="order_type" value="Para comer aquí" checked>
+        <label for="opt-here">🍽️ En el lugar</label>
+        <input type="radio" id="opt-togo" name="order_type" value="Para llevar">
+        <label for="opt-togo">🛍️ Para llevar</label>
+      </div>
+
+      <div id="client-name-container" class="bg-white p-3 rounded-xl border-2 border-[#E7E3D8] shadow-sm mb-3 transition-all">
+        <label for="client-name" class="block text-xs font-bold text-maleza-dark mb-1">
+          ¿A qué nombre registramos tu pedido? <span class="text-maleza-accent">*</span>
+        </label>
+        <input type="text" id="client-name" placeholder="Ej. Carlos Estrada" class="w-full bg-[#FAF9F5] text-zinc-900 text-xs px-3 py-2 rounded-lg border border-zinc-200 focus:outline-none focus:border-maleza font-medium">
+        <p id="client-name-error" class="hidden text-[10px] text-maleza-accent font-semibold mt-1">
+          Por favor ingresa tu nombre para identificar tu comanda.
+        </p>
+      </div>
+
+      <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-200 mb-4">
+        <label class="block text-xs font-semibold text-zinc-600 mb-2">Forma de Pago:</label>
+        <div class="grid grid-cols-3 gap-2 text-xs font-medium">
+          <label class="flex flex-col items-center justify-center p-2 rounded-lg bg-white border border-zinc-200 cursor-pointer text-center">
+            <input type="radio" name="payment_method" value="Efectivo" onchange="window.handlePaymentMethodChange(this.value)" checked class="mb-1">
+            <span>💵 Efectivo</span>
+          </label>
+          <label class="flex flex-col items-center justify-center p-2 rounded-lg bg-white border border-zinc-200 cursor-pointer text-center">
+            <input type="radio" name="payment_method" value="Transferencia BBVA" onchange="window.handlePaymentMethodChange(this.value)" class="mb-1">
+            <span>🏦 BBVA</span>
+          </label>
+          <label class="flex flex-col items-center justify-center p-2 rounded-lg bg-white border border-zinc-200 cursor-pointer text-center">
+            <input type="radio" name="payment_method" value="Tarjeta" onchange="window.handlePaymentMethodChange(this.value)" class="mb-1">
+            <span>💳 Tarjeta</span>
+          </label>
         </div>
-        <div class="grid grid-cols-2 gap-2">
-          <button type="button" onclick="window.loadHistoryDate()" class="w-full bg-maleza text-white font-semibold text-xs py-2.5 rounded-xl cursor-pointer">Consultar</button>
-          <button type="button" onclick="window.resetToToday()" class="w-full bg-zinc-100 text-zinc-700 font-semibold text-xs py-2.5 rounded-xl cursor-pointer">Hoy</button>
+        
+        <div id="bbva-details" class="hidden mt-2.5 p-2.5 bg-white rounded-lg border border-zinc-200">
+          <p class="text-[10px] text-zinc-500 mb-1">Cuenta BBVA (Daniela I. Zacatelco):</p>[cite: 8]
+          <div class="flex items-center justify-between bg-zinc-50 p-2 rounded-md border border-zinc-100">
+            <span class="font-mono font-bold text-xs tracking-wider text-maleza-dark">4152 3145 8769 0465</span>[cite: 8]
+            <button type="button" onclick="window.copyBBVA(this)" class="bg-maleza/10 text-maleza px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 active:scale-95 transition-all">
+              📋 Copiar
+            </button>
+          </div>
+        </div>
+
+        <div id="tarjeta-details" class="hidden mt-2.5 p-2.5 bg-amber-50 rounded-lg border border-amber-200">
+          <div class="flex items-start gap-2 text-amber-900">
+            <span class="text-base shrink-0">💳</span>
+            <p class="text-[11px] font-medium leading-snug">
+              Llevaremos la terminal a tu mesa al entregarte tu pedido.
+            </p>
+          </div>
         </div>
       </div>
+
+      <div class="border-t border-zinc-100 pt-2.5 flex items-center justify-between mb-3">
+        <span class="text-xs font-semibold text-zinc-600">Total a pagar:</span>
+        <span id="cart-checkout-total" class="font-serif font-bold text-xl text-maleza-accent">$0.00</span>
+      </div>
+
+      <button type="button" onclick="window.sendOrder()" id="btn-submit-order" class="w-full bg-maleza-accent text-white font-bold text-sm py-3 rounded-xl shadow-lg active:scale-95 transition-transform cursor-pointer">
+        Enviar Comanda a Cocina
+      </button>
     </div>
   </div>
 
   <script>
     (function() {
-      // Firmas criptográficas SHA-256 (AppSec Defensivo)
-      // "1234" = 03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4
-      // "0000" = 9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0
-      const KDS_PIN_HASH = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
-      const OWNER_PIN_HASH = "9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0";
+      const WA_PHONE_NUMBER = "525519793606";
 
-      async function sha256(str) {
-        const buffer = new TextEncoder().encode(str);
-        const hash = await crypto.subtle.digest('SHA-256', buffer);
-        return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-      }
+      const FEATURED_PROMO = {
+        active: true,
+        productId: 'promo_pumpkin',
+        badge: 'Otoño en Maleza',
+        title: 'Pumpkin Spice',
+        desc: 'Nuestra bebida de Temporada.',
+        visualEmoji: '🎃'
+      };
 
       const firebaseConfig = {
         apiKey: "AIzaSyC-R4TAHZqtW4jU-mKrvEWOhJiQq1Z5raQ",
@@ -169,14 +291,8 @@
         setItem: function(key, val) {
           try { window.localStorage.setItem(key, val); } catch (e) { this.memory[key] = String(val); }
         },
-        getSession: function(key) {
-          try { return window.sessionStorage.getItem(key); } catch (e) { return this.memory['s_' + key] || null; }
-        },
-        setSession: function(key, val) {
-          try { window.sessionStorage.setItem(key, val); } catch (e) { this.memory['s_' + key] = String(val); }
-        },
-        removeSession: function(key) {
-          try { window.sessionStorage.removeItem(key); } catch (e) { delete this.memory['s_' + key]; }
+        removeItem: function(key) {
+          try { window.localStorage.removeItem(key); } catch (e) { delete this.memory[key]; }
         }
       };
 
@@ -195,330 +311,915 @@
         console.warn("Modo Local Activo");
       }
 
-      let orders = [];
-      let kdsUnsubscribe = null;
+      const MENU_DATA = window.MENU_DATA || [];
+
+      let cart = [];
+      let currentCustomItem = null;
+      let activeClientOrderId = null;
+      let activeClientOrderData = null;
+      let clientUnsubscribe = null;
+      let currentActiveCategory = 'crepas';
 
       function getLocalDateString(d) {
         const dateObj = d || new Date();
         const tzOffset = dateObj.getTimezoneOffset() * 60000;
         return new Date(dateObj.getTime() - tzOffset).toISOString().slice(0, 10);
       }
-      
-      let selectedKdsDateStr = getLocalDateString();
 
-      window.unlockKDS = async function() {
-        const pin = document.getElementById('kds-pin-input').value;
-        const hashInput = await sha256(pin);
-        if (hashInput === KDS_PIN_HASH) {
-          SafeStorage.setSession('maleza_kds_unlocked', 'true');
-          document.getElementById('kds-auth-screen').classList.add('hidden');
-          showKDSScreen();
-        } else {
-          alert("PIN incorrecto. Acceso denegado.");
-          document.getElementById('kds-pin-input').value = "";
-        }
-      };
-      
-      window.lockKDS = function() {
-        SafeStorage.removeSession('maleza_kds_unlocked');
-        location.reload();
-      };
-
-      function showKDSScreen() {
-        document.getElementById('view-tablet').classList.remove('hidden');
-        document.getElementById('history-date-picker').value = selectedKdsDateStr;
-        const b = document.getElementById('cloud-badge');
-        if (b) {
-          b.textContent = isCloud ? 'Nube Activa (Firebase)' : 'Modo Local';
-          b.className = isCloud
-            ? 'text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-medium'
-            : 'text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-medium';
-        }
-        startKDSListener(selectedKdsDateStr);
+      function normalizeString(str) {
+        return (str || '')
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .trim();
       }
 
-      function startKDSListener(targetDateStr) {
-        if (kdsUnsubscribe) kdsUnsubscribe();
+      function renderCard(p, badgeCategory) {
+        let imageHtml = '';
+        if (p.image) {
+          imageHtml = '<div class="w-16 h-16 shrink-0 rounded-xl overflow-hidden bg-zinc-100 border border-zinc-200/60 shadow-inner mr-3">' +
+            '<img src="' + p.image + '" alt="' + p.name + '" class="w-full h-full object-cover">' +
+          '</div>';
+        }
 
-        const isToday = targetDateStr === getLocalDateString();
-        document.getElementById('kds-active-date-label').textContent = isToday 
-          ? "Viendo: Hoy (" + targetDateStr + ")" 
-          : "Viendo Historial: " + targetDateStr;
+        return '<div class="bg-white rounded-2xl p-3 shadow-sm border border-zinc-200 flex items-center justify-between">' +
+          '<div class="flex items-center flex-1 min-w-0 pr-3">' +
+            imageHtml +
+            '<div class="flex-1 min-w-0">' +
+              (badgeCategory ? '<span class="inline-block text-[9px] uppercase tracking-wider font-bold text-maleza bg-maleza/10 px-2 py-0.5 rounded-md mb-1">' + badgeCategory + '</span>' : '') +
+              '<div class="flex items-baseline justify-between mb-0.5">' +
+                '<h4 class="font-bold text-xs text-zinc-900 truncate pr-1">' + p.name + '</h4>' +
+                '<span class="font-bold text-maleza text-xs shrink-0">' + (p.price ? '$' + p.price : 'Opciones') + '</span>' +
+              '</div>' +
+              '<p class="text-[11px] text-zinc-500 line-clamp-2 leading-snug pr-2">' + p.desc + '</p>' +
+            '</div>' +
+          '</div>' +
+          '<button type="button" onclick="window.handleProductClick(\'' + p.id + '\')" class="shrink-0 bg-[#F4F2EB] hover:bg-maleza hover:text-white active:bg-maleza-dark active:text-white text-zinc-700 text-xs font-semibold px-3 py-2 rounded-xl transition-colors cursor-pointer">' +
+            (p.type === 'simple' ? 'Pedir +' : 'Opciones +') +
+          '</button>' +
+        '</div>';
+      }
 
-        let isFirstLoad = true;
+      function getCategoryLabel(cat) {
+        const map = {
+          'crepas': 'Crepas & Waffles',
+          'roles': 'Roles Artesanales',
+          'banderillas': 'Banderillas Coreanas',
+          'especiales': 'Lattes Especiales',
+          'bubble': 'Bubble Tea',
+          'cafe': 'Cafetería & Bebidas'
+        };
+        return map[cat] || 'Menú';
+      }
 
-        if (isCloud && db) {
-          const q = db.collection("orders").where("dateStr", "==", targetDateStr);
-          kdsUnsubscribe = q.onSnapshot(function(snapshot) {
-            orders = [];
-            let hasNewOrders = false;
-            snapshot.docChanges().forEach(function(change) { if (change.type === "added") hasNewOrders = true; });
-            snapshot.forEach(function(doc) { orders.push(Object.assign({ id: doc.id }, doc.data())); });
-            orders.sort(function(a, b) { return (b.timestampStr || '').localeCompare(a.timestampStr || ''); });
-            renderKDS();
+      function renderProducts(cat) {
+        const category = cat || 'crepas';
+        currentActiveCategory = category;
+        const grid = document.getElementById('products-grid');
+        if (!grid) return;
+        grid.innerHTML = MENU_DATA.filter(function(p) { return p.cat === category; }).map(function(p) {
+          return renderCard(p, null);
+        }).join('');
+      }
 
-            if (!isFirstLoad && hasNewOrders && isToday) playChime();
-            isFirstLoad = false;
+      window.filterCategory = function(cat, btn) {
+        const searchInput = document.getElementById('menu-search-input');
+        const clearBtn = document.getElementById('menu-search-clear');
+        if (searchInput) searchInput.value = '';
+        if (clearBtn) clearBtn.classList.add('hidden');
+
+        document.querySelectorAll('.cat-btn').forEach(function(b) {
+          b.className = 'cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white text-zinc-600 border border-zinc-200 text-xs font-semibold shrink-0';
+        });
+        if (btn) {
+          btn.className = 'cat-btn whitespace-nowrap px-3.5 py-1.5 rounded-full bg-maleza text-white text-xs font-semibold shadow-sm shrink-0';
+        }
+        renderProducts(cat);
+      };
+
+      window.handleSearchInput = function(query) {
+        const clearBtn = document.getElementById('menu-search-clear');
+        const grid = document.getElementById('products-grid');
+        const nav = document.getElementById('category-nav');
+        const q = normalizeString(query);
+
+        if (!q) {
+          if (clearBtn) clearBtn.classList.add('hidden');
+          if (nav) nav.classList.remove('opacity-40');
+          renderProducts(currentActiveCategory);
+          return;
+        }
+
+        if (clearBtn) clearBtn.classList.remove('hidden');
+        if (nav) nav.classList.add('opacity-40');
+
+        const filtered = MENU_DATA.filter(function(item) {
+          if (item.cat === 'oculto') return false;
+          const nameNorm = normalizeString(item.name);
+          const descNorm = normalizeString(item.desc);
+          const catNorm = normalizeString(getCategoryLabel(item.cat));
+          const flavorsNorm = (item.flavors || []).map(normalizeString).join(' ');
+          const pricesNorm = Object.keys(item.prices || {}).map(normalizeString).join(' ');
+
+          return nameNorm.includes(q) || 
+                 descNorm.includes(q) || 
+                 catNorm.includes(q) || 
+                 flavorsNorm.includes(q) || 
+                 pricesNorm.includes(q);
+        });
+
+        if (filtered.length === 0) {
+          grid.innerHTML = '<div class="py-12 px-4 text-center bg-white rounded-2xl border border-zinc-200 shadow-sm">' +
+            '<span class="text-3xl block mb-2">🔍</span>' +
+            '<h4 class="font-bold text-sm text-zinc-800 mb-1">Sin coincidencias</h4>' +
+            '<p class="text-xs text-zinc-500 mb-3">No encontramos "' + query + '", pero prueba una crepa salada o una banderilla coreana.</p>' +
+            '<button type="button" onclick="window.clearMenuSearch()" class="bg-maleza text-white font-semibold text-xs px-4 py-2 rounded-xl">Ver Menú Completo</button>' +
+          '</div>';
+          return;
+        }
+
+        grid.innerHTML = filtered.map(function(p) {
+          return renderCard(p, getCategoryLabel(p.cat));
+        }).join('');
+      };
+
+      window.clearMenuSearch = function() {
+        const searchInput = document.getElementById('menu-search-input');
+        const clearBtn = document.getElementById('menu-search-clear');
+        const nav = document.getElementById('category-nav');
+        if (searchInput) searchInput.value = '';
+        if (clearBtn) clearBtn.classList.add('hidden');
+        if (nav) nav.classList.remove('opacity-40');
+        renderProducts(currentActiveCategory);
+      };
+
+      window.handlePaymentMethodChange = function(method) {
+        const bbvaBox = document.getElementById('bbva-details');
+        const cardBox = document.getElementById('tarjeta-details');
+        if (bbvaBox) bbvaBox.classList.toggle('hidden', method !== 'Transferencia BBVA');
+        if (cardBox) cardBox.classList.toggle('hidden', method !== 'Tarjeta');
+      };
+
+      function renderCustomModifierBlock() {
+        return '<div class="mt-3 p-3 bg-amber-50/70 rounded-xl border border-amber-200/80">' +
+          '<label class="block font-bold text-xs text-amber-950 mb-1">📝 Extra o Modificador Libre (Barra):</label>' +
+          '<div class="grid grid-cols-3 gap-2 mb-2">' +
+            '<div class="col-span-2">' +
+              '<input type="text" id="custom_mod_desc" placeholder="Ej. Extra jamón y manchego" class="w-full bg-white text-zinc-900 text-xs px-2.5 py-1.5 rounded-lg border border-amber-300 focus:outline-none focus:border-maleza font-medium">' +
+            '</div>' +
+            '<div class="col-span-1">' +
+              '<div class="relative">' +
+                '<span class="absolute inset-y-0 left-0 pl-2 flex items-center text-zinc-400 font-bold text-xs">$</span>' +
+                '<input type="number" id="custom_mod_price" inputmode="decimal" min="0" step="1" placeholder="0" oninput="window.updatePriceSubtotal()" class="w-full bg-white text-zinc-900 text-xs pl-5 pr-2 py-1.5 rounded-lg border border-amber-300 focus:outline-none focus:border-maleza font-bold">' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }
+
+      window.handleProductClick = function(id) {
+        const item = MENU_DATA.find(function(p) { return p.id === id; });
+        if (!item) return;
+
+        if (item.type === 'simple') {
+          cart.push({ id: item.id, name: item.name, price: item.price, total: item.price, qty: 1, details: '' });
+          updateCartUI();
+          return;
+        }
+
+        currentCustomItem = item;
+        document.getElementById('modal-title').textContent = item.name;
+        const c = document.getElementById('modal-options-container');
+        c.innerHTML = '';
+
+        if (item.type === 'special_custom') {
+          renderSpecialCustomOptions(item, c);
+        } else if (item.type === 'mandragora') {
+          renderMandragoraOptions(item, c);
+        } else if (item.type === 'pumpkin') {
+          renderDynamicTrioOptions(item, c, 'opt_pumpkin');
+        } else if (item.type === 'matcha_azul') {
+          renderDynamicTrioOptions(item, c, 'opt_matcha_azul');
+        } else if (item.type === 'frappe' || item.type === 'malteada') {
+          renderFrappeOrMalteadaOptions(item, c);
+        } else if (item.type === 'crepa_dulce') {
+          renderCrepaDulceOptions(item, c);
+        } else if (item.type === 'crepa_salada') {
+          renderCrepaSaladaOptions(item, c);
+        } else if (item.type === 'rol_dulce') {
+          renderRolDulceOptions(item, c);
+        } else if (item.type === 'banderilla') {
+          document.getElementById('modal-base-price').textContent = "Selecciona relleno:";
+          let html = '<div class="space-y-1.5">';
+          Object.entries(item.prices).forEach(function(entry, i) {
+            const r = entry[0];
+            const p = entry[1];
+            html += '<label class="flex justify-between items-center p-2.5 rounded-xl border border-zinc-200 cursor-pointer hover:border-maleza">' +
+              '<span class="text-xs font-semibold flex items-center gap-2"><input type="radio" name="opt_band" value="' + r + '" data-p="' + p + '" ' + (i === 0 ? 'checked' : '') + ' onchange="window.updatePriceSubtotal()"> ' + r + '</span>' +
+              '<span class="font-bold text-xs text-maleza">$' + p + '</span></label>';
           });
-        } else {
-          const allOrders = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
-          orders = allOrders.filter(function(o) { return o.dateStr === targetDateStr; });
-          renderKDS();
+          html += '</div>';
+          html += '<div class="mt-2.5"><label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 cursor-pointer"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" id="band_extra" onchange="window.updatePriceSubtotal()"> Ingrediente extra</span><span class="font-bold text-xs text-maleza-accent">+$15</span></label></div>';[cite: 9]
+          html += renderCustomModifierBlock();
+          c.innerHTML = html;
+          window.updatePriceSubtotal();
+        } else if (item.type === 'bubble') {
+          document.getElementById('modal-base-price').textContent = 'Precio: $' + item.price;
+          let html = '<div class="bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 mb-2"><p class="text-[11px] text-zinc-500 font-medium">✨ Incluye perlas de tapioca tradicional de la casa.</p></div>';[cite: 8]
+          html += renderBobaToppingsCheckboxes('Extras o perlas adicionales (+ $15 c/u):');
+          html += renderCustomModifierBlock();
+          c.innerHTML = html;
+          document.getElementById('modal-subtotal').textContent = '$' + item.price.toFixed(2);
+        } else if (item.type === 'flavor' || item.type === 'flavor_noshot') {
+          document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
+          let html = '<div><label class="font-semibold block text-xs text-zinc-700 mb-1.5">Sabor o preparación:</label><div class="grid grid-cols-2 gap-1.5 text-xs">';
+          item.flavors.forEach(function(fl, i) {
+            html += '<label class="flex items-center gap-2 p-2 rounded-xl bg-zinc-50 border border-zinc-200 cursor-pointer"><input type="radio" name="opt_flavor" value="' + fl + '" ' + (i === 0 ? 'checked' : '') + '><span>' + fl + '</span></label>';
+          });
+          html += '</div></div>';
+          if (item.type === 'flavor' && item.allowShot) {
+            html += '<div class="mt-2.5"><label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 text-xs font-semibold cursor-pointer"><span class="flex items-center gap-2"><input type="checkbox" id="shot_extra" onchange="window.updatePriceSubtotal()"> Shot de Espresso extra</span><span class="font-bold text-maleza-accent">+$15</span></label></div>';[cite: 7]
+          }
+          if (item.hasBobaToppings) {
+            html += '<div class="mt-3">' + renderBobaToppingsCheckboxes() + '</div>';
+          }
+          html += renderCustomModifierBlock();
+          c.innerHTML = html;
+          document.getElementById('modal-subtotal').textContent = '$' + item.price.toFixed(2);
         }
+        document.getElementById('custom-modal').classList.remove('hidden');
+      };
+
+      function renderSpecialCustomOptions(item, container) {
+        document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
+        
+        let imageHtml = '';
+        if (item.image) {
+          imageHtml = '<div class="w-full h-40 mb-3 rounded-xl overflow-hidden bg-zinc-100 border border-zinc-200 shadow-sm"><img src="' + item.image + '" alt="' + item.name + '" class="w-full h-full object-cover"></div>';
+        }
+
+        let html = imageHtml + '<div class="bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 mb-2"><p class="text-xs text-zinc-600 font-medium">Receta de autor: ' + item.desc + '</p></div>';
+        html += renderBobaToppingsCheckboxes('Toppings masticables opcionales (+ $15 c/u):');
+        html += renderCustomModifierBlock();
+        container.innerHTML = html;
+        window.updatePriceSubtotal();
       }
 
-      window.openHistoryModal = function() { document.getElementById('history-modal').classList.remove('hidden'); };
-      window.closeHistoryModal = function() { document.getElementById('history-modal').classList.add('hidden'); };
+      function renderBobaToppingsCheckboxes(customTitle) {
+        const title = customTitle || 'Toppings masticables / perlas (+ $15 c/u):';
+        const bobaOptions = [
+          'Tapioca negra',
+          'Jelly de Coco',
+          'Perlas Explosivas Lichi',
+          'Perlas Explosivas Limonada Rosa'
+        ];
+        let h = '<label class="font-semibold block text-xs text-zinc-700 mb-1.5">' + title + '</label><div class="grid grid-cols-1 gap-1.5 text-xs">';
+        bobaOptions.forEach(function(b) {
+          h += '<label class="flex items-center justify-between p-2 rounded-xl bg-zinc-50 border border-zinc-200 cursor-pointer hover:border-maleza">' +
+            '<span class="text-xs font-medium flex items-center gap-2"><input type="checkbox" name="opt_boba" value="' + b + '" data-cost="15" onchange="window.updatePriceSubtotal()"> ' + b + '</span>' +
+            '<span class="font-bold text-xs text-maleza-accent">+$15</span>' +
+          '</label>';
+        });
+        h += '</div>';
+        return h;
+      }
 
-      window.loadHistoryDate = function() {
-        const selected = document.getElementById('history-date-picker').value;
-        if (!selected) return alert("Selecciona una fecha válida.");
-        selectedKdsDateStr = selected;
-        startKDSListener(selectedKdsDateStr);
-        window.closeHistoryModal();
+      function renderMandragoraOptions(item, container) {
+        document.getElementById('modal-base-price').textContent = "Precio completo: $" + item.price;
+        
+        let imageHtml = '';
+        if (item.image) {
+          imageHtml = '<div class="w-full h-40 mb-3 rounded-xl overflow-hidden bg-zinc-100 border border-zinc-200 shadow-sm"><img src="' + item.image + '" alt="' + item.name + '" class="w-full h-full object-cover"></div>';
+        }
+
+        const rellenos = ['Crema Batida', 'Queso Philadelphia', 'Nata'];
+        const frutas = ['Fresa', 'Plátano', 'Durazno'];
+
+        let html = imageHtml + '<div class="space-y-3">';
+        html += '<div><label class="font-semibold block text-xs text-zinc-700 mb-1.5">1. Elige el relleno de tu Pan de Muerto (Cortesía):</label><div class="grid grid-cols-3 gap-1.5 text-xs">';
+        rellenos.forEach(function(r, i) {
+          html += '<label class="flex items-center justify-center p-2 rounded-xl bg-emerald-50 border border-emerald-100 cursor-pointer text-emerald-900 font-medium"><input type="radio" name="opt_mandragora_relleno" value="' + r + '" ' + (i === 0 ? 'checked' : '') + ' class="mr-1.5"><span class="text-[11px]">' + r + '</span></label>';
+        });
+        html += '</div></div>';
+
+        html += '<div><label class="font-semibold block text-xs text-zinc-700 mb-1.5">2. Elige la fruta para tu relleno (Cortesía):</label><div class="grid grid-cols-3 gap-1.5 text-xs">';
+        frutas.forEach(function(f, i) {
+          html += '<label class="flex items-center justify-center p-2 rounded-xl bg-zinc-50 border border-zinc-200 cursor-pointer text-zinc-800 font-medium"><input type="radio" name="opt_mandragora_fruta" value="' + f + '" ' + (i === 0 ? 'checked' : '') + ' class="mr-1.5"><span class="text-[11px]">' + f + '</span></label>';
+        });
+        html += '</div></div>';
+        html += '</div>';
+        html += renderCustomModifierBlock();
+
+        container.innerHTML = html;
+        window.updatePriceSubtotal();
+      }
+
+      function renderDynamicTrioOptions(item, container, groupName) {
+        document.getElementById('modal-base-price').textContent = "Selecciona preparación:";
+        const options = [
+          { name: 'Caliente', price: 60 },
+          { name: 'Latte Frío', price: 70 },
+          { name: 'Frappé', price: 60 }
+        ];
+
+        let html = '<div class="space-y-2">';
+        options.forEach(function(opt, idx) {
+          html += '<label class="flex justify-between items-center p-3 rounded-xl border border-zinc-200 cursor-pointer hover:border-maleza">' +
+            '<span class="text-xs font-semibold flex items-center gap-2"><input type="radio" name="' + groupName + '" value="' + opt.name + '" data-price="' + opt.price + '" ' + (idx === 0 ? 'checked' : '') + ' onchange="window.updatePriceSubtotal()"> ' + opt.name + '</span>' +
+            '<span class="font-bold text-xs text-maleza">$' + opt.price + '</span></label>';
+        });
+        html += '</div>';
+
+        html += '<div class="mt-3">' + renderBobaToppingsCheckboxes() + '</div>';
+        html += renderCustomModifierBlock();
+
+        container.innerHTML = html;
+        window.updatePriceSubtotal();
+      }
+
+      function renderFrappeOrMalteadaOptions(item, container) {
+        document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
+        let html = '<div><label class="font-semibold block text-xs text-zinc-700 mb-1.5">Sabor:</label><div class="grid grid-cols-2 gap-1.5 text-xs">';
+        item.flavors.forEach(function(fl, i) {
+          html += '<label class="flex items-center gap-2 p-2 rounded-xl bg-zinc-50 border border-zinc-200 cursor-pointer"><input type="radio" name="opt_flavor" value="' + fl + '" ' + (i === 0 ? 'checked' : '') + '><span>' + fl + '</span></label>';
+        });
+        html += '</div></div>';
+        
+        html += '<div class="mt-3"><label class="flex items-center justify-between p-3 rounded-xl border border-zinc-200 bg-zinc-50 cursor-pointer text-zinc-800"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" id="item_no_cream"> ¿Sin crema batida?</span><span class="font-bold text-xs uppercase text-zinc-500">Cortesía</span></label></div>';
+        
+        html += '<div class="mt-3">' + renderBobaToppingsCheckboxes() + '</div>';
+        html += renderCustomModifierBlock();
+
+        container.innerHTML = html;
+        window.updatePriceSubtotal();
+      }
+
+      function renderCrepaDulceOptions(item, container) {
+        document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
+        const bases = ['Crema de avellanas', 'Mermelada fresa', 'Mermelada zarzamora', 'Cajeta', 'Lechera', 'Philadelphia'];[cite: 4]
+        const frutas = ['Fresa', 'Plátano', 'Durazno'];[cite: 4]
+        const cortesia = ['Jarabe Hershey', 'Lechera', 'Azúcar Glass'];
+        const toppings = [
+          { name: 'Nuez', cost: 10 },[cite: 4]
+          { name: 'Chispas de chocolate', cost: 10 },[cite: 4]
+          { name: 'Oreo', cost: 10 },[cite: 4]
+          { name: 'Fruta extra', cost: 10 },[cite: 4]
+          { name: 'Ingrediente extra', cost: 10 }[cite: 4]
+        ];
+        if (item.isWaffle) { toppings.push({ name: 'Bola de helado', cost: 15 }); }[cite: 5]
+
+        let html = '<div>' +
+          '<div class="flex items-center justify-between mb-1">' +
+            '<label class="font-semibold block text-xs text-zinc-700">Elige tus bases (Máximo ' + item.maxBases + '):</label>' +
+          '</div>' +
+          '<div id="base-limit-msg" class="hidden mb-2 p-2 bg-rose-50 border border-rose-200 text-rose-700 text-[11px] font-semibold rounded-lg text-center transition-all animate-pulse"></div>' +
+          '<div class="grid grid-cols-2 gap-1.5 text-xs">';
+        bases.forEach(function(b) {
+          html += '<label class="flex items-center gap-2 p-2 rounded-lg bg-zinc-50 border border-zinc-200 cursor-pointer"><input type="checkbox" name="opt_base" value="' + b + '" onchange="window.checkMaxBases(' + item.maxBases + ', this)"><span>' + b + '</span></label>';
+        });
+        html += '</div></div>';
+
+        if (item.hasFruit) {
+          html += '<div class="mt-2.5"><label class="font-semibold block text-xs text-zinc-700 mb-1">Elige tu fruta:</label><div class="grid grid-cols-3 gap-1.5 text-xs">';
+          frutas.forEach(function(f, i) {
+            html += '<label class="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-zinc-50 border border-zinc-200 cursor-pointer"><input type="radio" name="opt_fruta" value="' + f + '" ' + (i === 0 ? 'checked' : '') + '><span>' + f + '</span></label>';
+          });
+          html += '</div></div>';
+        }
+
+        html += '<div class="mt-2.5"><label class="font-semibold block text-xs text-zinc-700 mb-1">Toque final de cortesía (Elige los que gustes):</label><div class="grid grid-cols-3 gap-1.5 text-xs">';
+        cortesia.forEach(function(c) {
+          html += '<label class="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-emerald-50 border border-emerald-100 cursor-pointer text-emerald-800"><input type="checkbox" name="opt_cortesia" value="' + c + '"><span class="text-center">' + c + '</span></label>';
+        });
+        html += '</div></div>';
+
+        html += '<div class="mt-2.5"><label class="font-semibold block text-xs text-zinc-700 mb-1">Toppings / Extras con costo:</label><div class="grid grid-cols-2 gap-1.5 text-xs">';
+        toppings.forEach(function(t) {
+          html += '<label class="flex items-center justify-between p-2 rounded-lg bg-zinc-50 border border-zinc-200 cursor-pointer"><div class="flex items-center gap-2"><input type="checkbox" name="opt_topping" value="' + t.name + '" data-cost="' + t.cost + '" onchange="window.updatePriceSubtotal()"><span>' + t.name + '</span></div><span class="font-bold text-maleza-accent text-[11px]">+$' + t.cost + '</span></label>';
+        });
+        html += '</div></div>';
+        html += renderCustomModifierBlock();
+
+        container.innerHTML = html;
+        window.updatePriceSubtotal();
+      }
+
+      function renderCrepaSaladaOptions(item, container) {
+        document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
+        let html = '<div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200 mb-3"><p class="text-xs text-zinc-600 font-medium">Contiene: ' + item.desc + '</p></div>';
+        html += '<div><label class="flex items-center justify-between p-3 rounded-xl border border-emerald-200 bg-emerald-50 cursor-pointer text-emerald-800"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" name="opt_cortesia" value="Salsa Macha"> ¿Agregar Salsa Macha artesanal?</span><span class="font-bold text-xs uppercase text-emerald-600">Cortesía</span></label></div>';
+        html += renderCustomModifierBlock();
+        container.innerHTML = html;
+        window.updatePriceSubtotal();
+      }
+
+      function renderRolDulceOptions(item, container) {
+        document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
+        const frutas = ['Fresa', 'Plátano', 'Durazno'];
+        let html = '<div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200 mb-3"><p class="text-xs text-zinc-600 font-medium">Contiene: ' + item.desc + '</p></div>';
+        html += '<div><label class="flex items-center justify-between p-3 rounded-xl border border-emerald-200 bg-emerald-50 cursor-pointer text-emerald-800"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" name="opt_cortesia" value="Glaseado Glass" checked> ¿Agregar Glaseado Glass?</span><span class="font-bold text-xs uppercase text-emerald-600">Cortesía</span></label></div>';
+        html += '<div class="mt-2.5"><label class="font-semibold block text-xs text-zinc-700 mb-1">Opcional: Agregar fruta (+$10)</label><div class="grid grid-cols-3 gap-1.5 text-xs">';
+        frutas.forEach(function(f) {
+          html += '<label class="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-zinc-50 border border-zinc-200 cursor-pointer"><input type="checkbox" name="opt_topping" value="Fruta: ' + f + '" data-cost="10" onchange="window.updatePriceSubtotal()"><span>' + f + '</span></label>';
+        });
+        html += '</div></div>';
+        html += renderCustomModifierBlock();
+        container.innerHTML = html;
+        window.updatePriceSubtotal();
+      }
+
+      window.checkMaxBases = function(max, currentCheckbox) {
+        const checked = document.querySelectorAll('input[name="opt_base"]:checked');
+        const alertBox = document.getElementById('base-limit-msg');
+
+        if (checked.length > max) {
+          if (currentCheckbox) currentCheckbox.checked = false;
+
+          if (navigator.vibrate) {
+            try { navigator.vibrate(50); } catch (e) {}
+          }
+
+          if (alertBox) {
+            alertBox.textContent = '⚠️ Este producto solo incluye ' + max + ' base(s).';[cite: 4, 5]
+            alertBox.classList.remove('hidden');
+            clearTimeout(window._baseToastTimer);
+            window._baseToastTimer = setTimeout(function() {
+              alertBox.classList.add('hidden');
+            }, 2500);
+          }
+        } else if (alertBox) {
+          alertBox.classList.add('hidden');
+        }
       };
       
-      window.resetToToday = function() {
-        selectedKdsDateStr = getLocalDateString();
-        document.getElementById('history-date-picker').value = selectedKdsDateStr;
-        startKDSListener(selectedKdsDateStr);
-        window.closeHistoryModal();
+      window.updatePriceSubtotal = function() {
+        if (!currentCustomItem) return;
+        let total = currentCustomItem.price || 0;
+        
+        if (currentCustomItem.type === 'pumpkin') {
+          const selected = document.querySelector('input[name="opt_pumpkin"]:checked');
+          if (selected) total = parseInt(selected.dataset.price, 10);
+        } else if (currentCustomItem.type === 'matcha_azul') {
+          const selected = document.querySelector('input[name="opt_matcha_azul"]:checked');
+          if (selected) total = parseInt(selected.dataset.price, 10);
+        } else if (currentCustomItem.type === 'banderilla') {
+          const b = document.querySelector('input[name="opt_band"]:checked');
+          if (b) total = parseInt(b.dataset.p, 10);
+          const ex = document.getElementById('band_extra');
+          if (ex && ex.checked) total += 15;
+        } else if (currentCustomItem.type === 'mandragora') {
+          total = currentCustomItem.price || 120;
+        }
+
+        const sh = document.getElementById('shot_extra');
+        if (sh && sh.checked) total += 15;
+
+        document.querySelectorAll('input[name="opt_topping"]:checked').forEach(function(cb) {
+          total += parseInt(cb.dataset.cost, 10);
+        });
+
+        document.querySelectorAll('input[name="opt_boba"]:checked').forEach(function(cb) {
+          total += parseInt(cb.dataset.cost, 10);
+        });
+
+        const customPriceInput = document.getElementById('custom_mod_price');
+        if (customPriceInput) {
+          const customCost = parseFloat(customPriceInput.value) || 0;
+          if (customCost > 0) total += customCost;
+        }
+        
+        document.getElementById('modal-subtotal').textContent = '$' + total.toFixed(2);
+      };
+      
+      window.confirmAddToCart = function() {
+        if (!currentCustomItem) return;
+        let details = [];
+        let price = currentCustomItem.price || 0;
+
+        if (currentCustomItem.type === 'mandragora') {
+          const r = document.querySelector('input[name="opt_mandragora_relleno"]:checked');
+          const f = document.querySelector('input[name="opt_mandragora_fruta"]:checked');
+          if (r) details.push('Relleno pan: ' + r.value);
+          if (f) details.push('Fruta: ' + f.value);
+        } else if (currentCustomItem.type === 'pumpkin') {
+          const selected = document.querySelector('input[name="opt_pumpkin"]:checked');
+          if (selected) {
+            price = parseInt(selected.dataset.price, 10);
+            details.push('Preparación: ' + selected.value);
+          }
+        } else if (currentCustomItem.type === 'matcha_azul') {
+          const selected = document.querySelector('input[name="opt_matcha_azul"]:checked');
+          if (selected) {
+            price = parseInt(selected.dataset.price, 10);
+            details.push('Preparación: ' + selected.value);
+          }
+        } else if (currentCustomItem.type === 'frappe' || currentCustomItem.type === 'malteada') {
+          const fl = document.querySelector('input[name="opt_flavor"]:checked');
+          if (fl) details.push('Sabor: ' + fl.value);
+          const noCream = document.getElementById('item_no_cream');
+          if (noCream && noCream.checked) details.push('Sin crema batida');
+        } else if (currentCustomItem.type.startsWith('crepa') || currentCustomItem.type.startsWith('rol')) {
+          const bases = Array.from(document.querySelectorAll('input[name="opt_base"]:checked')).map(function(x) { return x.value; });
+          if (bases.length > 0) details.push('Bases: ' + bases.join(', '));
+          
+          const fruta = document.querySelector('input[name="opt_fruta"]:checked');
+          if (fruta && currentCustomItem.hasFruit) details.push('Fruta: ' + fruta.value);
+          
+          const cortesia = Array.from(document.querySelectorAll('input[name="opt_cortesia"]:checked')).map(function(x) { return x.value; });
+          if (cortesia.length > 0) details.push('Cortesía: ' + cortesia.join(', '));
+
+          const toppings = Array.from(document.querySelectorAll('input[name="opt_topping"]:checked')).map(function(cb) {
+            price += parseInt(cb.dataset.cost, 10);
+            return cb.value;
+          });
+          if (toppings.length > 0) details.push('Extras: ' + toppings.join(', '));
+          
+        } else if (currentCustomItem.type === 'banderilla') {
+          const b = document.querySelector('input[name="opt_band"]:checked');
+          if (b) { price = parseInt(b.dataset.p, 10); details.push('Relleno: ' + b.value); }
+          const ex = document.getElementById('band_extra');
+          if (ex && ex.checked) { price += 15; details.push('Con extra'); }
+        } else if (currentCustomItem.type.startsWith('flavor')) {
+          const fl = document.querySelector('input[name="opt_flavor"]:checked');
+          if (fl && fl.value !== 'Clásico' && fl.value !== 'Tradicional' && fl.value !== 'Receta Original') {
+            details.push('Sabor: ' + fl.value);
+          }
+          const sh = document.getElementById('shot_extra');
+          if (sh && sh.checked) { price += 15; details.push('Con Shot Espresso'); }
+        }
+
+        const bobas = Array.from(document.querySelectorAll('input[name="opt_boba"]:checked')).map(function(cb) {
+          price += parseInt(cb.dataset.cost, 10);
+          return '+ ' + cb.value;
+        });
+        if (bobas.length > 0) details.push(bobas.join(', '));
+
+        const customDescInput = document.getElementById('custom_mod_desc');
+        const customPriceInput = document.getElementById('custom_mod_price');
+        if (customDescInput && customPriceInput) {
+          const customDesc = customDescInput.value.trim();
+          const customCost = parseFloat(customPriceInput.value) || 0;
+          if (customDesc) {
+            price += customCost;
+            details.push('Extra Barra: ' + customDesc + (customCost > 0 ? ' (+$' + customCost.toFixed(2) + ')' : ''));
+          } else if (customCost > 0) {
+            price += customCost;
+            details.push('Extra Barra (+$' + customCost.toFixed(2) + ')');
+          }
+        }
+        
+        cart.push({ id: currentCustomItem.id, name: currentCustomItem.name, price: price, total: price, qty: 1, details: details.join(' | ') });
+        window.closeCustomModal();
+        updateCartUI();
       };
 
-      window.openResetCutModal = function() {
-        const pinInput = document.getElementById('owner-pin-input');
-        const err = document.getElementById('owner-pin-error');
-        if (pinInput) pinInput.value = "";
+      window.closeCustomModal = function() { document.getElementById('custom-modal').classList.add('hidden'); };
+      
+      window.openCartModal = function() { 
+        renderCartModalItems(); 
+        const err = document.getElementById('client-name-error');
+        const box = document.getElementById('client-name-container');
         if (err) err.classList.add('hidden');
-        document.getElementById('reset-cut-modal').classList.remove('hidden');
-        if (pinInput) pinInput.focus();
-      };
-
-      window.closeResetCutModal = function() {
-        document.getElementById('reset-cut-modal').classList.add('hidden');
-      };
-
-      window.confirmResetCut = async function() {
-        const pinVal = document.getElementById('owner-pin-input').value;
-        const err = document.getElementById('owner-pin-error');
-        const hashInput = await sha256(pinVal);
-
-        if (hashInput !== OWNER_PIN_HASH) {
-          if (err) err.classList.remove('hidden');
-          document.getElementById('owner-pin-input').value = "";
-          return;
-        }
-
-        const activeOrders = orders.filter(function(o) { 
-          return o.status !== 'canceled' && o.status !== 'returned' && o.status !== 'archived_cut'; 
-        });
-
-        if (activeOrders.length > 0) {
-          const timeNow = new Date().toTimeString().slice(0,5).replace(':', '-');
-          window.exportCurrentOrdersCSV(`Respaldo_Corte_${selectedKdsDateStr}_${timeNow}.csv`);
-        }
-
-        if (isCloud && db) {
-          try {
-            const batch = db.batch();
-            activeOrders.forEach(function(o) {
-              if (o.id) {
-                batch.update(db.collection("orders").doc(o.id), { status: 'archived_cut' });
-              }
-            });
-            await batch.commit();
-          } catch(e) {
-            console.error("Error al reiniciar corte en nube:", e);
-          }
-        } else {
-          const all = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
-          all.forEach(function(o) {
-            if (o.dateStr === selectedKdsDateStr && o.status !== 'canceled' && o.status !== 'returned' && o.status !== 'archived_cut') {
-              o.status = 'archived_cut';
-            }
-          });
-          SafeStorage.setItem('maleza_orders', JSON.stringify(all));
-          startKDSListener(selectedKdsDateStr);
-        }
-
-        window.closeResetCutModal();
-        alert("Corte reiniciado a $0.00 exitosamente.");
-      };
-
-      window.handleShiftClosing = function() {
-        const validOrders = orders.filter(function(o) { return o.status !== 'canceled' && o.status !== 'returned' && o.status !== 'archived_cut'; });
-        if (validOrders.length === 0) return alert("No hay comandas activas para realizar corte.");
-
-        const totalShift = validOrders.reduce(function(s, o) { return s + (o.total || 0); }, 0);
-        const confirmClose = confirm("¿Limpiar tablero y hacer corte?\n\nTotal: $" + totalShift.toFixed(2) + "\nComandas: " + validOrders.length);
-        if (!confirmClose) return;
-
-        window.exportCurrentOrdersCSV("Corte_Caja_Maleza_" + selectedKdsDateStr + ".csv");
-
-        if (isCloud && db) {
-          const batch = db.batch();
-          orders.forEach(function(o) {
-            if (o.id && o.status !== 'archived' && o.status !== 'canceled' && o.status !== 'returned' && o.status !== 'archived_cut') {
-              batch.update(db.collection("orders").doc(o.id), { status: 'archived' });
-            }
-          });
-          batch.commit().then(function() { alert("Tablero limpio."); }).catch(console.error);
-        } else {
-          const all = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
-          all.forEach(function(o) {
-            if (o.dateStr === selectedKdsDateStr && o.status !== 'canceled' && o.status !== 'returned') o.status = 'archived';
-          });
-          SafeStorage.setItem('maleza_orders', JSON.stringify(all));
-          startKDSListener(selectedKdsDateStr);
-          alert("Tablero limpio.");
-        }
-      };
-
-      window.updateOrderStatus = async function(id, status) {
-        if (isCloud && db) {
-          try { await db.collection("orders").doc(id).update({ status: status }); } catch (e) { console.error(e); }
-        } else {
-          const all = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
-          const o = all.find(function(x) { return x.id === id; });
-          if (o) { o.status = status; SafeStorage.setItem('maleza_orders', JSON.stringify(all)); startKDSListener(selectedKdsDateStr); }
-        }
-      };
-
-      window.exportCurrentOrdersCSV = function(customFileName) {
-        if (orders.length === 0) return alert("No hay pedidos para exportar en esta fecha.");
-        let csv = "\uFEFFID,Fecha,Hora,Tipo,Cliente,Productos,Pago,Total,Estatus\n";
-        orders.forEach(function(o) {
-          const items = '"' + o.items.map(function(i) { return i.qty + 'x ' + i.name + ' (' + (i.details || '') + ')'; }).join(' | ').replace(/"/g, '""') + '"';
-          const tType = o.orderType || 'Para comer aquí';
-          csv += (o.id || '') + ',' + (o.dateStr || selectedKdsDateStr) + ',' + (o.timestampStr || '') + ',"' + tType + '","' + o.clientName + '",' + items + ',' + (o.paymentMethod || 'Efectivo') + ',' + o.total.toFixed(2) + ',' + o.status + '\n';
-        });
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = customFileName || ('Ventas_Maleza_' + selectedKdsDateStr + '.csv');
-        link.click();
-      };
-
-      function renderKDS() {
-        const grid = document.getElementById('kds-grid');
-        const totalEl = document.getElementById('kds-sales-total');
+        if (box) box.className = 'bg-white p-3 rounded-xl border-2 border-[#E7E3D8] shadow-sm mb-3 transition-all';
         
-        const isToday = selectedKdsDateStr === getLocalDateString();
-        
-        const visibleOrders = isToday 
-          ? orders.filter(function(o) { return o.status !== 'archived' && o.status !== 'canceled' && o.status !== 'returned' && o.status !== 'archived_cut'; }) 
-          : orders;
+        const activePayment = document.querySelector('input[name="payment_method"]:checked');
+        window.handlePaymentMethodChange(activePayment ? activePayment.value : 'Efectivo');
 
-        const activeCutOrders = orders.filter(function(o) { return o.status !== 'canceled' && o.status !== 'returned' && o.status !== 'archived_cut' && o.status !== 'archived'; });
-        const totalSum = activeCutOrders.reduce(function(s, o) { return s + (o.total || 0); }, 0);
-        if (totalEl) totalEl.textContent = '$' + totalSum.toFixed(2);
+        document.getElementById('cart-modal').classList.remove('hidden'); 
+      };
+      
+      window.closeCartModal = function() { document.getElementById('cart-modal').classList.add('hidden'); };
 
-        if (visibleOrders.length === 0) {
-          grid.innerHTML = '<div class="col-span-full py-16 text-center text-zinc-400 font-medium">Pantalla limpia. Esperando comandas...</div>';
-          return;
-        }
+      window.removeCartItem = function(idx) {
+        cart.splice(idx, 1);
+        updateCartUI();
+        renderCartModalItems();
+      };
 
-        grid.innerHTML = visibleOrders.map(function(o) {
-          const isPend = o.status === 'pending';
-          const isPrep = o.status === 'preparing';
-          const isArch = o.status === 'archived' || o.status === 'archived_cut';
-          const isCanc = o.status === 'canceled' || o.status === 'returned';
-          const isToGo = o.orderType === 'Para llevar';
-          const isCard = o.paymentMethod === 'Tarjeta';
-          
-          const border = isPend ? 'border-amber-400' : isPrep ? 'border-blue-500' : isCanc ? 'border-red-300 opacity-50 bg-red-50' : isArch ? 'border-zinc-300 opacity-50 bg-zinc-50' : 'border-emerald-500 opacity-70 bg-emerald-50';
-          const badgeTxt = isPend ? 'PENDIENTE' : isPrep ? 'PREPARANDO' : isCanc ? 'CANCELADO' : isArch ? 'CORTE CERRADO' : 'LISTO';
-          
-          const typeBadge = isToGo 
-            ? '<span class="text-[9px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800 ml-2 uppercase">🛍️ Para Llevar</span>'
-            : '<span class="text-[9px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 ml-2 uppercase">🍽️ Mesa/Barra</span>';
+      function updateCartUI() {
+        const count = cart.reduce(function(s, i) { return s + i.qty; }, 0);
+        const total = cart.reduce(function(s, i) { return s + i.total; }, 0);
+        document.getElementById('cart-count').textContent = count;
+        document.getElementById('cart-total').textContent = '$' + total.toFixed(2);
+        document.getElementById('cart-float').classList.toggle('hidden', count === 0);
+      }
 
-          const itemsHtml = o.items.map(function(i) {
-            return '<div class="text-xs bg-zinc-50 p-1.5 rounded-lg border border-zinc-100">' +
-              '<strong>' + i.qty + 'x ' + i.name + '</strong> - $' + i.total +
-              (i.details ? '<p class="text-[11px] text-zinc-500 font-medium">• ' + i.details + '</p>' : '') +
-            '</div>';
-          }).join('');
-
-          let buttonsHtml = '';
-          if (isPend) {
-            buttonsHtml = '<div class="grid grid-cols-2 gap-2">' +
-              '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'preparing\')" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs py-2 rounded-xl font-semibold cursor-pointer">Iniciar Prep.</button>' +
-              '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'returned\')" class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs py-2 rounded-xl font-semibold cursor-pointer">Devolver a Cliente</button>' +
-            '</div>';
-          } else if (isPrep) {
-            buttonsHtml = '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'ready\')" class="w-full bg-emerald-600 text-white text-xs py-2 rounded-xl font-semibold cursor-pointer">Marcar Listo</button>';
-          } else if (isArch || isCanc) {
-            buttonsHtml = '<span class="block w-full text-center text-zinc-400 text-[11px] py-1.5 font-semibold">Historial (No interactivo)</span>';
-          } else {
-            buttonsHtml = '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'archived\')" class="w-full text-zinc-500 border border-zinc-300 text-xs py-1.5 rounded-lg hover:bg-zinc-50 font-semibold mb-1 cursor-pointer">Archivar y Ocultar</button>' +
-              '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'preparing\')" class="w-full text-zinc-400 text-[10px] py-1 cursor-pointer">Reabrir</button>';
-          }
-
-          const cardAlert = (isCard && !isArch && !isCanc)
-            ? '<div class="bg-amber-100 border border-amber-300 text-amber-900 rounded-lg p-1.5 mb-2 flex items-center justify-center gap-1.5 font-bold text-[11px] animate-pulse">' +
-                '<span>💳 LLEVAR TERMINAL</span>' +
-              '</div>' 
-            : '';
-
-          return '<div class="bg-white rounded-2xl border-2 ' + border + ' p-3.5 shadow-sm flex flex-col justify-between">' +
-            '<div>' +
-              '<div class="flex justify-between border-b pb-2 mb-2">' +
-                '<div>' +
-                  '<div class="flex items-center">' +
-                    '<span class="text-[10px] text-zinc-400 font-mono">' + (o.id ? o.id.slice(-5) : '') + '</span>' +
-                    typeBadge +
-                  '</div>' +
-                  '<h4 class="font-bold text-sm leading-tight mt-1">' + o.clientName + '</h4>' +
-                '</div>' +
-                '<div class="text-right">' +
-                  '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-100">' + badgeTxt + '</span>' +
-                  '<span class="block text-[11px] text-zinc-400 mt-1">' + (o.timestampStr || '') + '</span>' +
-                '</div>' +
-              '</div>' +
-              '<div class="space-y-1 mb-2.5">' + itemsHtml + '</div>' +
-            '</div>' +
-            '<div class="border-t pt-2">' +
-              cardAlert +
-              '<div class="flex justify-between text-xs mb-2">' +
-                '<span>Pago: <strong>' + (o.paymentMethod || 'Efectivo') + '</strong></span>' +
-                '<span class="font-bold text-maleza-dark ' + (isCanc ? 'line-through text-red-400' : '') + '">$' + o.total.toFixed(2) + '</span>' +
-              '</div>' +
-              buttonsHtml +
-            '</div>' +
+      function renderCartModalItems() {
+        const list = document.getElementById('cart-items-list');
+        const total = cart.reduce(function(s, i) { return s + i.total; }, 0);
+        document.getElementById('cart-checkout-total').textContent = '$' + total.toFixed(2);
+        list.innerHTML = cart.map(function(it, idx) {
+          return '<div class="flex justify-between items-center p-2.5 bg-[#FAF9F5] rounded-xl border border-zinc-200 text-xs">' +
+            '<div><strong>' + it.qty + 'x ' + it.name + '</strong> ($' + it.total + ') ' + (it.details ? '<p class="text-[10px] text-zinc-500">' + it.details + '</p>' : '') + '</div>' +
+            '<button type="button" onclick="window.removeCartItem(' + idx + ')" class="text-red-500 font-bold px-2 cursor-pointer">✕</button>' +
           '</div>';
         }).join('');
       }
 
-      function playChime() {
-        try {
-          const ctx = new (window.AudioContext || window.webkitAudioContext)();
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.frequency.setValueAtTime(587, ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
-          gain.gain.setValueAtTime(0.3, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start();
-          osc.stop(ctx.currentTime + 0.8);
-        } catch (e) {}
-      }
+      window.copyBBVA = function(btn) {
+        const num = "4152314587690465";[cite: 8]
+        function onCopied() {
+          const originalText = btn.innerHTML;
+          btn.innerHTML = "✓ ¡COPIADO!";
+          btn.classList.replace('bg-maleza/10', 'bg-emerald-100');
+          btn.classList.replace('text-maleza', 'text-emerald-700');
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.replace('bg-emerald-100', 'bg-maleza/10');
+            btn.classList.replace('text-emerald-700', 'text-maleza');
+          }, 2000);
+        }
 
-      function initKDS() {
-        if (SafeStorage.getSession('maleza_kds_unlocked') === 'true') {
-          document.getElementById('kds-auth-screen').classList.add('hidden');
-          showKDSScreen();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(num).then(onCopied).catch(fallback);
         } else {
-          document.getElementById('kds-auth-screen').classList.remove('hidden');
+          fallback();
+        }
+
+        function fallback() {
+          const ta = document.createElement("textarea");
+          ta.value = num;
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          try {
+            document.execCommand('copy');
+            onCopied();
+          } catch (e) {
+            alert("Cuenta BBVA: " + num);[cite: 8]
+          }
+          document.body.removeChild(ta);
+        }
+      };
+
+      function checkActiveClientOrder() {
+        activeClientOrderId = SafeStorage.getItem('maleza_active_order');
+        if (activeClientOrderId) {
+          listenToActiveClientOrder(activeClientOrderId);
         }
       }
 
+      function listenToActiveClientOrder(orderId) {
+        if (isCloud && db) {
+          if (clientUnsubscribe) clientUnsubscribe();
+          clientUnsubscribe = db.collection("orders").doc(orderId).onSnapshot(function(doc) {
+            if (doc.exists) {
+              handleClientStatusChange(doc.id, doc.data());
+            }
+          });
+        } else {
+          const all = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
+          const o = all.find(function(x) { return x.id === orderId; });
+          if (o) handleClientStatusChange(o.id, o);
+        }
+      }
+
+      function handleClientStatusChange(id, data) {
+        activeClientOrderData = data;
+        const monitor = document.getElementById('order-monitor');
+        const badge = document.getElementById('monitor-badge');
+        const msg = document.getElementById('monitor-msg');
+        const actions = document.getElementById('monitor-actions');
+        
+        if (data.status === 'canceled' || data.status === 'archived' || data.status === 'archived_cut') {
+          monitor.classList.add('hidden');
+          SafeStorage.removeItem('maleza_active_order');
+          if (clientUnsubscribe) { clientUnsubscribe(); clientUnsubscribe = null; }
+          return;
+        }
+        
+        monitor.classList.remove('hidden');
+        
+        let waBtn = '';
+        if (data.paymentMethod === 'Transferencia BBVA') {
+          const orderTypeString = data.orderType === 'Para llevar' ? '(Para llevar)' : '(Comer aquí)';
+          const msgText = `Hola Maleza Café, soy ${data.clientName} ${orderTypeString} y les comparto mi comprobante de pago de la comanda #${id.slice(-4).toUpperCase()} por un total de $${parseFloat(data.total).toFixed(2)}.`;
+          const waUrl = `https://wa.me/${WA_PHONE_NUMBER}?text=${encodeURIComponent(msgText)}`;
+          waBtn = `<a href="${waUrl}" target="_blank" class="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-xs font-bold py-2 rounded-xl shadow-sm flex items-center justify-center gap-1.5 transition-all">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+            Enviar Comprobante WhatsApp
+          </a>`;
+        }
+
+        if (data.status === 'pending') {
+          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-amber-400 p-3.5 transition-all';
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800';
+          badge.textContent = 'PENDIENTE';
+          msg.textContent = 'Tu pedido está en fila. Aún puedes hacer cambios si te equivocaste.';
+          actions.innerHTML = `<button type="button" onclick="window.modifyActiveOrder()" class="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-semibold py-2 rounded-xl border border-zinc-300 active:scale-95 transition-transform cursor-pointer">✏️ Modificar Pedido</button>` + waBtn;
+          actions.classList.remove('hidden');
+        } else if (data.status === 'preparing') {
+          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-blue-500 p-3.5 transition-all';
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800';
+          badge.textContent = 'PREPARANDO';
+          msg.textContent = '¡Ya estamos preparando tu pedido! En un momento estará listo.';
+          actions.innerHTML = waBtn;
+          if (waBtn) { actions.classList.remove('hidden'); } else { actions.classList.add('hidden'); }
+        } else if (data.status === 'ready') {
+          if (navigator.vibrate) {
+            try { navigator.vibrate([200, 100, 200]); } catch(e){}
+          }
+          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-emerald-500 p-3.5 transition-all';
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
+          badge.textContent = 'LISTO';
+          msg.textContent = '¡Tu pedido está listo! Te lo entregaremos en breve.';
+          actions.innerHTML = `<button type="button" onclick="window.dismissMonitor()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-2 rounded-xl shadow-md cursor-pointer">Entendido</button>` + waBtn;
+          actions.classList.remove('hidden');
+        } else if (data.status === 'returned') {
+          cart = Array.isArray(data.items) ? data.items.slice() : [];
+          if (data.clientName) {
+            document.getElementById('client-name').value = data.clientName;
+          }
+          updateCartUI();
+          window.openCartModal();
+          
+          monitor.classList.add('hidden');
+          SafeStorage.removeItem('maleza_active_order');
+          if (clientUnsubscribe) { clientUnsubscribe(); clientUnsubscribe = null; }
+        }
+      }
+
+      window.modifyActiveOrder = async function() {
+        const orderId = activeClientOrderId || SafeStorage.getItem('maleza_active_order');
+        if (!orderId) return;
+
+        const confirmModify = confirm("¿Deseas editar tu comanda actual?");
+        if (!confirmModify) return;
+
+        let itemsToRestore = [];
+        let nameToRestore = '';
+        let typeToRestore = 'Para comer aquí';
+
+        if (activeClientOrderData && Array.isArray(activeClientOrderData.items)) {
+          itemsToRestore = activeClientOrderData.items.slice();
+          nameToRestore = activeClientOrderData.clientName || '';
+          typeToRestore = activeClientOrderData.orderType || 'Para comer aquí';
+        } else if (isCloud && db) {
+          try {
+            const docSnap = await db.collection("orders").doc(orderId).get();
+            if (docSnap.exists) {
+              const d = docSnap.data();
+              if (Array.isArray(d.items)) itemsToRestore = d.items.slice();
+              nameToRestore = d.clientName || '';
+              typeToRestore = d.orderType || 'Para comer aquí';
+            }
+          } catch (e) {
+            console.error("Error al recuperar pedido:", e);
+          }
+        } else {
+          const all = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
+          const o = all.find(function(x) { return x.id === orderId; });
+          if (o && Array.isArray(o.items)) {
+            itemsToRestore = o.items.slice();
+            nameToRestore = o.clientName || '';
+            typeToRestore = o.orderType || 'Para comer aquí';
+          }
+        }
+
+        if (isCloud && db) {
+          try {
+            await db.collection("orders").doc(orderId).update({ status: 'canceled' });
+          } catch (e) {
+            console.error("Error al cancelar orden previa:", e);
+          }
+        } else {
+          const all = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
+          const o = all.find(function(x) { return x.id === orderId; });
+          if (o) {
+            o.status = 'canceled';
+            SafeStorage.setItem('maleza_orders', JSON.stringify(all));
+          }
+        }
+
+        document.getElementById('order-monitor').classList.add('hidden');
+        SafeStorage.removeItem('maleza_active_order');
+        activeClientOrderId = null;
+        activeClientOrderData = null;
+        if (clientUnsubscribe) {
+          clientUnsubscribe();
+          clientUnsubscribe = null;
+        }
+
+        if (itemsToRestore.length > 0) { cart = itemsToRestore; }
+        if (nameToRestore) { document.getElementById('client-name').value = nameToRestore; }
+        
+        if (typeToRestore === 'Para llevar') {
+          document.getElementById('opt-togo').checked = true;
+        } else {
+          document.getElementById('opt-here').checked = true;
+        }
+
+        updateCartUI();
+        window.openCartModal();
+      };
+
+      window.dismissMonitor = function() {
+        document.getElementById('order-monitor').classList.add('hidden');
+        SafeStorage.removeItem('maleza_active_order');
+        if (clientUnsubscribe) { clientUnsubscribe(); clientUnsubscribe = null; }
+      };
+
+      window.sendOrder = async function() {
+        const nameInput = document.getElementById('client-name');
+        const nameContainer = document.getElementById('client-name-container');
+        const nameError = document.getElementById('client-name-error');
+        const nameVal = nameInput ? nameInput.value.trim() : '';
+
+        if (!nameVal) {
+          if (nameContainer) nameContainer.className = 'bg-red-50 p-3 rounded-xl border-2 border-maleza-accent shadow-sm mb-3 transition-all';
+          if (nameError) nameError.classList.remove('hidden');
+          if (nameInput) {
+            nameInput.focus();
+            nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          return;
+        }
+
+        if (nameContainer) nameContainer.className = 'bg-white p-3 rounded-xl border-2 border-[#E7E3D8] shadow-sm mb-3 transition-all';
+        if (nameError) nameError.classList.add('hidden');
+
+        if (cart.length === 0) return;
+
+        const total = cart.reduce(function(s, i) { return s + i.total; }, 0);
+        const paymentEl = document.querySelector('input[name="payment_method"]:checked');
+        const payment = paymentEl ? paymentEl.value : 'Efectivo';
+        
+        const typeEl = document.querySelector('input[name="order_type"]:checked');
+        const orderType = typeEl ? typeEl.value : 'Para comer aquí';
+        
+        const order = {
+          clientName: nameVal,
+          orderType: orderType,
+          items: cart,
+          total: total,
+          paymentMethod: payment,
+          status: 'pending',
+          dateStr: getLocalDateString(), 
+          timestampStr: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          createdAt: isCloud ? firebase.firestore.FieldValue.serverTimestamp() : new Date().toISOString()
+        };
+
+        const btn = document.getElementById('btn-submit-order');
+        btn.disabled = true;
+        btn.textContent = "Enviando comanda...";
+
+        try {
+          let newOrderId = null;
+          if (isCloud && db) {
+            const docRef = await db.collection("orders").add(order);
+            newOrderId = docRef.id;
+          } else {
+            newOrderId = 'ORD-' + Date.now().toString().slice(-4);
+            order.id = newOrderId;
+            const allOrders = JSON.parse(SafeStorage.getItem('maleza_orders') || '[]');
+            allOrders.unshift(order);
+            SafeStorage.setItem('maleza_orders', JSON.stringify(allOrders));
+          }
+          
+          SafeStorage.setItem('maleza_active_order', newOrderId);
+          listenToActiveClientOrder(newOrderId);
+          
+          cart = [];
+          updateCartUI();
+          window.closeCartModal();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch (err) {
+          console.error("Error al enviar:", err);
+          alert("Error de conexión al enviar comanda. Intenta nuevamente.");
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Enviar Comanda a Cocina";
+        }
+      };
+
+      window.handlePromoClick = function() {
+        if (!FEATURED_PROMO.productId) return;
+        window.handleProductClick(FEATURED_PROMO.productId);
+      };
+
+      function initApp() {
+        if (FEATURED_PROMO && FEATURED_PROMO.active) {
+          const promoContainer = document.getElementById('seasonal-promo-container');
+          const promoBadge = document.getElementById('promo-badge');
+          const promoTitle = document.getElementById('promo-title');
+          const promoDesc = document.getElementById('promo-desc');
+          
+          if (promoBadge) promoBadge.textContent = FEATURED_PROMO.badge;
+          if (promoTitle) promoTitle.textContent = FEATURED_PROMO.title;
+          if (promoDesc) promoDesc.textContent = FEATURED_PROMO.desc;
+          if (promoContainer) promoContainer.classList.remove('hidden');
+        }
+
+        renderProducts('crepas');
+        checkActiveClientOrder();
+      }
+
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initKDS);
+        document.addEventListener('DOMContentLoaded', initApp);
       } else {
-        initKDS();
+        initApp();
       }
     })();
   </script>
