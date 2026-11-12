@@ -71,57 +71,24 @@
 <body class="text-zinc-800 antialiased pb-28 min-h-screen flex justify-center">
 
   <!-- Pantalla de Bienvenida (Splash Screen) -->
-  <div id="welcome-splash" onclick="window.hideWelcomeSplash()" class="fixed inset-0 z-[60] bg-[#203322] text-[#F4F2EB] flex flex-col items-center justify-center p-6 transition-all duration-700 ease-in-out cursor-pointer select-none">
-    <!-- Ornamento botánico superior -->
-    <div class="w-40 h-10 opacity-30 mb-6 flex justify-center">
-      <svg class="w-full h-full stroke-current" fill="none" stroke-width="1.2" viewBox="0 0 160 40">
-        <path d="M10 30 Q 45 5, 80 20 Q 115 5, 150 30"/>
-        <path d="M40 16 Q 48 6, 56 14 M120 16 Q 112 6, 104 14"/>
-        <circle cx="80" cy="12" r="2" fill="currentColor"/>
-      </svg>
-    </div>
+<!-- Pantalla de Bienvenida (Splash Screen con Arte Original) -->
+  <div id="welcome-splash" onclick="window.hideWelcomeSplash()" class="fixed inset-0 z-[60] bg-[#203322] text-[#F4F2EB] flex flex-col items-center justify-end p-6 pb-14 transition-all duration-700 ease-in-out cursor-pointer select-none overflow-hidden">
+    <!-- Imagen original de fondo -->
+    <img src="img/bienvenida.webp" alt="Maleza Café" class="absolute inset-0 w-full h-full object-cover object-center">
+    
+    <!-- Degradado inferior sutil para lectura perfecta del saludo -->
+    <div class="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-[#162418] via-[#162418]/85 to-transparent"></div>
 
-    <!-- Emblema Floral y Marca -->
-    <div class="animate-splash-content flex flex-col items-center text-center max-w-xs">
-      <div class="w-24 h-24 rounded-full bg-[#2F4832]/80 border border-[#F4F2EB]/25 flex items-center justify-center mb-5 shadow-2xl">
-        <svg class="w-14 h-14 text-[#F4F2EB]" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 64 64">
-          <path d="M32 34 C25 26, 20 16, 28 11 C32 9, 36 13, 32 22"/>
-          <path d="M32 34 C39 26, 44 16, 36 11 C32 9, 28 13, 32 22"/>
-          <path d="M32 34 C21 31, 13 24, 17 17 C20 12, 26 17, 29 26"/>
-          <path d="M32 34 C43 31, 51 24, 47 17 C44 12, 38 17, 35 26"/>
-          <path d="M32 34 C23 39, 16 37, 18 31 C19 27, 25 29, 30 32"/>
-          <path d="M32 34 C41 39, 48 37, 46 31 C45 27, 39 29, 34 32"/>
-          <path d="M32 34 L32 45"/>
-          <path d="M22 46 Q 32 41, 42 46"/>
-          <path d="M18 51 Q 32 45, 46 51"/>
-        </svg>
-      </div>
-
-      <h2 class="font-serif text-3xl font-bold tracking-tight text-[#F4F2EB] mb-1">
-        maleza<span class="text-[#B86543] italic font-normal">.cafe</span>
-      </h2>
-
-      <div class="w-12 h-[1px] bg-[#F4F2EB]/30 my-3"></div>
-
-      <p class="font-serif italic text-lg text-[#F4F2EB]/95 leading-snug">
+    <!-- Saludo y lema -->
+    <div class="relative z-10 animate-splash-content flex flex-col items-center text-center max-w-xs">
+      <div class="w-12 h-[1px] bg-[#F4F2EB]/40 mb-3"></div>
+      <p class="font-serif italic text-xl text-[#F4F2EB] drop-shadow-md leading-snug">
         Bienvenido a Maleza
       </p>
-      <span class="mt-1.5 text-[10px] uppercase font-bold tracking-[0.24em] text-[#E2E8DD]/85">
+      <span class="mt-1.5 text-[10px] uppercase font-bold tracking-[0.24em] text-[#E2E8DD] drop-shadow">
         Hecho a nuestro modo
       </span>
     </div>
-
-    <!-- Ornamento botánico inferior -->
-    <div class="w-40 h-10 opacity-30 mt-8 flex justify-center">
-      <svg class="w-full h-full stroke-current" fill="none" stroke-width="1.2" viewBox="0 0 160 40">
-        <path d="M10 10 Q 45 35, 80 20 Q 115 35, 150 10"/>
-        <circle cx="80" cy="28" r="2" fill="currentColor"/>
-      </svg>
-    </div>
-
-    <span class="absolute bottom-6 text-[10px] tracking-widest uppercase text-[#F4F2EB]/45">
-      @maleza.cafe
-    </span>
   </div>
 
   <div id="main-app-container" class="w-full max-w-md bg-[#F4F2EB] min-h-screen shadow-2xl relative flex flex-col border-x border-[#E2DDD0]">
