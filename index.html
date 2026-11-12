@@ -16,7 +16,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
 
-  <!-- Catálogo modular -->
   <script src="menu.data.js"></script>
 
   <script>
@@ -59,9 +58,71 @@
     .segmented-control input[type="radio"]:checked + label {
       background-color: #2F4832; color: #ffffff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
+
+    @keyframes splashFadeUp {
+      0% { opacity: 0; transform: translateY(14px) scale(0.96); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .animate-splash-content {
+      animation: splashFadeUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
   </style>
 </head>
 <body class="text-zinc-800 antialiased pb-28 min-h-screen flex justify-center">
+
+  <!-- Pantalla de Bienvenida (Splash Screen) -->
+  <div id="welcome-splash" onclick="window.hideWelcomeSplash()" class="fixed inset-0 z-[60] bg-[#203322] text-[#F4F2EB] flex flex-col items-center justify-center p-6 transition-all duration-700 ease-in-out cursor-pointer select-none">
+    <!-- Ornamento botánico superior -->
+    <div class="w-40 h-10 opacity-30 mb-6 flex justify-center">
+      <svg class="w-full h-full stroke-current" fill="none" stroke-width="1.2" viewBox="0 0 160 40">
+        <path d="M10 30 Q 45 5, 80 20 Q 115 5, 150 30"/>
+        <path d="M40 16 Q 48 6, 56 14 M120 16 Q 112 6, 104 14"/>
+        <circle cx="80" cy="12" r="2" fill="currentColor"/>
+      </svg>
+    </div>
+
+    <!-- Emblema Floral y Marca -->
+    <div class="animate-splash-content flex flex-col items-center text-center max-w-xs">
+      <div class="w-24 h-24 rounded-full bg-[#2F4832]/80 border border-[#F4F2EB]/25 flex items-center justify-center mb-5 shadow-2xl">
+        <svg class="w-14 h-14 text-[#F4F2EB]" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 64 64">
+          <path d="M32 34 C25 26, 20 16, 28 11 C32 9, 36 13, 32 22"/>
+          <path d="M32 34 C39 26, 44 16, 36 11 C32 9, 28 13, 32 22"/>
+          <path d="M32 34 C21 31, 13 24, 17 17 C20 12, 26 17, 29 26"/>
+          <path d="M32 34 C43 31, 51 24, 47 17 C44 12, 38 17, 35 26"/>
+          <path d="M32 34 C23 39, 16 37, 18 31 C19 27, 25 29, 30 32"/>
+          <path d="M32 34 C41 39, 48 37, 46 31 C45 27, 39 29, 34 32"/>
+          <path d="M32 34 L32 45"/>
+          <path d="M22 46 Q 32 41, 42 46"/>
+          <path d="M18 51 Q 32 45, 46 51"/>
+        </svg>
+      </div>
+
+      <h2 class="font-serif text-3xl font-bold tracking-tight text-[#F4F2EB] mb-1">
+        maleza<span class="text-[#B86543] italic font-normal">.cafe</span>
+      </h2>
+
+      <div class="w-12 h-[1px] bg-[#F4F2EB]/30 my-3"></div>
+
+      <p class="font-serif italic text-lg text-[#F4F2EB]/95 leading-snug">
+        Bienvenido a Maleza
+      </p>
+      <span class="mt-1.5 text-[10px] uppercase font-bold tracking-[0.24em] text-[#E2E8DD]/85">
+        Hecho a nuestro modo
+      </span>
+    </div>
+
+    <!-- Ornamento botánico inferior -->
+    <div class="w-40 h-10 opacity-30 mt-8 flex justify-center">
+      <svg class="w-full h-full stroke-current" fill="none" stroke-width="1.2" viewBox="0 0 160 40">
+        <path d="M10 10 Q 45 35, 80 20 Q 115 35, 150 10"/>
+        <circle cx="80" cy="28" r="2" fill="currentColor"/>
+      </svg>
+    </div>
+
+    <span class="absolute bottom-6 text-[10px] tracking-widest uppercase text-[#F4F2EB]/45">
+      @maleza.cafe
+    </span>
+  </div>
 
   <div id="main-app-container" class="w-full max-w-md bg-[#F4F2EB] min-h-screen shadow-2xl relative flex flex-col border-x border-[#E2DDD0]">
 
@@ -349,6 +410,12 @@
         },
         removeItem: function(key) {
           try { window.localStorage.removeItem(key); } catch (e) { delete this.memory[key]; }
+        },
+        getSession: function(key) {
+          try { return window.sessionStorage.getItem(key); } catch (e) { return this.memory['s_' + key] || null; }
+        },
+        setSession: function(key, val) {
+          try { window.sessionStorage.setItem(key, val); } catch (e) { this.memory['s_' + key] = String(val); }
         }
       };
 
@@ -367,7 +434,6 @@
         console.warn("Modo Local Activo");
       }
 
-      // La variable MENU_DATA ahora viene del archivo menu.data.js
       const MENU_DATA = window.MENU_DATA || [];
 
       let cart = [];
@@ -376,6 +442,30 @@
       let activeClientOrderData = null;
       let clientUnsubscribe = null;
       let currentActiveCategory = 'crepas';
+      let splashTimer = null;
+
+      window.hideWelcomeSplash = function() {
+        const splash = document.getElementById('welcome-splash');
+        if (!splash || splash.classList.contains('hidden')) return;
+        if (splashTimer) clearTimeout(splashTimer);
+        splash.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
+        SafeStorage.setSession('maleza_welcomed', 'true');
+        setTimeout(function() {
+          splash.classList.add('hidden');
+        }, 700);
+      };
+
+      function initWelcomeSplash() {
+        const splash = document.getElementById('welcome-splash');
+        if (!splash) return;
+        if (SafeStorage.getSession('maleza_welcomed') === 'true') {
+          splash.classList.add('hidden');
+          return;
+        }
+        splashTimer = setTimeout(function() {
+          window.hideWelcomeSplash();
+        }, 1650);
+      }
 
       function getLocalDateString(d) {
         const dateObj = d || new Date();
@@ -1335,6 +1425,8 @@
       };
 
       function initApp() {
+        initWelcomeSplash();
+
         if (FEATURED_PROMO && FEATURED_PROMO.active) {
           const promoContainer = document.getElementById('seasonal-promo-container');
           const promoBadge = document.getElementById('promo-badge');
