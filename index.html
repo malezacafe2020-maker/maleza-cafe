@@ -485,7 +485,7 @@
         let imageHtml = '';
         if (p.image) {
           imageHtml = '<div class="w-16 h-16 shrink-0 rounded-xl overflow-hidden bg-zinc-100 border border-zinc-200/60 shadow-inner mr-3">' +
-            '<img src="' + p.image + '" alt="' + p.name + '" class="w-full h-full object-cover">' +
+            '<img src="' + p.image + '" alt="' + p.name + '" onerror="this.parentElement.remove()" class="w-full h-full object-cover">' +
           '</div>';
         }
         
@@ -760,7 +760,7 @@
         
         let imageHtml = '';
         if (item.image) {
-          imageHtml = '<div class="w-full h-40 mb-3 rounded-xl overflow-hidden bg-zinc-100 border border-zinc-200 shadow-sm"><img src="' + item.image + '" alt="' + item.name + '" class="w-full h-full object-cover"></div>';
+          imageHtml = '<div class="w-full h-40 mb-3 rounded-xl overflow-hidden bg-zinc-100 border border-zinc-200 shadow-sm"><img src="' + item.image + '" alt="' + item.name + '" onerror="this.parentElement.remove()" class="w-full h-full object-cover"></div>';
         }
 
         let html = imageHtml + '<div class="bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 mb-2"><p class="text-xs text-zinc-600 font-medium">Receta de autor: ' + item.desc + '</p></div>';
@@ -794,7 +794,7 @@
         
         let imageHtml = '';
         if (item.image) {
-          imageHtml = '<div class="w-full h-40 mb-3 rounded-xl overflow-hidden bg-zinc-100 border border-zinc-200 shadow-sm"><img src="' + item.image + '" alt="' + item.name + '" class="w-full h-full object-cover"></div>';
+          imageHtml = '<div class="w-full h-40 mb-3 rounded-xl overflow-hidden bg-zinc-100 border border-zinc-200 shadow-sm"><img src="' + item.image + '" alt="' + item.name + '" onerror="this.parentElement.remove()" class="w-full h-full object-cover"></div>';
         }
 
         const rellenos = ['Crema Batida', 'Queso Philadelphia', 'Nata'];
