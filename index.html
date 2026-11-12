@@ -16,7 +16,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
 
-  <!-- Vinculación del catálogo modular -->
+  <!-- Catálogo modular -->
   <script src="menu.data.js"></script>
 
   <script>
@@ -342,6 +342,11 @@
             '<img src="' + p.image + '" alt="' + p.name + '" class="w-full h-full object-cover">' +
           '</div>';
         }
+        
+        let priceDisplay = p.price ? '$' + p.price : 'Opciones';
+        if (p.type === 'sized_flavor' && p.prices && p.prices['Chico']) {
+          priceDisplay = '$' + p.prices['Chico'] + ' / $' + p.prices['Grande'];
+        }
 
         return '<div class="bg-white rounded-2xl p-3 shadow-sm border border-zinc-200 flex items-center justify-between">' +
           '<div class="flex items-center flex-1 min-w-0 pr-3">' +
@@ -350,7 +355,7 @@
               (badgeCategory ? '<span class="inline-block text-[9px] uppercase tracking-wider font-bold text-maleza bg-maleza/10 px-2 py-0.5 rounded-md mb-1">' + badgeCategory + '</span>' : '') +
               '<div class="flex items-baseline justify-between mb-0.5">' +
                 '<h4 class="font-bold text-xs text-zinc-900 truncate pr-1">' + p.name + '</h4>' +
-                '<span class="font-bold text-maleza text-xs shrink-0">' + (p.price ? '$' + p.price : 'Opciones') + '</span>' +
+                '<span class="font-bold text-maleza text-xs shrink-0">' + priceDisplay + '</span>' +
               '</div>' +
               '<p class="text-[11px] text-zinc-500 line-clamp-2 leading-snug pr-2">' + p.desc + '</p>' +
             '</div>' +
@@ -420,7 +425,11 @@
           const descNorm = normalizeString(item.desc);
           const catNorm = normalizeString(getCategoryLabel(item.cat));
           const flavorsNorm = (item.flavors || []).map(normalizeString).join(' ');
-          const pricesNorm = Object.keys(item.prices || {}).map(normalizeString).join(' ');
+          
+          let pricesNorm = '';
+          if (item.prices) {
+             pricesNorm = Object.keys(item.prices).map(normalizeString).join(' ');
+          }
 
           return nameNorm.includes(q) || 
                  descNorm.includes(q) || 
@@ -513,8 +522,32 @@
           renderMandragoraOptions(item, c);
         } else if (item.type === 'pumpkin') {
           renderDynamicTrioOptions(item, c, 'opt_pumpkin');
-        } else if (item.type === 'matcha_azul') {
-          renderDynamicTrioOptions(item, c, 'opt_matcha_azul');
+        } else if (item.type === 'sized_flavor') {
+          document.getElementById('modal-base-price').textContent = "Selecciona tamaño:";
+          let html = '<div class="space-y-2 mb-3">';
+          Object.entries(item.prices).forEach(function(entry, i) {
+            const size = entry[0];
+            const p = entry[1];
+            html += '<label class="flex justify-between items-center p-3 rounded-xl border border-zinc-200 cursor-pointer hover:border-maleza">' +
+              '<span class="text-xs font-semibold flex items-center gap-2"><input type="radio" name="opt_size" value="' + size + '" data-price="' + p + '" ' + (i === 0 ? 'checked' : '') + ' onchange="window.updatePriceSubtotal()"> ' + size + '</span>' +
+              '<span class="font-bold text-xs text-maleza">$' + p + '</span></label>';
+          });
+          html += '</div>';
+          
+          if (item.flavors) {
+            html += '<div><label class="font-semibold block text-xs text-zinc-700 mb-1.5">Sabor o preparación:</label><div class="grid grid-cols-2 gap-1.5 text-xs mb-3">';
+            item.flavors.forEach(function(fl, i) {
+              html += '<label class="flex items-center gap-2 p-2 rounded-xl bg-zinc-50 border border-zinc-200 cursor-pointer"><input type="radio" name="opt_flavor" value="' + fl + '" ' + (i === 0 ? 'checked' : '') + '><span>' + fl + '</span></label>';
+            });
+            html += '</div></div>';
+          }
+          
+          if (item.allowShot) {
+            html += '<div><label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 text-xs font-semibold cursor-pointer"><span class="flex items-center gap-2"><input type="checkbox" id="shot_extra" onchange="window.updatePriceSubtotal()"> Shot de Espresso extra</span><span class="font-bold text-maleza-accent">+$15</span></label></div>';
+          }
+          html += renderCustomModifierBlock();
+          c.innerHTML = html;
+          window.updatePriceSubtotal();
         } else if (item.type === 'frappe' || item.type === 'malteada') {
           renderFrappeOrMalteadaOptions(item, c);
         } else if (item.type === 'crepa_dulce') {
@@ -774,6 +807,9 @@
         if (currentCustomItem.type === 'pumpkin') {
           const selected = document.querySelector('input[name="opt_pumpkin"]:checked');
           if (selected) total = parseInt(selected.dataset.price, 10);
+        } else if (currentCustomItem.type === 'sized_flavor') {
+          const selected = document.querySelector('input[name="opt_size"]:checked');
+          if (selected) total = parseInt(selected.dataset.price, 10);
         } else if (currentCustomItem.type === 'matcha_azul') {
           const selected = document.querySelector('input[name="opt_matcha_azul"]:checked');
           if (selected) total = parseInt(selected.dataset.price, 10);
@@ -821,6 +857,23 @@
           if (selected) {
             price = parseInt(selected.dataset.price, 10);
             details.push('Preparación: ' + selected.value);
+          }
+        } else if (currentCustomItem.type === 'sized_flavor') {
+          const selected = document.querySelector('input[name="opt_size"]:checked');
+          if (selected) {
+            price = parseInt(selected.dataset.price, 10);
+            details.push('Tamaño: ' + selected.value);
+          }
+          if (currentCustomItem.flavors) {
+            const fl = document.querySelector('input[name="opt_flavor"]:checked');
+            if (fl && fl.value !== 'Clásico' && fl.value !== 'Tradicional') {
+              details.push('Sabor: ' + fl.value);
+            }
+          }
+          const sh = document.getElementById('shot_extra');
+          if (sh && sh.checked) {
+            price += 15;
+            details.push('Con Shot Espresso');
           }
         } else if (currentCustomItem.type === 'matcha_azul') {
           const selected = document.querySelector('input[name="opt_matcha_azul"]:checked');
