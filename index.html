@@ -488,29 +488,31 @@
         return priceDisplay;
       }
 
-      // Tarjeta en Mosaico (2 columnas) para categorías visuales (Lattes Especiales y Bubble Tea)
+      // Tarjeta en Mosaico (2 columnas) alineada y con respaldo de marca centrado
       function renderMosaicCard(p) {
         const priceDisplay = getPriceDisplay(p);
+        const fallbackBadge = '<div class="w-full h-full flex flex-col items-center justify-center p-3 text-[#F4F2EB]">' +
+          '<span class="font-serif font-bold text-sm">maleza<span class="text-[#B86543] italic font-normal">.cafe</span></span>' +
+        '</div>';
+
         const imageBlock = p.image
           ? '<div class="w-full aspect-square bg-[#203322] overflow-hidden relative">' +
-              '<img src="' + p.image + '" alt="' + p.name + '" loading="lazy" onerror="this.style.display=\'none\'" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">' +
+              '<img src="' + p.image + '" alt="' + p.name + '" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'w-full h-full flex flex-col items-center justify-center p-3 text-[#F4F2EB]\\\'>\'+\'<span class=\\\'font-serif font-bold text-sm\\\'>maleza<span class=\\\'text-[#B86543] italic font-normal\\\'>.cafe</span></span></div>\'" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">' +
             '</div>'
-          : '<div class="w-full aspect-square bg-[#203322] flex flex-col items-center justify-center p-3 text-[#F4F2EB]">' +
-              '<span class="font-serif font-bold text-sm">maleza<span class="text-[#B86543] italic font-normal">.cafe</span></span>' +
-            '</div>';
+          : '<div class="w-full aspect-square bg-[#203322] overflow-hidden relative">' + fallbackBadge + '</div>';
 
-        return '<div onclick="window.handleProductClick(\'' + p.id + '\')" class="group bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden flex flex-col justify-between cursor-pointer active:scale-[0.98] transition-all">' +
+        return '<div onclick="window.handleProductClick(\'' + p.id + '\')" class="group bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden flex flex-col justify-between h-full cursor-pointer active:scale-[0.98] transition-all">' +
           '<div>' +
             imageBlock +
             '<div class="p-2.5 pb-1.5">' +
-              '<div class="flex items-start justify-between gap-1 mb-0.5">' +
+              '<div class="flex items-start justify-between gap-1 mb-1 min-h-[2rem]">' +
                 '<h4 class="font-bold text-xs text-zinc-900 leading-tight line-clamp-2">' + p.name + '</h4>' +
                 '<span class="font-bold text-maleza text-xs shrink-0">' + priceDisplay + '</span>' +
               '</div>' +
-              '<p class="text-[10.5px] text-zinc-500 line-clamp-2 leading-snug">' + p.desc + '</p>' +
+              '<p class="text-[10.5px] text-zinc-500 line-clamp-2 leading-snug min-h-[1.75rem]">' + p.desc + '</p>' +
             '</div>' +
           '</div>' +
-          '<div class="px-2.5 pb-2.5 pt-1">' +
+          '<div class="px-2.5 pb-2.5 pt-1 mt-auto">' +
             '<span class="block w-full text-center bg-[#F4F2EB] group-hover:bg-maleza group-hover:text-white text-zinc-700 text-[11px] font-semibold py-1.5 rounded-xl transition-colors">' +
               (p.type === 'simple' ? 'Pedir +' : 'Opciones +') +
             '</span>' +
