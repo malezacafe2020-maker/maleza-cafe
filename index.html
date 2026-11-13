@@ -72,7 +72,6 @@
 
   <!-- Pantalla de Bienvenida (Splash Screen) -->
   <div id="welcome-splash" onclick="window.hideWelcomeSplash()" class="fixed inset-0 z-[60] bg-[#203322] text-[#F4F2EB] flex flex-col items-center justify-center p-6 transition-all duration-700 ease-in-out cursor-pointer select-none">
-    <!-- Ornamento botánico superior -->
     <div class="w-40 h-10 opacity-30 mb-6 flex justify-center">
       <svg class="w-full h-full stroke-current" fill="none" stroke-width="1.2" viewBox="0 0 160 40">
         <path d="M10 30 Q 45 5, 80 20 Q 115 5, 150 30"/>
@@ -81,7 +80,6 @@
       </svg>
     </div>
 
-    <!-- Emblema Floral y Marca -->
     <div class="animate-splash-content flex flex-col items-center text-center max-w-xs">
       <div class="w-24 h-24 rounded-full bg-[#2F4832]/80 border border-[#F4F2EB]/25 flex items-center justify-center mb-5 shadow-2xl">
         <svg class="w-14 h-14 text-[#F4F2EB]" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 64 64">
@@ -111,7 +109,6 @@
       </span>
     </div>
 
-    <!-- Ornamento botánico inferior -->
     <div class="w-40 h-10 opacity-30 mt-8 flex justify-center">
       <svg class="w-full h-full stroke-current" fill="none" stroke-width="1.2" viewBox="0 0 160 40">
         <path d="M10 10 Q 45 35, 80 20 Q 115 35, 150 10"/>
@@ -282,8 +279,9 @@
 
   </div>
 
+  <!-- Modal de Personalización y Vista Ampliada -->
   <div id="custom-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[88vh] overflow-y-auto p-5 shadow-2xl">
+    <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[90vh] overflow-y-auto p-5 shadow-2xl">
       <div class="flex justify-between items-start border-b border-zinc-100 pb-2 mb-3">
         <div>
           <h3 id="modal-title" class="font-serif font-bold text-lg text-maleza-dark leading-tight"></h3>
@@ -304,6 +302,7 @@
     </div>
   </div>
 
+  <!-- Modal del Carrito -->
   <div id="cart-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[92vh] overflow-y-auto p-5 shadow-2xl">
       <div class="flex justify-between items-center border-b border-zinc-100 pb-2 mb-3">
@@ -481,6 +480,45 @@
           .trim();
       }
 
+      function getPriceDisplay(p) {
+        let priceDisplay = p.price ? '$' + p.price : 'Opciones';
+        if (p.type === 'sized_flavor' && p.prices && p.prices['Chico']) {
+          priceDisplay = '$' + p.prices['Chico'] + ' / $' + p.prices['Grande'];
+        }
+        return priceDisplay;
+      }
+
+      // Tarjeta en Mosaico (2 columnas) para categorías visuales (Lattes Especiales y Bubble Tea)
+      function renderMosaicCard(p) {
+        const priceDisplay = getPriceDisplay(p);
+        const imageBlock = p.image
+          ? '<div class="w-full aspect-square bg-[#203322] overflow-hidden relative">' +
+              '<img src="' + p.image + '" alt="' + p.name + '" loading="lazy" onerror="this.style.display=\'none\'" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">' +
+            '</div>'
+          : '<div class="w-full aspect-square bg-[#203322] flex flex-col items-center justify-center p-3 text-[#F4F2EB]">' +
+              '<span class="font-serif font-bold text-sm">maleza<span class="text-[#B86543] italic font-normal">.cafe</span></span>' +
+            '</div>';
+
+        return '<div onclick="window.handleProductClick(\'' + p.id + '\')" class="group bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden flex flex-col justify-between cursor-pointer active:scale-[0.98] transition-all">' +
+          '<div>' +
+            imageBlock +
+            '<div class="p-2.5 pb-1.5">' +
+              '<div class="flex items-start justify-between gap-1 mb-0.5">' +
+                '<h4 class="font-bold text-xs text-zinc-900 leading-tight line-clamp-2">' + p.name + '</h4>' +
+                '<span class="font-bold text-maleza text-xs shrink-0">' + priceDisplay + '</span>' +
+              '</div>' +
+              '<p class="text-[10.5px] text-zinc-500 line-clamp-2 leading-snug">' + p.desc + '</p>' +
+            '</div>' +
+          '</div>' +
+          '<div class="px-2.5 pb-2.5 pt-1">' +
+            '<span class="block w-full text-center bg-[#F4F2EB] group-hover:bg-maleza group-hover:text-white text-zinc-700 text-[11px] font-semibold py-1.5 rounded-xl transition-colors">' +
+              (p.type === 'simple' ? 'Pedir +' : 'Opciones +') +
+            '</span>' +
+          '</div>' +
+        '</div>';
+      }
+
+      // Tarjeta en Lista Horizontal para categorías sin fotografías aún
       function renderCard(p, badgeCategory) {
         let imageHtml = '';
         if (p.image) {
@@ -489,12 +527,9 @@
           '</div>';
         }
         
-        let priceDisplay = p.price ? '$' + p.price : 'Opciones';
-        if (p.type === 'sized_flavor' && p.prices && p.prices['Chico']) {
-          priceDisplay = '$' + p.prices['Chico'] + ' / $' + p.prices['Grande'];
-        }
+        const priceDisplay = getPriceDisplay(p);
 
-        return '<div class="bg-white rounded-2xl p-3 shadow-sm border border-zinc-200 flex items-center justify-between">' +
+        return '<div onclick="window.handleProductClick(\'' + p.id + '\')" class="bg-white rounded-2xl p-3 shadow-sm border border-zinc-200 flex items-center justify-between cursor-pointer active:scale-[0.99] transition-all">' +
           '<div class="flex items-center flex-1 min-w-0 pr-3">' +
             imageHtml +
             '<div class="flex-1 min-w-0">' +
@@ -506,7 +541,7 @@
               '<p class="text-[11px] text-zinc-500 line-clamp-2 leading-snug pr-2">' + p.desc + '</p>' +
             '</div>' +
           '</div>' +
-          '<button type="button" onclick="window.handleProductClick(\'' + p.id + '\')" class="shrink-0 bg-[#F4F2EB] hover:bg-maleza hover:text-white active:bg-maleza-dark active:text-white text-zinc-700 text-xs font-semibold px-3 py-2 rounded-xl transition-colors cursor-pointer">' +
+          '<button type="button" onclick="event.stopPropagation(); window.handleProductClick(\'' + p.id + '\')" class="shrink-0 bg-[#F4F2EB] hover:bg-maleza hover:text-white active:bg-maleza-dark active:text-white text-zinc-700 text-xs font-semibold px-3 py-2 rounded-xl transition-colors cursor-pointer">' +
             (p.type === 'simple' ? 'Pedir +' : 'Opciones +') +
           '</button>' +
         '</div>';
@@ -529,9 +564,21 @@
         currentActiveCategory = category;
         const grid = document.getElementById('products-grid');
         if (!grid) return;
-        grid.innerHTML = MENU_DATA.filter(function(p) { return p.cat === category; }).map(function(p) {
-          return renderCard(p, null);
-        }).join('');
+
+        const items = MENU_DATA.filter(function(p) { return p.cat === category; });
+        const isMosaicCategory = (category === 'especiales' || category === 'bubble');
+
+        if (isMosaicCategory) {
+          grid.className = 'grid grid-cols-2 gap-3';
+          grid.innerHTML = items.map(function(p) {
+            return renderMosaicCard(p);
+          }).join('');
+        } else {
+          grid.className = 'flex flex-col gap-2.5';
+          grid.innerHTML = items.map(function(p) {
+            return renderCard(p, null);
+          }).join('');
+        }
       }
 
       window.filterCategory = function(cat, btn) {
@@ -575,6 +622,7 @@
 
         if (clearBtn) clearBtn.classList.remove('hidden');
         if (nav) nav.classList.add('opacity-40');
+        grid.className = 'flex flex-col gap-2.5';
 
         const filtered = MENU_DATA.filter(function(item) {
           if (item.cat === 'oculto') return false;
@@ -626,6 +674,13 @@
         if (bbvaBox) bbvaBox.classList.toggle('hidden', method !== 'Transferencia BBVA');
         if (cardBox) cardBox.classList.toggle('hidden', method !== 'Tarjeta');
       };
+
+      function renderModalHeroImage(item) {
+        if (!item || !item.image) return '';
+        return '<div class="w-full aspect-square max-h-72 mx-auto mb-3 rounded-2xl overflow-hidden bg-[#203322] border border-zinc-200 shadow-md">' +
+          '<img src="' + item.image + '" alt="' + item.name + '" onerror="this.parentElement.remove()" class="w-full h-full object-cover">' +
+        '</div>';
+      }
 
       function renderCustomModifierBlock() {
         return '<div class="mt-3 p-3 bg-amber-50/70 rounded-xl border border-amber-200/80">' +
@@ -681,7 +736,7 @@
           renderDynamicTrioOptions(item, c, 'opt_pumpkin');
         } else if (item.type === 'sized_flavor') {
           document.getElementById('modal-base-price').textContent = "Selecciona tamaño:";
-          let html = '<div class="space-y-2 mb-3">';
+          let html = renderModalHeroImage(item) + '<div class="space-y-2 mb-3">';
           Object.entries(item.prices).forEach(function(entry, i) {
             const size = entry[0];
             const p = entry[1];
@@ -715,7 +770,7 @@
           renderRolDulceOptions(item, c);
         } else if (item.type === 'banderilla') {
           document.getElementById('modal-base-price').textContent = "Selecciona relleno:";
-          let html = '<div class="space-y-1.5">';
+          let html = renderModalHeroImage(item) + '<div class="space-y-1.5">';
           Object.entries(item.prices).forEach(function(entry, i) {
             const r = entry[0];
             const p = entry[1];
@@ -730,14 +785,14 @@
           window.updatePriceSubtotal();
         } else if (item.type === 'bubble') {
           document.getElementById('modal-base-price').textContent = 'Precio: $' + item.price;
-          let html = '<div class="bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 mb-2"><p class="text-[11px] text-zinc-500 font-medium">✨ Incluye perlas de tapioca tradicional de la casa.</p></div>';
+          let html = renderModalHeroImage(item) + '<div class="bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 mb-2"><p class="text-[11px] text-zinc-500 font-medium">✨ Incluye perlas de tapioca tradicional de la casa.</p></div>';
           html += renderBobaToppingsCheckboxes('Extras o perlas adicionales (+ $15 c/u):');
           html += renderCustomModifierBlock();
           c.innerHTML = html;
           document.getElementById('modal-subtotal').textContent = '$' + item.price.toFixed(2);
         } else if (item.type === 'flavor' || item.type === 'flavor_noshot') {
           document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
-          let html = '<div><label class="font-semibold block text-xs text-zinc-700 mb-1.5">Sabor o preparación:</label><div class="grid grid-cols-2 gap-1.5 text-xs">';
+          let html = renderModalHeroImage(item) + '<div><label class="font-semibold block text-xs text-zinc-700 mb-1.5">Sabor o preparación:</label><div class="grid grid-cols-2 gap-1.5 text-xs">';
           item.flavors.forEach(function(fl, i) {
             html += '<label class="flex items-center gap-2 p-2 rounded-xl bg-zinc-50 border border-zinc-200 cursor-pointer"><input type="radio" name="opt_flavor" value="' + fl + '" ' + (i === 0 ? 'checked' : '') + '><span>' + fl + '</span></label>';
           });
@@ -757,13 +812,7 @@
 
       function renderSpecialCustomOptions(item, container) {
         document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
-        
-        let imageHtml = '';
-        if (item.image) {
-          imageHtml = '<div class="w-full h-40 mb-3 rounded-xl overflow-hidden bg-zinc-100 border border-zinc-200 shadow-sm"><img src="' + item.image + '" alt="' + item.name + '" onerror="this.parentElement.remove()" class="w-full h-full object-cover"></div>';
-        }
-
-        let html = imageHtml + '<div class="bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 mb-2"><p class="text-xs text-zinc-600 font-medium">Receta de autor: ' + item.desc + '</p></div>';
+        let html = renderModalHeroImage(item) + '<div class="bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 mb-2"><p class="text-xs text-zinc-600 font-medium">Receta de autor: ' + item.desc + '</p></div>';
         html += renderBobaToppingsCheckboxes('Toppings masticables opcionales (+ $15 c/u):');
         html += renderCustomModifierBlock();
         container.innerHTML = html;
@@ -791,16 +840,10 @@
 
       function renderMandragoraOptions(item, container) {
         document.getElementById('modal-base-price').textContent = "Precio completo: $" + item.price;
-        
-        let imageHtml = '';
-        if (item.image) {
-          imageHtml = '<div class="w-full h-40 mb-3 rounded-xl overflow-hidden bg-zinc-100 border border-zinc-200 shadow-sm"><img src="' + item.image + '" alt="' + item.name + '" onerror="this.parentElement.remove()" class="w-full h-full object-cover"></div>';
-        }
-
         const rellenos = ['Crema Batida', 'Queso Philadelphia', 'Nata'];
         const frutas = ['Fresa', 'Plátano', 'Durazno'];
 
-        let html = imageHtml + '<div class="space-y-3">';
+        let html = renderModalHeroImage(item) + '<div class="space-y-3">';
         html += '<div><label class="font-semibold block text-xs text-zinc-700 mb-1.5">1. Elige el relleno de tu Pan de Muerto (Cortesía):</label><div class="grid grid-cols-3 gap-1.5 text-xs">';
         rellenos.forEach(function(r, i) {
           html += '<label class="flex items-center justify-center p-2 rounded-xl bg-emerald-50 border border-emerald-100 cursor-pointer text-emerald-900 font-medium"><input type="radio" name="opt_mandragora_relleno" value="' + r + '" ' + (i === 0 ? 'checked' : '') + ' class="mr-1.5"><span class="text-[11px]">' + r + '</span></label>';
@@ -827,7 +870,7 @@
           { name: 'Frappé', price: 60 }
         ];
 
-        let html = '<div class="space-y-2">';
+        let html = renderModalHeroImage(item) + '<div class="space-y-2">';
         options.forEach(function(opt, idx) {
           html += '<label class="flex justify-between items-center p-3 rounded-xl border border-zinc-200 cursor-pointer hover:border-maleza">' +
             '<span class="text-xs font-semibold flex items-center gap-2"><input type="radio" name="' + groupName + '" value="' + opt.name + '" data-price="' + opt.price + '" ' + (idx === 0 ? 'checked' : '') + ' onchange="window.updatePriceSubtotal()"> ' + opt.name + '</span>' +
@@ -844,7 +887,7 @@
 
       function renderFrappeOrMalteadaOptions(item, container) {
         document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
-        let html = '<div><label class="font-semibold block text-xs text-zinc-700 mb-1.5">Sabor:</label><div class="grid grid-cols-2 gap-1.5 text-xs">';
+        let html = renderModalHeroImage(item) + '<div><label class="font-semibold block text-xs text-zinc-700 mb-1.5">Sabor:</label><div class="grid grid-cols-2 gap-1.5 text-xs">';
         item.flavors.forEach(function(fl, i) {
           html += '<label class="flex items-center gap-2 p-2 rounded-xl bg-zinc-50 border border-zinc-200 cursor-pointer"><input type="radio" name="opt_flavor" value="' + fl + '" ' + (i === 0 ? 'checked' : '') + '><span>' + fl + '</span></label>';
         });
@@ -873,7 +916,7 @@
         ];
         if (item.isWaffle) { toppings.push({ name: 'Bola de helado', cost: 15 }); }
 
-        let html = '<div>' +
+        let html = renderModalHeroImage(item) + '<div>' +
           '<div class="flex items-center justify-between mb-1">' +
             '<label class="font-semibold block text-xs text-zinc-700">Elige tus bases (Máximo ' + item.maxBases + '):</label>' +
           '</div>' +
@@ -911,7 +954,7 @@
 
       function renderCrepaSaladaOptions(item, container) {
         document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
-        let html = '<div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200 mb-3"><p class="text-xs text-zinc-600 font-medium">Contiene: ' + item.desc + '</p></div>';
+        let html = renderModalHeroImage(item) + '<div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200 mb-3"><p class="text-xs text-zinc-600 font-medium">Contiene: ' + item.desc + '</p></div>';
         html += '<div><label class="flex items-center justify-between p-3 rounded-xl border border-emerald-200 bg-emerald-50 cursor-pointer text-emerald-800"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" name="opt_cortesia" value="Salsa Macha"> ¿Agregar Salsa Macha artesanal?</span><span class="font-bold text-xs uppercase text-emerald-600">Cortesía</span></label></div>';
         html += renderCustomModifierBlock();
         container.innerHTML = html;
@@ -921,7 +964,7 @@
       function renderRolDulceOptions(item, container) {
         document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
         const frutas = ['Fresa', 'Plátano', 'Durazno'];
-        let html = '<div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200 mb-3"><p class="text-xs text-zinc-600 font-medium">Contiene: ' + item.desc + '</p></div>';
+        let html = renderModalHeroImage(item) + '<div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200 mb-3"><p class="text-xs text-zinc-600 font-medium">Contiene: ' + item.desc + '</p></div>';
         html += '<div><label class="flex items-center justify-between p-3 rounded-xl border border-emerald-200 bg-emerald-50 cursor-pointer text-emerald-800"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" name="opt_cortesia" value="Glaseado Glass" checked> ¿Agregar Glaseado Glass?</span><span class="font-bold text-xs uppercase text-emerald-600">Cortesía</span></label></div>';
         html += '<div class="mt-2.5"><label class="font-semibold block text-xs text-zinc-700 mb-1">Opcional: Agregar fruta (+$10)</label><div class="grid grid-cols-3 gap-1.5 text-xs">';
         frutas.forEach(function(f) {
