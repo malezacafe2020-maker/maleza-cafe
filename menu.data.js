@@ -32,8 +32,8 @@ window.MENU_DATA = [
   { id: 'esp_magnolia', cat: 'especiales', name: 'Magnolia (Chocolate Latte)', price: 80, type: 'special_custom', image: 'img/magnolia.webp', desc: 'Bebida fría, espresso, leche cremosa y cold foam de chocolate' },
   { id: 'esp_crisantemo', cat: 'especiales', name: 'Crisantemo (Mango Matcha)', price: 85, type: 'special_custom', image: 'img/crisantemo.webp', desc: 'Bebida fría, matcha, leche cremosa y mango' },
   { id: 'esp_mandragora', cat: 'especiales', name: 'Mandrágora', price: 120, type: 'mandragora', image: 'img/mandragora.webp', desc: 'Frappé chocolate abuelita + pan de muerto relleno' },
-  { id: 'latte_caliente', cat: 'especiales', name: 'Latte de Sabor Caliente', price: 65, type: 'flavor', allowShot: true, flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], desc: 'Elige tu sabor favorito' },
-  { id: 'latte_frio', cat: 'especiales', name: 'Latte de Sabor Frío', price: 70, type: 'flavor', allowShot: true, flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], desc: 'Elige tu sabor favorito' },
+  { id: 'latte_caliente', cat: 'especiales', name: 'Latte de Sabor Caliente', price: 65, type: 'flavor', allowShot: true, image: 'img/latte-caliente.webp', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], desc: 'Elige tu sabor favorito' },
+  { id: 'latte_frio', cat: 'especiales', name: 'Latte de Sabor Frío', price: 70, type: 'flavor', allowShot: true, image: 'img/latte-frio.webp', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], desc: 'Elige tu sabor favorito' },
 
   // ================= BUBBLE TEA =================
   { id: 'bub_jacaranda', cat: 'bubble', name: 'Jacaranda (Taro Milk Tea)', price: 70, type: 'bubble', image: 'img/jacaranda.webp', desc: 'Taro, leche, té negro y tapioca' },
