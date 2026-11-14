@@ -53,7 +53,7 @@
       <span class="w-12 h-12 bg-maleza/10 text-maleza flex items-center justify-center rounded-full mx-auto text-xl mb-3">🔒</span>
       <h3 class="font-serif font-bold text-xl text-maleza-dark">Acceso a Barra / Cocina</h3>
       <p class="text-xs text-zinc-500 mb-5">Ingresa el PIN de seguridad del KDS</p>
-      <input type="password" id="kds-pin-input" maxlength="4" placeholder="••••" class="text-center tracking-widest text-2xl font-mono font-bold w-36 mx-auto bg-zinc-100 border border-zinc-300 rounded-xl py-2 mb-4 focus:outline-none focus:border-maleza">
+      <input type="password" id="kds-pin-input" inputmode="numeric" maxlength="4" placeholder="••••" onkeydown="if(event.key==='Enter') window.unlockKDS()" class="text-center tracking-widest text-2xl font-mono font-bold w-36 mx-auto bg-zinc-100 border border-zinc-300 rounded-xl py-2 mb-4 focus:outline-none focus:border-maleza">
       <button type="button" onclick="window.unlockKDS()" class="w-full bg-maleza hover:bg-maleza-dark text-white font-semibold text-sm py-3 rounded-xl shadow-md transition-all cursor-pointer">
         Ingresar al Tablero
       </button>
@@ -109,7 +109,7 @@
       </p>
       <div class="mb-4">
         <label class="block text-xs font-bold text-zinc-700 mb-1">Ingresa PIN de Dueño:</label>
-        <input type="password" id="owner-pin-input" maxlength="4" placeholder="••••" class="text-center tracking-widest text-2xl font-mono font-bold w-36 mx-auto bg-zinc-100 border border-zinc-300 rounded-xl py-2 focus:outline-none focus:border-rose-600">
+        <input type="password" id="owner-pin-input" inputmode="numeric" maxlength="4" placeholder="••••" onkeydown="if(event.key==='Enter') window.confirmResetCut()" class="text-center tracking-widest text-2xl font-mono font-bold w-36 mx-auto bg-zinc-100 border border-zinc-300 rounded-xl py-2 focus:outline-none focus:border-rose-600">
         <p id="owner-pin-error" class="hidden text-[11px] text-rose-600 font-semibold mt-1.5">PIN incorrecto.</p>
       </div>
       <div class="grid grid-cols-2 gap-2">
@@ -141,8 +141,6 @@
   <script>
     (function() {
       // Firmas criptográficas SHA-256 (AppSec Defensivo)
-      // "1234" = 03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4
-      // "0000" = 9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0
       const KDS_PIN_HASH = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
       const OWNER_PIN_HASH = "9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0";
 
@@ -150,6 +148,16 @@
         const buffer = new TextEncoder().encode(str);
         const hash = await crypto.subtle.digest('SHA-256', buffer);
         return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+      }
+
+      // Sanitización preventiva contra inyección HTML/XSS en entradas libres de clientes
+      function escapeHTML(str) {
+        return String(str || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
       }
 
       const firebaseConfig = {
@@ -374,6 +382,12 @@
         }
       };
 
+      window.reopenOrder = function(id) {
+        if (confirm("¿Regresar esta comanda a 'Preparando'?")) {
+          window.updateOrderStatus(id, 'preparing');
+        }
+      };
+
       window.updateOrderStatus = async function(id, status) {
         if (isCloud && db) {
           try { await db.collection("orders").doc(id).update({ status: status }); } catch (e) { console.error(e); }
@@ -388,9 +402,9 @@
         if (orders.length === 0) return alert("No hay pedidos para exportar en esta fecha.");
         let csv = "\uFEFFID,Fecha,Hora,Tipo,Cliente,Productos,Pago,Total,Estatus\n";
         orders.forEach(function(o) {
-          const items = '"' + o.items.map(function(i) { return i.qty + 'x ' + i.name + ' (' + (i.details || '') + ')'; }).join(' | ').replace(/"/g, '""') + '"';
+          const items = '"' + (o.items || []).map(function(i) { return i.qty + 'x ' + i.name + ' (' + (i.details || '') + ')'; }).join(' | ').replace(/"/g, '""') + '"';
           const tType = o.orderType || 'Para comer aquí';
-          csv += (o.id || '') + ',' + (o.dateStr || selectedKdsDateStr) + ',' + (o.timestampStr || '') + ',"' + tType + '","' + o.clientName + '",' + items + ',' + (o.paymentMethod || 'Efectivo') + ',' + o.total.toFixed(2) + ',' + o.status + '\n';
+          csv += (o.id || '') + ',' + (o.dateStr || selectedKdsDateStr) + ',' + (o.timestampStr || '') + ',"' + tType + '","' + (o.clientName || '').replace(/"/g, '""') + '",' + items + ',' + (o.paymentMethod || 'Efectivo') + ',' + (o.total || 0).toFixed(2) + ',' + o.status + '\n';
         });
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
@@ -426,33 +440,36 @@
           const isToGo = o.orderType === 'Para llevar';
           const isCard = o.paymentMethod === 'Tarjeta';
           
-          const border = isPend ? 'border-amber-400' : isPrep ? 'border-blue-500' : isCanc ? 'border-red-300 opacity-50 bg-red-50' : isArch ? 'border-zinc-300 opacity-50 bg-zinc-50' : 'border-emerald-500 opacity-70 bg-emerald-50';
+          const border = isPend ? 'border-amber-400' : isPrep ? 'border-blue-500' : isCanc ? 'border-red-300 opacity-50 bg-red-50' : isArch ? 'border-zinc-300 opacity-50 bg-zinc-50' : 'border-emerald-500 bg-emerald-50/60';
           const badgeTxt = isPend ? 'PENDIENTE' : isPrep ? 'PREPARANDO' : isCanc ? 'CANCELADO' : isArch ? 'CORTE CERRADO' : 'LISTO';
           
           const typeBadge = isToGo 
             ? '<span class="text-[9px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800 ml-2 uppercase">🛍️ Para Llevar</span>'
             : '<span class="text-[9px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 ml-2 uppercase">🍽️ Mesa/Barra</span>';
 
-          const itemsHtml = o.items.map(function(i) {
+          const itemsHtml = (o.items || []).map(function(i) {
             return '<div class="text-xs bg-zinc-50 p-1.5 rounded-lg border border-zinc-100">' +
-              '<strong>' + i.qty + 'x ' + i.name + '</strong> - $' + i.total +
-              (i.details ? '<p class="text-[11px] text-zinc-500 font-medium">• ' + i.details + '</p>' : '') +
+              '<strong>' + escapeHTML(i.qty) + 'x ' + escapeHTML(i.name) + '</strong> - $' + escapeHTML(i.total) +
+              (i.details ? '<p class="text-[11px] text-zinc-500 font-medium">• ' + escapeHTML(i.details) + '</p>' : '') +
             '</div>';
           }).join('');
 
           let buttonsHtml = '';
           if (isPend) {
             buttonsHtml = '<div class="grid grid-cols-2 gap-2">' +
-              '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'preparing\')" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs py-2 rounded-xl font-semibold cursor-pointer">Iniciar Prep.</button>' +
-              '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'returned\')" class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs py-2 rounded-xl font-semibold cursor-pointer">Devolver a Cliente</button>' +
+              '<button type="button" onclick="window.updateOrderStatus(\'' + escapeHTML(o.id) + '\', \'preparing\')" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs py-2 rounded-xl font-semibold cursor-pointer">Iniciar Prep.</button>' +
+              '<button type="button" onclick="window.updateOrderStatus(\'' + escapeHTML(o.id) + '\', \'returned\')" class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs py-2 rounded-xl font-semibold cursor-pointer">Devolver a Cliente</button>' +
             '</div>';
           } else if (isPrep) {
-            buttonsHtml = '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'ready\')" class="w-full bg-emerald-600 text-white text-xs py-2 rounded-xl font-semibold cursor-pointer">Marcar Listo</button>';
+            buttonsHtml = '<button type="button" onclick="window.updateOrderStatus(\'' + escapeHTML(o.id) + '\', \'ready\')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs py-2 rounded-xl font-semibold cursor-pointer">Marcar Listo</button>';
           } else if (isArch || isCanc) {
             buttonsHtml = '<span class="block w-full text-center text-zinc-400 text-[11px] py-1.5 font-semibold">Historial (No interactivo)</span>';
           } else {
-            buttonsHtml = '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'archived\')" class="w-full text-zinc-500 border border-zinc-300 text-xs py-1.5 rounded-lg hover:bg-zinc-50 font-semibold mb-1 cursor-pointer">Archivar y Ocultar</button>' +
-              '<button type="button" onclick="window.updateOrderStatus(\'' + o.id + '\', \'preparing\')" class="w-full text-zinc-400 text-[10px] py-1 cursor-pointer">Reabrir</button>';
+            // Estado LISTO: sin botón "Archivar y Ocultar" para evitar borrados accidentales durante el turno
+            buttonsHtml = '<div class="flex items-center justify-between pt-1">' +
+              '<span class="inline-flex items-center gap-1 text-emerald-700 bg-emerald-100/80 border border-emerald-200 text-[11px] font-bold px-2.5 py-1 rounded-lg">✓ Pedido Completo</span>' +
+              '<button type="button" onclick="window.reopenOrder(\'' + escapeHTML(o.id) + '\')" class="text-zinc-400 hover:text-zinc-600 text-[11px] underline px-2 py-1 cursor-pointer">Reabrir</button>' +
+            '</div>';
           }
 
           const cardAlert = (isCard && !isArch && !isCanc)
@@ -466,14 +483,14 @@
               '<div class="flex justify-between border-b pb-2 mb-2">' +
                 '<div>' +
                   '<div class="flex items-center">' +
-                    '<span class="text-[10px] text-zinc-400 font-mono">' + (o.id ? o.id.slice(-5) : '') + '</span>' +
+                    '<span class="text-[10px] text-zinc-400 font-mono">' + escapeHTML(o.id ? o.id.slice(-5) : '') + '</span>' +
                     typeBadge +
                   '</div>' +
-                  '<h4 class="font-bold text-sm leading-tight mt-1">' + o.clientName + '</h4>' +
+                  '<h4 class="font-bold text-sm leading-tight mt-1">' + escapeHTML(o.clientName) + '</h4>' +
                 '</div>' +
                 '<div class="text-right">' +
                   '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-100">' + badgeTxt + '</span>' +
-                  '<span class="block text-[11px] text-zinc-400 mt-1">' + (o.timestampStr || '') + '</span>' +
+                  '<span class="block text-[11px] text-zinc-400 mt-1">' + escapeHTML(o.timestampStr || '') + '</span>' +
                 '</div>' +
               '</div>' +
               '<div class="space-y-1 mb-2.5">' + itemsHtml + '</div>' +
@@ -481,8 +498,8 @@
             '<div class="border-t pt-2">' +
               cardAlert +
               '<div class="flex justify-between text-xs mb-2">' +
-                '<span>Pago: <strong>' + (o.paymentMethod || 'Efectivo') + '</strong></span>' +
-                '<span class="font-bold text-maleza-dark ' + (isCanc ? 'line-through text-red-400' : '') + '">$' + o.total.toFixed(2) + '</span>' +
+                '<span>Pago: <strong>' + escapeHTML(o.paymentMethod || 'Efectivo') + '</strong></span>' +
+                '<span class="font-bold text-maleza-dark ' + (isCanc ? 'line-through text-red-400' : '') + '">$' + (o.total || 0).toFixed(2) + '</span>' +
               '</div>' +
               buttonsHtml +
             '</div>' +
