@@ -51,7 +51,6 @@ window.MENU_DATA = [
   // ================= CAFETERÍA & BEBIDAS =================
   { id: 'caf_americano', cat: 'cafe', name: 'Americano', price: 45, type: 'simple', desc: 'Café de especialidad recién extraído' },
   { id: 'caf_capuchino', cat: 'cafe', name: 'Capuchino', price: 50, type: 'simple', desc: 'Espresso con leche vaporizada y espuma cremosa' },
-  { id: 'caf_latte', cat: 'cafe', name: 'Latte Clásico', price: 50, type: 'simple', desc: 'Espresso suave con abundante leche cremosa' },
   { id: 'caf_lechero', cat: 'cafe', name: 'Lechero', price: 55, type: 'simple', desc: 'Café cargado con leche caliente espumada' },
   { id: 'caf_mocha', cat: 'cafe', name: 'Mocha', price: 55, type: 'simple', desc: 'Espresso, cacao artesanal y leche vaporizada' },
   { id: 'caf_cap_sabor', cat: 'cafe', name: 'Capuchino de Sabor', price: 60, type: 'flavor', allowShot: true, flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], desc: 'Capuchino cremoso con jarabe a elegir' },
