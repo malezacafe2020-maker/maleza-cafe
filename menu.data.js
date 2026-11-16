@@ -27,8 +27,8 @@ window.MENU_DATA = [
   { id: 'ban_mexi', cat: 'banderillas', name: 'Monstera Mexicheese', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 }, desc: 'Empanizado con queso y jalapeño' },
 
   // ================= LATTES ESPECIALES =================
-  { id: 'esp_areca', cat: 'especiales', name: 'Areca (Coconut Latte)', price: 70, type: 'special_custom', image: 'img/areca.webp', desc: 'Bebida fría, espresso, leche cremosa y coco' },
-  { id: 'esp_cosmos', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 80, type: 'special_custom', image: 'img/cosmos.webp', desc: 'Bebida fría, matcha, leche cremosa y fresa' },
+  { id: 'esp_areca', cat: 'especiales', name: 'Areca (Coconut Latte)', price: 80, type: 'special_custom', image: 'img/areca.webp', desc: 'Bebida fría, espresso, leche cremosa y coco' },
+  { id: 'esp_cosmos', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 85, type: 'special_custom', image: 'img/cosmos.webp', desc: 'Bebida fría, matcha, leche cremosa y fresa' },
   { id: 'esp_magnolia', cat: 'especiales', name: 'Magnolia (Chocolate Latte)', price: 80, type: 'special_custom', image: 'img/magnolia.webp', desc: 'Bebida fría, espresso, leche cremosa y cold foam de chocolate' },
   { id: 'esp_crisantemo', cat: 'especiales', name: 'Crisantemo (Mango Matcha)', price: 85, type: 'special_custom', image: 'img/crisantemo.webp', desc: 'Bebida fría, matcha, leche cremosa y mango' },
   { id: 'esp_mandragora', cat: 'especiales', name: 'Mandrágora', price: 120, type: 'mandragora', image: 'img/mandragora.webp', desc: 'Frappé chocolate abuelita + pan de muerto relleno' },
