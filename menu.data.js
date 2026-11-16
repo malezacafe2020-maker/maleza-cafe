@@ -57,7 +57,7 @@ window.MENU_DATA = [
   { id: 'sin_chocolate', cat: 'cafe', name: 'Chocolate Caliente', price: 60, type: 'simple', desc: 'Cacao tradicional espumoso' },
   { id: 'sin_chai', cat: 'cafe', name: 'Chai Latte', price: 60, type: 'simple', desc: 'Infusión especiada con leche cremosa' },
   { id: 'sin_matcha', cat: 'cafe', name: 'Matcha Latte', price: 60, type: 'simple', desc: 'Té verde matcha ceremonial con leche' },
-  { id: 'sin_tisana', cat: 'cafe', name: 'Tisana Frutal', price: 50, type: 'flavor_noshot', flavors: ['Frutos Rojos', 'Maracuyá-Cempasúchil'], desc: 'Infusión natural de frutas deshidratadas' },
+  { id: 'sin_tisana', cat: 'cafe', name: 'Tisana Frutal', price: 50, type: 'flavor_noshot', flavors: ['Frutos Rojos', 'Fresa-Kiwi'], desc: 'Infusión natural de frutas deshidratadas' },
 
   // Frappés, Sodas, Smoothies, Malteadas y Esquimos
   { id: 'frp_clasico', cat: 'cafe', name: 'Frappé Clásico', price: 60, type: 'frappe', flavors: ['Oreo', 'Chocolate Abuelita', 'Moka', 'Chai'], desc: 'Bebida frozen cremosa con crema batida' },
