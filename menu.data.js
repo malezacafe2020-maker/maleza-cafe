@@ -20,9 +20,9 @@ window.MENU_DATA = [
   { id: 'rol_manzana', cat: 'roles', name: 'Rol de Manzana Canela', price: 55, type: 'rol_dulce', desc: 'Compota artesanal de manzana y canela' },
 
   // ================= BANDERILLAS COREANAS =================
-  { id: 'ban_deliciosa', cat: 'banderillas', name: 'Monstera Deliciosa', type: 'banderilla', prices: { 'Salchicha': 70, 'Queso manchego': 80, 'Combinada': 75 }, desc: 'Cubierta crujiente de papa + panko' },
-  { id: 'ban_thai', cat: 'banderillas', name: 'Monstera Thai', type: 'banderilla', prices: { 'Salchicha': 65, 'Queso manchego': 75, 'Combinada': 70 }, desc: 'Cubierta de ramen + panko' },
-  { id: 'ban_fuego', cat: 'banderillas', name: 'Monstera Fuego', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 }, desc: 'Empanizado flaming picante' },
+  { id: 'ban_deliciosa', cat: 'banderillas', name: 'Monstera Deliciosa', type: 'banderilla', image: 'img/banderilla-deliciosa.webp', prices: { 'Salchicha': 70, 'Queso manchego': 80, 'Combinada': 75 }, desc: 'Cubierta crujiente de papa + panko' },
+  { id: 'ban_thai', cat: 'banderillas', name: 'Monstera Thai', type: 'banderilla', image: 'img/banderilla-thai.webp', prices: { 'Salchicha': 65, 'Queso manchego': 75, 'Combinada': 70 }, desc: 'Cubierta de ramen + panko' },
+  { id: 'ban_fuego', cat: 'banderillas', name: 'Monstera Fuego', type: 'banderilla', image: 'img/banderilla-fuego.webp', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 }, desc: 'Empanizado flaming picante' },
   { id: 'ban_clasica', cat: 'banderillas', name: 'Monstera Clásica', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 }, desc: 'Empanizado tradicional crujiente' },
   { id: 'ban_mexi', cat: 'banderillas', name: 'Monstera Mexicheese', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 }, desc: 'Empanizado con queso y jalapeño' },
 
@@ -57,7 +57,6 @@ window.MENU_DATA = [
   { id: 'sin_chocolate', cat: 'cafe', name: 'Chocolate Caliente', price: 60, type: 'simple', desc: 'Cacao tradicional espumoso' },
   { id: 'sin_chai', cat: 'cafe', name: 'Chai Latte', price: 60, type: 'simple', desc: 'Infusión especiada con leche cremosa' },
   { id: 'sin_matcha', cat: 'cafe', name: 'Matcha Latte', price: 60, type: 'simple', desc: 'Té verde matcha ceremonial con leche' },
-  { id: 'sin_tisana', cat: 'cafe', name: 'Tisana Frutal', price: 50, type: 'flavor_noshot', flavors: ['Frutos Rojos', 'Fresa-Kiwi'], desc: 'Infusión natural de frutas deshidratadas' },
 
   // Frappés, Sodas, Smoothies, Malteadas y Esquimos
   { id: 'frp_clasico', cat: 'cafe', name: 'Frappé Clásico', price: 60, type: 'frappe', flavors: ['Oreo', 'Chocolate Abuelita', 'Moka', 'Chai'], desc: 'Bebida frozen cremosa con crema batida' },
