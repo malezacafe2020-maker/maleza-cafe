@@ -16,7 +16,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
 
-  <script src="menu.data.js?v=20261116"></script>
+  <script src="menu.data.js?v=20261116b"></script>
 
   <script>
     tailwind.config = {
@@ -673,6 +673,21 @@
         '</div>';
       }
 
+      // Selector de tipo de Matcha (sin costo extra) para Cosmos, Crisantemo y Matcha Latte
+      function renderMatchaTypeSelector() {
+        return '<div class="mb-3">' +
+          '<label class="font-semibold block text-xs text-zinc-700 mb-1.5">Tipo de Matcha (Sin costo):</label>' +
+          '<div class="grid grid-cols-2 gap-1.5 text-xs">' +
+            '<label class="flex items-center justify-between p-2.5 rounded-xl bg-emerald-50/70 border border-emerald-200 cursor-pointer text-emerald-950 font-semibold">' +
+              '<span class="flex items-center gap-2"><input type="radio" name="opt_matcha_type" value="Matcha tradicional" checked> Matcha tradicional</span>' +
+            '</label>' +
+            '<label class="flex items-center justify-between p-2.5 rounded-xl bg-sky-50/70 border border-sky-200 cursor-pointer text-sky-950 font-semibold">' +
+              '<span class="flex items-center gap-2"><input type="radio" name="opt_matcha_type" value="Matcha azul"> Matcha azul</span>' +
+            '</label>' +
+          '</div>' +
+        '</div>';
+      }
+
       function renderCustomModifierBlock() {
         return '<div class="mt-3 p-3 bg-amber-50/70 rounded-xl border border-amber-200/80">' +
           '<label class="block font-bold text-xs text-amber-950 mb-1">📝 Extra o Modificador Libre (Barra):</label>' +
@@ -736,6 +751,10 @@
               '<span class="font-bold text-xs text-maleza">$' + p + '</span></label>';
           });
           html += '</div>';
+
+          if (item.hasMatchaType) {
+            html += renderMatchaTypeSelector();
+          }
           
           if (item.flavors) {
             html += '<div><label class="font-semibold block text-xs text-zinc-700 mb-1.5">Sabor o preparación:</label><div class="grid grid-cols-2 gap-1.5 text-xs mb-3">';
@@ -804,6 +823,9 @@
       function renderSpecialCustomOptions(item, container) {
         document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
         let html = renderModalHeroImage(item) + '<div class="bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 mb-2"><p class="text-xs text-zinc-600 font-medium">Receta de autor: ' + item.desc + '</p></div>';
+        if (item.hasMatchaType) {
+          html += renderMatchaTypeSelector();
+        }
         html += renderBobaToppingsCheckboxes('Toppings masticables opcionales (+ $15 c/u):');
         html += renderCustomModifierBlock();
         container.innerHTML = html;
@@ -1105,6 +1127,11 @@
           }
           const sh = document.getElementById('shot_extra');
           if (sh && sh.checked) { price += 15; details.push('Con Shot Espresso'); }
+        }
+
+        const matchaType = document.querySelector('input[name="opt_matcha_type"]:checked');
+        if (matchaType) {
+          details.push('Matcha: ' + matchaType.value);
         }
 
         const bobas = Array.from(document.querySelectorAll('input[name="opt_boba"]:checked')).map(function(cb) {
