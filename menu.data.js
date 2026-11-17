@@ -54,21 +54,63 @@ window.MENU_DATA = [
   { id: 'caf_mocha', cat: 'cafe', name: 'Mocha', type: 'sized_flavor', prices: { 'Chico': 55, 'Grande': 70 }, desc: 'Espresso, cacao artesanal y leche vaporizada' },
   { id: 'caf_cap_sabor', cat: 'cafe', name: 'Capuchino de Sabor', type: 'sized_flavor', prices: { 'Chico': 60, 'Grande': 75 }, allowShot: true, flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], desc: 'Capuchino cremoso con jarabe a elegir' },
   { id: 'sin_chocolate', cat: 'cafe', name: 'Chocolate Caliente', type: 'sized_flavor', prices: { 'Chico': 60, 'Grande': 75 }, desc: 'Cacao tradicional espumoso' },
-  { id: 'sin_chai', cat: 'cafe', name: 'Chai Latte', type: 'sized_flavor', prices: { 'Chico': 60, 'Grande': 70 }, desc: 'Infusión especiada con leche cremosa' },
+  {
+    id: 'sin_chai',
+    cat: 'cafe',
+    name: 'Chai Latte',
+    type: 'prep_trio',
+    prepOptions: [
+      { name: 'Caliente Chico', price: 60 },
+      { name: 'Caliente Grande', price: 70 },
+      { name: 'Frío', price: 70 }
+    ],
+    desc: 'Infusión especiada con leche cremosa (caliente o frío)'
+  },
   { id: 'sin_matcha', cat: 'cafe', name: 'Matcha Latte', type: 'sized_flavor', prices: { 'Chico': 60, 'Grande': 75 }, hasMatchaType: true, desc: 'Té matcha ceremonial o azul con leche' },
+  { id: 'sin_tisana', cat: 'cafe', name: 'Tisana Frutal', price: 50, type: 'flavor_noshot', flavors: ['Frutos Rojos', 'Fresa-Kiwi'], desc: 'Infusión natural de frutas deshidratadas' },
 
   // Frappés, Sodas, Smoothies, Malteadas y Esquimos
-  { id: 'frp_clasico', cat: 'cafe', name: 'Frappé Clásico', price: 60, type: 'frappe', flavors: ['Oreo', 'Chocolate Abuelita', 'Moka', 'Chai'], desc: 'Bebida frozen cremosa con crema batida' },
+  {
+    id: 'frp_clasico',
+    cat: 'cafe',
+    name: 'Frappé Clásico',
+    price: 60,
+    type: 'frappe',
+    flavors: ['Oreo', 'Chocolate Abuelita', 'Moka', 'Chai'],
+    flavorPrices: { 'Oreo': 70, 'Chocolate Abuelita': 60, 'Moka': 70, 'Chai': 60 },
+    desc: 'Bebida frozen cremosa con crema batida'
+  },
   { id: 'frp_premium', cat: 'cafe', name: 'Frappé Especial', price: 70, type: 'frappe', flavors: ['Café', 'Matcha'], desc: 'Bebida frozen intensa con crema batida' },
   { id: 'frp_caramelo', cat: 'cafe', name: 'Frappé Caramelo', price: 75, type: 'frappe', flavors: ['Caramelo'], desc: 'Frozen de café y caramelo con crema batida' },
-  { id: 'frp_alcohol', cat: 'cafe', name: 'Frappé con Licor', price: 75, type: 'frappe', flavors: ['Crema Irlandesa', 'Rompope', 'Piña Colada', 'Baileys'], desc: 'Preparación frozen con toque de licor' },
+  {
+    id: 'frp_alcohol',
+    cat: 'cafe',
+    name: 'Frappé con Licor',
+    price: 75,
+    type: 'frappe',
+    flavors: ['Crema Irlandesa', 'Rompope', 'Piña Colada', 'Baileys'],
+    flavorPrices: { 'Crema Irlandesa': 75, 'Rompope': 75, 'Piña Colada': 75, 'Baileys': 80 },
+    desc: 'Preparación frozen con toque de licor'
+  },
   { id: 'sod_italiana', cat: 'cafe', name: 'Soda Italiana', price: 60, type: 'flavor_noshot', hasBobaToppings: true, flavors: ['Mora Azul', 'Mora Azul y Lavanda', 'Manzana Verde', 'Frutos Rojos'], desc: 'Agua mineralizada con jarabe frutal y hielo' },
   { id: 'ref_maleza', cat: 'cafe', name: 'Refresh', price: 60, type: 'flavor_noshot', hasBobaToppings: true, flavors: ['Maracuyá', 'Dragon Fruit'], desc: 'Bebida refrescante de fruta natural con hielo' },
-  { id: 'smo_frutal', cat: 'cafe', name: 'Smoothie', price: 60, type: 'flavor_noshot', hasBobaToppings: true, flavors: ['Coco', 'Mango'], desc: 'Granizado frutal cremoso' },
+  { id: 'smo_frutal', cat: 'cafe', name: 'Smoothie', price: 60, type: 'flavor_noshot', hasBobaToppings: true, hasGreekYogurt: true, flavors: ['Coco', 'Mango'], desc: 'Granizado frutal cremoso' },
   { id: 'mal_clasica', cat: 'cafe', name: 'Malteada Clásica', price: 60, type: 'malteada', flavors: ['Fresa', 'Vainilla', 'Chocolate'], desc: 'Batido cremoso de helado con crema batida' },
   { id: 'mal_alcohol', cat: 'cafe', name: 'Malteada con Licor', price: 75, type: 'malteada', flavors: ['Rompope', 'Piña Colada', 'Baileys'], desc: 'Batido cremoso de helado con toque de licor' },
   { id: 'esq_maleza', cat: 'cafe', name: 'Esquimo', price: 40, type: 'flavor_noshot', flavors: ['Café', 'Chocolate', 'Vainilla', 'Fresa', 'Chocolate Abuelita', 'Caramelo', 'Moka', 'Chai', 'Matcha', 'Taro'], desc: 'Bebida fría espumosa tradicional' },
 
-  // ================= PROMOCIÓN DE TEMPORADA (OCULTA EN LISTADO GENERAL) =================
-  { id: 'promo_pumpkin', cat: 'oculto', name: 'Pumpkin Spice', price: 60, type: 'pumpkin', desc: 'Nuestra bebida de Temporada' }
+  // ================= NUEVOS Y DE TEMPORADA =================
+  {
+    id: 'promo_pumpkin',
+    cat: 'temporada',
+    name: 'Pumpkin Spice',
+    type: 'prep_trio',
+    hasBobaToppings: true,
+    prepOptions: [
+      { name: 'Caliente', price: 60 },
+      { name: 'Latte Frío', price: 70 },
+      { name: 'Frappé', price: 60 }
+    ],
+    desc: 'Nuestra bebida especiada de temporada en 3 preparaciones'
+  }
 ];
