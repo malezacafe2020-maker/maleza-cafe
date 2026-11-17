@@ -16,7 +16,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
 
-  <script src="menu.data.js?v=20261113b"></script>
+  <script src="menu.data.js?v=20261116"></script>
 
   <script>
     tailwind.config = {
@@ -252,7 +252,7 @@
         <div id="products-grid" class="flex flex-col gap-2.5"></div>
       </div>
 
-           <div id="cart-float" class="hidden fixed bottom-4 inset-x-4 max-w-md mx-auto z-40">
+      <div id="cart-float" class="hidden fixed bottom-4 inset-x-4 max-w-md mx-auto z-40">
         <button type="button" onclick="window.openCartModal()" class="w-full bg-maleza-dark text-white p-3.5 rounded-2xl shadow-xl flex items-center justify-between border border-emerald-950/40 active:scale-95 transition-transform cursor-pointer">
           <div class="flex items-center space-x-2.5">
             <span id="cart-count" class="bg-maleza-accent text-white font-bold text-xs px-2.5 py-0.5 rounded-full">0</span>
@@ -470,6 +470,9 @@
         let priceDisplay = p.price ? '$' + p.price : 'Opciones';
         if (p.type === 'sized_flavor' && p.prices && p.prices['Chico']) {
           priceDisplay = '$' + p.prices['Chico'] + ' / $' + p.prices['Grande'];
+        } else if (p.type === 'banderilla' && p.prices) {
+          const vals = Object.values(p.prices);
+          priceDisplay = 'Desde $' + Math.min.apply(null, vals);
         }
         return priceDisplay;
       }
@@ -554,7 +557,7 @@
         if (!grid) return;
 
         const items = MENU_DATA.filter(function(p) { return p.cat === category; });
-        const isMosaicCategory = (category === 'especiales' || category === 'bubble');
+        const isMosaicCategory = (category === 'especiales' || category === 'bubble' || category === 'banderillas');
 
         if (isMosaicCategory) {
           grid.className = 'grid grid-cols-2 gap-3';
