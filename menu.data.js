@@ -20,11 +20,12 @@ window.MENU_DATA = [
   { id: 'rol_manzana', cat: 'roles', name: 'Rol de Manzana Canela', price: 55, type: 'rol_dulce', desc: 'Compota artesanal de manzana y canela' },
 
   // ================= BANDERILLAS COREANAS =================
+  // ================= BANDERILLAS COREANAS =================
   { id: 'ban_deliciosa', cat: 'banderillas', name: 'Monstera Deliciosa', type: 'banderilla', image: 'img/banderilla-deliciosa.webp', prices: { 'Salchicha': 70, 'Queso manchego': 80, 'Combinada': 75 }, desc: 'Cubierta crujiente de papa + panko' },
   { id: 'ban_thai', cat: 'banderillas', name: 'Monstera Thai', type: 'banderilla', image: 'img/banderilla-thai.webp', prices: { 'Salchicha': 65, 'Queso manchego': 75, 'Combinada': 70 }, desc: 'Cubierta de ramen + panko' },
   { id: 'ban_fuego', cat: 'banderillas', name: 'Monstera Fuego', type: 'banderilla', image: 'img/banderilla-fuego.webp', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 }, desc: 'Empanizado flaming picante' },
-  { id: 'ban_clasica', cat: 'banderillas', name: 'Monstera Clásica', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 }, desc: 'Empanizado tradicional crujiente' },
-  { id: 'ban_mexi', cat: 'banderillas', name: 'Monstera Mexicheese', type: 'banderilla', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 }, desc: 'Empanizado con queso y jalapeño' },
+  { id: 'ban_clasica', cat: 'banderillas', name: 'Monstera Clásica', type: 'banderilla', image: 'img/banderilla-clasica.webp', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 }, desc: 'Empanizado tradicional crujiente' },
+  { id: 'ban_mexi', cat: 'banderillas', name: 'Monstera Mexicheese', type: 'banderilla', image: 'img/banderilla-mexicheese.webp', prices: { 'Salchicha': 60, 'Queso manchego': 70, 'Combinada': 65 }, desc: 'Empanizado con queso y jalapeño' },
 
   // ================= LATTES ESPECIALES =================
   { id: 'esp_areca', cat: 'especiales', name: 'Areca (Coconut Latte)', price: 80, type: 'special_custom', image: 'img/areca.webp', desc: 'Bebida fría, espresso, leche cremosa y coco' },
