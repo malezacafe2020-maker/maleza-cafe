@@ -16,7 +16,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
 
-  <script src="menu.data.js?v=20261116c"></script>
+  <script src="menu.data.js?v=20261116d"></script>
 
   <script>
     tailwind.config = {
@@ -138,10 +138,13 @@
       </div>
     </header>
 
-    <div id="order-monitor" class="hidden fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-zinc-200 p-3.5 transition-all">
+    <div id="order-monitor" class="hidden fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-zinc-200 p-3.5 transition-all duration-300">
       <div class="flex items-center justify-between mb-1.5">
         <h3 class="font-serif font-bold text-maleza-dark text-base">Estado de tu pedido</h3>
-        <span id="monitor-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">PENDIENTE</span>
+        <div class="flex items-center gap-2">
+          <span id="monitor-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">PENDIENTE</span>
+          <button type="button" onclick="window.dismissMonitor()" class="text-zinc-400 hover:text-zinc-700 text-base font-bold leading-none px-1 cursor-pointer" title="Cerrar aviso">&times;</button>
+        </div>
       </div>
       <p id="monitor-msg" class="text-xs text-zinc-600 mb-3 leading-snug">Tu pedido está en fila. Aún puedes hacer cambios si te equivocaste.</p>
       <div id="monitor-actions" class="flex flex-col gap-2"></div>
@@ -405,6 +408,7 @@
       let clientUnsubscribe = null;
       let currentActiveCategory = 'crepas';
       let splashTimer = null;
+      let monitorAutoHideTimer = null;
 
       window.hideWelcomeSplash = function() {
         const splash = document.getElementById('welcome-splash');
@@ -1284,8 +1288,13 @@
           if (clientUnsubscribe) { clientUnsubscribe(); clientUnsubscribe = null; }
           return;
         }
+
+        if (monitorAutoHideTimer) {
+          clearTimeout(monitorAutoHideTimer);
+          monitorAutoHideTimer = null;
+        }
         
-        monitor.classList.remove('hidden');
+        monitor.classList.remove('hidden', 'opacity-0');
         
         let waBtn = '';
         if (data.paymentMethod === 'Transferencia BBVA') {
@@ -1299,14 +1308,14 @@
         }
 
         if (data.status === 'pending') {
-          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-amber-400 p-3.5 transition-all';
+          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-amber-400 p-3.5 transition-all duration-300';
           badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800';
           badge.textContent = 'PENDIENTE';
           msg.textContent = 'Tu pedido está en fila. Aún puedes hacer cambios si te equivocaste.';
           actions.innerHTML = `<button type="button" onclick="window.modifyActiveOrder()" class="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-semibold py-2 rounded-xl border border-zinc-300 active:scale-95 transition-transform cursor-pointer">✏️ Modificar Pedido</button>` + waBtn;
           actions.classList.remove('hidden');
         } else if (data.status === 'preparing') {
-          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-blue-500 p-3.5 transition-all';
+          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-blue-500 p-3.5 transition-all duration-300';
           badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800';
           badge.textContent = 'PREPARANDO';
           msg.textContent = '¡Ya estamos preparando tu pedido! En un momento estará listo.';
@@ -1316,7 +1325,7 @@
           if (navigator.vibrate) {
             try { navigator.vibrate([200, 100, 200]); } catch(e){}
           }
-          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-emerald-500 p-3.5 transition-all';
+          monitor.className = 'fixed top-[72px] inset-x-3 max-w-[420px] mx-auto z-50 bg-white rounded-2xl shadow-xl border-2 border-emerald-500 p-3.5 transition-all duration-300';
           badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
           badge.textContent = 'LISTO';
           msg.textContent = '¡Tu pedido está listo! Te lo entregaremos en breve.';
@@ -1333,10 +1342,30 @@
           monitor.classList.add('hidden');
           SafeStorage.removeItem('maleza_active_order');
           if (clientUnsubscribe) { clientUnsubscribe(); clientUnsubscribe = null; }
+          return;
         }
+
+        // Auto-ocultar banner a los 5 segundos para operación fluida en barra
+        monitorAutoHideTimer = setTimeout(function() {
+          monitor.classList.add('opacity-0');
+          setTimeout(function() {
+            monitor.classList.add('hidden');
+            monitor.classList.remove('opacity-0');
+            SafeStorage.removeItem('maleza_active_order');
+            if (clientUnsubscribe) {
+              clientUnsubscribe();
+              clientUnsubscribe = null;
+            }
+          }, 300);
+        }, 5000);
       }
 
       window.modifyActiveOrder = async function() {
+        if (monitorAutoHideTimer) {
+          clearTimeout(monitorAutoHideTimer);
+          monitorAutoHideTimer = null;
+        }
+
         const orderId = activeClientOrderId || SafeStorage.getItem('maleza_active_order');
         if (!orderId) return;
 
@@ -1411,6 +1440,10 @@
       };
 
       window.dismissMonitor = function() {
+        if (monitorAutoHideTimer) {
+          clearTimeout(monitorAutoHideTimer);
+          monitorAutoHideTimer = null;
+        }
         document.getElementById('order-monitor').classList.add('hidden');
         SafeStorage.removeItem('maleza_active_order');
         if (clientUnsubscribe) { clientUnsubscribe(); clientUnsubscribe = null; }
