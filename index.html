@@ -16,7 +16,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
 
-  <script src="menu.data.js?v=20261116b"></script>
+  <script src="menu.data.js?v=20261116c"></script>
 
   <script>
     tailwind.config = {
@@ -48,7 +48,6 @@
     }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .banner-hover:active { transform: scale(0.98); }
     
     .segmented-control input[type="radio"] { display: none; }
     .segmented-control label {
@@ -150,28 +149,6 @@
 
     <main id="view-client" class="p-4 flex-1 flex flex-col justify-between">
       <div>
-        <div id="seasonal-promo-container" class="mb-3 hidden">
-          <div onclick="window.handlePromoClick()" class="banner-hover bg-gradient-to-r from-[#1b281c] via-[#2a3f2d] to-[#3a443a] text-white rounded-2xl p-3.5 shadow-md border border-[#2f4832]/30 flex items-center justify-between gap-3 cursor-pointer relative overflow-hidden transition-all">
-            <div class="flex-1 min-w-0 z-10">
-              <span id="promo-badge" class="inline-block text-[9px] font-bold tracking-wider uppercase bg-[#b86543] text-white px-2 py-0.5 rounded-full mb-1">
-                EDICIÓN ESPECIAL
-              </span>
-              <h3 id="promo-title" class="font-serif text-base font-bold text-[#faf9f5] leading-snug truncate">
-                Pumpkin Spice
-              </h3>
-              <p id="promo-desc" class="text-[11px] text-zinc-300 font-medium leading-tight mb-2 line-clamp-2">
-                Nuestra bebida de Temporada.
-              </p>
-              <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#f4e2c6]">
-                Elegir preparación ✨
-              </span>
-            </div>
-            <div class="w-14 h-14 rounded-full bg-emerald-950/40 border border-white/10 flex items-center justify-center text-2xl shadow-inner shrink-0 relative">
-              🎃<span class="absolute bottom-0 right-0 text-xs">☕</span>
-            </div>
-          </div>
-        </div>
-
         <div class="relative mb-2">
           <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -186,6 +163,15 @@
 
         <nav id="category-nav" class="flex items-stretch gap-3 overflow-x-auto no-scrollbar pt-2 pb-1 mb-3 -mx-4 px-4 sticky top-[60px] bg-[#F4F2EB]/95 backdrop-blur-md z-30 border-b border-[#E7E3D8] transition-opacity">
           
+          <button type="button" onclick="window.filterCategory('temporada', this)" class="cat-btn flex flex-col items-center justify-between gap-1 px-2.5 pb-2 pt-1 border-b-2 border-transparent text-zinc-500 hover:text-maleza-dark shrink-0 cursor-pointer transition-all">
+            <svg class="w-6 h-6 stroke-current" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+              <path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9L12 3z"/>
+              <path d="M19 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9.9-2.1z"/>
+              <path d="M5 16l.7 1.5L7.2 18l-1.5.7L5 20.2l-.7-1.5L2.8 18l1.5-.7L5 16z"/>
+            </svg>
+            <span class="text-[10.5px] font-semibold leading-tight text-center">Nuevos y<br>Temporada</span>
+          </button>
+
           <button type="button" onclick="window.filterCategory('crepas', this)" class="cat-btn flex flex-col items-center justify-between gap-1 px-2.5 pb-2 pt-1 border-b-2 border-maleza-accent text-maleza-dark shrink-0 cursor-pointer transition-all">
             <svg class="w-6 h-6 stroke-current" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
               <ellipse cx="12" cy="7" rx="7" ry="2.5"/>
@@ -367,15 +353,6 @@
     (function() {
       const WA_PHONE_NUMBER = "525519793606";
 
-      const FEATURED_PROMO = {
-        active: true,
-        productId: 'promo_pumpkin',
-        badge: 'Otoño en Maleza',
-        title: 'Pumpkin Spice',
-        desc: 'Nuestra bebida de Temporada.',
-        visualEmoji: '🎃'
-      };
-
       const firebaseConfig = {
         apiKey: "AIzaSyC-R4TAHZqtW4jU-mKrvEWOhJiQq1Z5raQ",
         authDomain: "maleza-cafe.firebaseapp.com",
@@ -470,6 +447,16 @@
         let priceDisplay = p.price ? '$' + p.price : 'Opciones';
         if (p.type === 'sized_flavor' && p.prices && p.prices['Chico']) {
           priceDisplay = '$' + p.prices['Chico'] + ' / $' + p.prices['Grande'];
+        } else if (p.type === 'prep_trio' && Array.isArray(p.prepOptions) && p.prepOptions.length > 0) {
+          const vals = p.prepOptions.map(function(o) { return o.price; });
+          const minP = Math.min.apply(null, vals);
+          const maxP = Math.max.apply(null, vals);
+          priceDisplay = minP === maxP ? '$' + minP : '$' + minP + ' / $' + maxP;
+        } else if (p.flavorPrices) {
+          const vals = Object.values(p.flavorPrices);
+          const minP = Math.min.apply(null, vals);
+          const maxP = Math.max.apply(null, vals);
+          priceDisplay = minP === maxP ? '$' + minP : '$' + minP + ' / $' + maxP;
         } else if (p.type === 'banderilla' && p.prices) {
           const vals = Object.values(p.prices);
           priceDisplay = 'Desde $' + Math.min.apply(null, vals);
@@ -540,6 +527,7 @@
 
       function getCategoryLabel(cat) {
         const map = {
+          'temporada': 'Nuevos y Temporada',
           'crepas': 'Crepas & Waffles',
           'roles': 'Roles Artesanales',
           'banderillas': 'Banderillas Coreanas',
@@ -624,7 +612,10 @@
           
           let pricesNorm = '';
           if (item.prices) {
-             pricesNorm = Object.keys(item.prices).map(normalizeString).join(' ');
+            pricesNorm = Object.keys(item.prices).map(normalizeString).join(' ');
+          }
+          if (Array.isArray(item.prepOptions)) {
+            pricesNorm += ' ' + item.prepOptions.map(function(o) { return normalizeString(o.name); }).join(' ');
           }
 
           return nameNorm.includes(q) || 
@@ -738,8 +729,8 @@
           renderSpecialCustomOptions(item, c);
         } else if (item.type === 'mandragora') {
           renderMandragoraOptions(item, c);
-        } else if (item.type === 'pumpkin') {
-          renderDynamicTrioOptions(item, c, 'opt_pumpkin');
+        } else if (item.type === 'prep_trio' || item.type === 'pumpkin') {
+          renderDynamicTrioOptions(item, c, 'opt_prep');
         } else if (item.type === 'sized_flavor') {
           document.getElementById('modal-base-price').textContent = "Selecciona tamaño:";
           let html = renderModalHeroImage(item) + '<div class="space-y-2 mb-3">';
@@ -807,6 +798,9 @@
             html += '<label class="flex items-center gap-2 p-2 rounded-xl bg-zinc-50 border border-zinc-200 cursor-pointer"><input type="radio" name="opt_flavor" value="' + fl + '" ' + (i === 0 ? 'checked' : '') + '><span>' + fl + '</span></label>';
           });
           html += '</div></div>';
+          if (item.hasGreekYogurt) {
+            html += '<div class="mt-3"><label class="flex items-center justify-between p-3 rounded-xl border border-emerald-200 bg-emerald-50 cursor-pointer text-emerald-900"><span class="text-xs font-semibold flex items-center gap-2"><input type="checkbox" id="item_greek_yogurt"> ¿Agregar Yogurt Griego?</span><span class="font-bold text-xs uppercase text-emerald-700">Cortesía</span></label></div>';
+          }
           if (item.type === 'flavor' && item.allowShot) {
             html += '<div class="mt-2.5"><label class="flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 text-xs font-semibold cursor-pointer"><span class="flex items-center gap-2"><input type="checkbox" id="shot_extra" onchange="window.updatePriceSubtotal()"> Shot de Espresso extra</span><span class="font-bold text-maleza-accent">+$15</span></label></div>';
           }
@@ -877,11 +871,13 @@
 
       function renderDynamicTrioOptions(item, container, groupName) {
         document.getElementById('modal-base-price').textContent = "Selecciona preparación:";
-        const options = [
-          { name: 'Caliente', price: 60 },
-          { name: 'Latte Frío', price: 70 },
-          { name: 'Frappé', price: 60 }
-        ];
+        const options = Array.isArray(item.prepOptions) && item.prepOptions.length > 0
+          ? item.prepOptions
+          : [
+              { name: 'Caliente', price: 60 },
+              { name: 'Latte Frío', price: 70 },
+              { name: 'Frappé', price: 60 }
+            ];
 
         let html = renderModalHeroImage(item) + '<div class="space-y-2">';
         options.forEach(function(opt, idx) {
@@ -891,7 +887,9 @@
         });
         html += '</div>';
 
-        html += '<div class="mt-3">' + renderBobaToppingsCheckboxes() + '</div>';
+        if (item.hasBobaToppings) {
+          html += '<div class="mt-3">' + renderBobaToppingsCheckboxes() + '</div>';
+        }
         html += renderCustomModifierBlock();
 
         container.innerHTML = html;
@@ -899,10 +897,20 @@
       }
 
       function renderFrappeOrMalteadaOptions(item, container) {
-        document.getElementById('modal-base-price').textContent = 'Precio base: $' + item.price;
-        let html = renderModalHeroImage(item) + '<div><label class="font-semibold block text-xs text-zinc-700 mb-1.5">Sabor:</label><div class="grid grid-cols-2 gap-1.5 text-xs">';
+        const hasDynamicPrices = Boolean(item.flavorPrices);
+        const firstFlavor = item.flavors[0];
+        const initialPrice = hasDynamicPrices ? (item.flavorPrices[firstFlavor] || item.price) : item.price;
+        document.getElementById('modal-base-price').textContent = hasDynamicPrices
+          ? 'Selecciona sabor:'
+          : 'Precio base: $' + initialPrice;
+
+        let html = renderModalHeroImage(item) + '<div><label class="font-semibold block text-xs text-zinc-700 mb-1.5">Sabor:</label><div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs">';
         item.flavors.forEach(function(fl, i) {
-          html += '<label class="flex items-center gap-2 p-2 rounded-xl bg-zinc-50 border border-zinc-200 cursor-pointer"><input type="radio" name="opt_flavor" value="' + fl + '" ' + (i === 0 ? 'checked' : '') + '><span>' + fl + '</span></label>';
+          const flPrice = hasDynamicPrices ? (item.flavorPrices[fl] || item.price) : item.price;
+          html += '<label class="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-zinc-50 border border-zinc-200 cursor-pointer hover:border-maleza">' +
+            '<span class="flex items-center gap-2 font-medium"><input type="radio" name="opt_flavor" value="' + fl + '" data-price="' + flPrice + '" ' + (i === 0 ? 'checked' : '') + ' onchange="window.updatePriceSubtotal()"><span>' + fl + '</span></span>' +
+            (hasDynamicPrices ? '<span class="font-bold text-maleza shrink-0">$' + flPrice + '</span>' : '') +
+          '</label>';
         });
         html += '</div></div>';
         
@@ -1017,15 +1025,15 @@
         if (!currentCustomItem) return;
         let total = currentCustomItem.price || 0;
         
-        if (currentCustomItem.type === 'pumpkin') {
-          const selected = document.querySelector('input[name="opt_pumpkin"]:checked');
+        if (currentCustomItem.type === 'prep_trio' || currentCustomItem.type === 'pumpkin') {
+          const selected = document.querySelector('input[name="opt_prep"]:checked');
           if (selected) total = parseInt(selected.dataset.price, 10);
         } else if (currentCustomItem.type === 'sized_flavor') {
           const selected = document.querySelector('input[name="opt_size"]:checked');
           if (selected) total = parseInt(selected.dataset.price, 10);
-        } else if (currentCustomItem.type === 'matcha_azul') {
-          const selected = document.querySelector('input[name="opt_matcha_azul"]:checked');
-          if (selected) total = parseInt(selected.dataset.price, 10);
+        } else if (currentCustomItem.type === 'frappe' || currentCustomItem.type === 'malteada') {
+          const fl = document.querySelector('input[name="opt_flavor"]:checked');
+          if (fl && fl.dataset.price) total = parseInt(fl.dataset.price, 10);
         } else if (currentCustomItem.type === 'banderilla') {
           const b = document.querySelector('input[name="opt_band"]:checked');
           if (b) total = parseInt(b.dataset.p, 10);
@@ -1065,8 +1073,8 @@
           const f = document.querySelector('input[name="opt_mandragora_fruta"]:checked');
           if (r) details.push('Relleno pan: ' + r.value);
           if (f) details.push('Fruta: ' + f.value);
-        } else if (currentCustomItem.type === 'pumpkin') {
-          const selected = document.querySelector('input[name="opt_pumpkin"]:checked');
+        } else if (currentCustomItem.type === 'prep_trio' || currentCustomItem.type === 'pumpkin') {
+          const selected = document.querySelector('input[name="opt_prep"]:checked');
           if (selected) {
             price = parseInt(selected.dataset.price, 10);
             details.push('Preparación: ' + selected.value);
@@ -1088,15 +1096,12 @@
             price += 15;
             details.push('Con Shot Espresso');
           }
-        } else if (currentCustomItem.type === 'matcha_azul') {
-          const selected = document.querySelector('input[name="opt_matcha_azul"]:checked');
-          if (selected) {
-            price = parseInt(selected.dataset.price, 10);
-            details.push('Preparación: ' + selected.value);
-          }
         } else if (currentCustomItem.type === 'frappe' || currentCustomItem.type === 'malteada') {
           const fl = document.querySelector('input[name="opt_flavor"]:checked');
-          if (fl) details.push('Sabor: ' + fl.value);
+          if (fl) {
+            if (fl.dataset.price) price = parseInt(fl.dataset.price, 10);
+            details.push('Sabor: ' + fl.value);
+          }
           const noCream = document.getElementById('item_no_cream');
           if (noCream && noCream.checked) details.push('Sin crema batida');
         } else if (currentCustomItem.type.startsWith('crepa') || currentCustomItem.type.startsWith('rol')) {
@@ -1124,6 +1129,10 @@
           const fl = document.querySelector('input[name="opt_flavor"]:checked');
           if (fl && fl.value !== 'Clásico' && fl.value !== 'Tradicional' && fl.value !== 'Receta Original') {
             details.push('Sabor: ' + fl.value);
+          }
+          const greekYogurt = document.getElementById('item_greek_yogurt');
+          if (greekYogurt && greekYogurt.checked) {
+            details.push('Con Yogurt Griego (Cortesía)');
           }
           const sh = document.getElementById('shot_extra');
           if (sh && sh.checked) { price += 15; details.push('Con Shot Espresso'); }
@@ -1480,26 +1489,8 @@
         }
       };
 
-      window.handlePromoClick = function() {
-        if (!FEATURED_PROMO.productId) return;
-        window.handleProductClick(FEATURED_PROMO.productId);
-      };
-
       function initApp() {
         initWelcomeSplash();
-
-        if (FEATURED_PROMO && FEATURED_PROMO.active) {
-          const promoContainer = document.getElementById('seasonal-promo-container');
-          const promoBadge = document.getElementById('promo-badge');
-          const promoTitle = document.getElementById('promo-title');
-          const promoDesc = document.getElementById('promo-desc');
-          
-          if (promoBadge) promoBadge.textContent = FEATURED_PROMO.badge;
-          if (promoTitle) promoTitle.textContent = FEATURED_PROMO.title;
-          if (promoDesc) promoDesc.textContent = FEATURED_PROMO.desc;
-          if (promoContainer) promoContainer.classList.remove('hidden');
-        }
-
         renderProducts('crepas');
         checkActiveClientOrder();
       }
