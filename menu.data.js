@@ -28,11 +28,11 @@ window.MENU_DATA = [
 
   // ================= LATTES ESPECIALES =================
   { id: 'esp_areca', cat: 'especiales', name: 'Areca (Coconut Latte)', price: 80, type: 'special_custom', image: 'img/areca.webp', desc: 'Bebida fría, espresso, leche cremosa y coco' },
-  { id: 'esp_cosmos', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 85, type: 'special_custom', image: 'img/cosmos.webp', desc: 'Bebida fría, matcha, leche cremosa y fresa' },
+  { id: 'esp_cosmos', cat: 'especiales', name: 'Cosmos (Strawberry Matcha)', price: 85, type: 'special_custom', hasMatchaType: true, image: 'img/cosmos.webp', desc: 'Bebida fría, matcha a elegir, leche cremosa y fresa' },
   { id: 'esp_magnolia', cat: 'especiales', name: 'Magnolia (Chocolate Latte)', price: 80, type: 'special_custom', image: 'img/magnolia.webp', desc: 'Bebida fría, espresso, leche cremosa y cold foam de chocolate' },
-  { id: 'esp_crisantemo', cat: 'especiales', name: 'Crisantemo (Mango Matcha)', price: 85, type: 'special_custom', image: 'img/crisantemo.webp', desc: 'Bebida fría, matcha, leche cremosa y mango' },
+  { id: 'esp_crisantemo', cat: 'especiales', name: 'Crisantemo (Mango Matcha)', price: 85, type: 'special_custom', hasMatchaType: true, image: 'img/crisantemo.webp', desc: 'Bebida fría, matcha a elegir, leche cremosa y mango' },
   { id: 'esp_mandragora', cat: 'especiales', name: 'Mandrágora', price: 120, type: 'mandragora', image: 'img/mandragora.webp', desc: 'Frappé chocolate abuelita + pan de muerto relleno' },
-  { id: 'latte_caliente', cat: 'especiales', name: 'Latte de Sabor Caliente', price: 65, type: 'flavor', allowShot: true, image: 'img/latte-caliente.webp', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], desc: 'Elige tu sabor favorito' },
+  { id: 'latte_caliente', cat: 'especiales', name: 'Latte de Sabor Caliente', type: 'sized_flavor', prices: { 'Chico': 60, 'Grande': 75 }, allowShot: true, image: 'img/latte-caliente.webp', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], desc: 'Elige tamaño y tu sabor favorito' },
   { id: 'latte_frio', cat: 'especiales', name: 'Latte de Sabor Frío', price: 75, type: 'flavor', allowShot: true, image: 'img/latte-frio.webp', flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], desc: 'Elige tu sabor favorito' },
 
   // ================= BUBBLE TEA =================
@@ -46,17 +46,16 @@ window.MENU_DATA = [
   { id: 'bub_diente', cat: 'bubble', name: 'Diente de León (Maracuyá)', price: 60, type: 'bubble', image: 'img/diente-de-leon.webp', desc: 'Maracuyá, té negro y tapioca' },
   { id: 'bub_litchi', cat: 'bubble', name: 'Litchi', price: 60, type: 'bubble', image: 'img/litchi.webp', desc: 'Litchi, té negro y tapioca' },
   { id: 'bub_ternatea', cat: 'bubble', name: 'Ternatea (Matcha azul)', price: 70, type: 'bubble', image: 'img/ternatea.webp', desc: 'Matcha azul, leche, té negro y tapioca' },
-  { id: 'bub_malus', cat: 'bubble', name: 'Malus (Manzana Verde)', price: 60, type: 'bubble', image: 'img/malus.webp', desc: 'Manzana verde, té negro y tapioca' },
 
   // ================= CAFETERÍA & BEBIDAS =================
-  { id: 'caf_americano', cat: 'cafe', name: 'Americano', price: 45, type: 'simple', desc: 'Café de especialidad recién extraído' },
-  { id: 'caf_capuchino', cat: 'cafe', name: 'Capuchino', price: 50, type: 'simple', desc: 'Espresso con leche vaporizada y espuma cremosa' },
-  { id: 'caf_lechero', cat: 'cafe', name: 'Lechero', price: 55, type: 'simple', desc: 'Café cargado con leche caliente espumada' },
-  { id: 'caf_mocha', cat: 'cafe', name: 'Mocha', price: 55, type: 'simple', desc: 'Espresso, cacao artesanal y leche vaporizada' },
-  { id: 'caf_cap_sabor', cat: 'cafe', name: 'Capuchino de Sabor', price: 60, type: 'flavor', allowShot: true, flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], desc: 'Capuchino cremoso con jarabe a elegir' },
-  { id: 'sin_chocolate', cat: 'cafe', name: 'Chocolate Caliente', price: 60, type: 'simple', desc: 'Cacao tradicional espumoso' },
-  { id: 'sin_chai', cat: 'cafe', name: 'Chai Latte', price: 60, type: 'simple', desc: 'Infusión especiada con leche cremosa' },
-  { id: 'sin_matcha', cat: 'cafe', name: 'Matcha Latte', price: 60, type: 'simple', desc: 'Té verde matcha ceremonial con leche' },
+  { id: 'caf_americano', cat: 'cafe', name: 'Americano', type: 'sized_flavor', prices: { 'Chico': 45, 'Grande': 60 }, desc: 'Café de especialidad recién extraído' },
+  { id: 'caf_capuchino', cat: 'cafe', name: 'Capuchino', type: 'sized_flavor', prices: { 'Chico': 50, 'Grande': 65 }, desc: 'Espresso con leche vaporizada y espuma cremosa' },
+  { id: 'caf_lechero', cat: 'cafe', name: 'Lechero', type: 'sized_flavor', prices: { 'Chico': 55, 'Grande': 70 }, desc: 'Café cargado con leche caliente espumada' },
+  { id: 'caf_mocha', cat: 'cafe', name: 'Mocha', type: 'sized_flavor', prices: { 'Chico': 55, 'Grande': 70 }, desc: 'Espresso, cacao artesanal y leche vaporizada' },
+  { id: 'caf_cap_sabor', cat: 'cafe', name: 'Capuchino de Sabor', type: 'sized_flavor', prices: { 'Chico': 60, 'Grande': 75 }, allowShot: true, flavors: ['Caramelo', 'Vainilla', 'Avellana', 'Crema Irlandesa'], desc: 'Capuchino cremoso con jarabe a elegir' },
+  { id: 'sin_chocolate', cat: 'cafe', name: 'Chocolate Caliente', type: 'sized_flavor', prices: { 'Chico': 60, 'Grande': 75 }, desc: 'Cacao tradicional espumoso' },
+  { id: 'sin_chai', cat: 'cafe', name: 'Chai Latte', type: 'sized_flavor', prices: { 'Chico': 60, 'Grande': 70 }, desc: 'Infusión especiada con leche cremosa' },
+  { id: 'sin_matcha', cat: 'cafe', name: 'Matcha Latte', type: 'sized_flavor', prices: { 'Chico': 60, 'Grande': 75 }, hasMatchaType: true, desc: 'Té matcha ceremonial o azul con leche' },
 
   // Frappés, Sodas, Smoothies, Malteadas y Esquimos
   { id: 'frp_clasico', cat: 'cafe', name: 'Frappé Clásico', price: 60, type: 'frappe', flavors: ['Oreo', 'Chocolate Abuelita', 'Moka', 'Chai'], desc: 'Bebida frozen cremosa con crema batida' },
