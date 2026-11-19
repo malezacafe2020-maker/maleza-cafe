@@ -100,17 +100,11 @@ window.MENU_DATA = [
   { id: 'esq_maleza', cat: 'cafe', name: 'Esquimo', price: 40, type: 'flavor_noshot', flavors: ['Café', 'Chocolate', 'Vainilla', 'Fresa', 'Chocolate Abuelita', 'Caramelo', 'Moka', 'Chai', 'Matcha', 'Taro'], desc: 'Bebida fría espumosa tradicional' },
 
   // ================= NUEVOS Y DE TEMPORADA =================
-  {
-    id: 'promo_pumpkin',
-    cat: 'temporada',
-    name: 'Pumpkin Spice',
-    type: 'prep_trio',
-    hasBobaToppings: true,
-    prepOptions: [
-      { name: 'Caliente', price: 60 },
-      { name: 'Latte Frío', price: 70 },
-      { name: 'Frappé', price: 60 }
-    ],
-    desc: 'Nuestra bebida especiada de temporada en 3 preparaciones'
-  }
+  { id: 'temp_frappe_jengi', cat: 'temporada', name: 'Frappé Jengi', price: 80, type: 'special_custom', desc: '' },
+  { id: 'temp_ponche', cat: 'temporada', name: 'Ponche', type: 'sized_flavor', prices: { 'Chico': 40, 'Grande': 55 }, desc: '' },
+  { id: 'temp_tisana_ponche', cat: 'temporada', name: 'Tisana sabor Ponche de fruta', type: 'sized_flavor', prices: { 'Chico': 50, 'Grande': 65 }, desc: '' },
+  { id: 'temp_esfera', cat: 'temporada', name: 'Esfera', type: 'sized_flavor', prices: { 'Chico': 65, 'Grande': 80 }, desc: '' },
+  { id: 'temp_copo', cat: 'temporada', name: 'Copo', price: 85, type: 'special_custom', desc: '' },
+  { id: 'temp_fogata', cat: 'temporada', name: 'Fogata', type: 'sized_flavor', prices: { 'Chico': 70, 'Grande': 85 }, desc: '' },
+  { id: 'temp_fugaz', cat: 'temporada', name: 'Fugaz', price: 80, type: 'special_custom', desc: '' }
 ];
